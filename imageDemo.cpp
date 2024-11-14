@@ -1,15 +1,24 @@
 #include "iGraphics.h"
 
-/* 
-	function iDraw() is called again and again by the system.
-*/
+
+
+Image bg, mario;
+
+void loadResources()
+{
+	iLoadImage(&bg, "background.jpg");
+	iLoadImage(&mario, "mario.png");
+	double marioAspectRatio = (double)mario.width / mario.height;
+	iResizeImage(&mario, 48, 48.0 / marioAspectRatio);
+}
+
 void iDraw()
 {
 	//place your drawing codes here	
     // load background.jpg using stb_image
 	iClear();
-    iShowIMG(200, 200, "background.jpg");
-	iShowIMGWithResize(211, 304, 48, 64, "mario.png");
+    iShowImage(200, 200, &bg);
+	iShowImage(211, 304, &mario);
 }
 
 /* 
@@ -29,9 +38,11 @@ void iMouse(int button, int state, int mx, int my)
 {
 	if(button == GLUT_LEFT_BUTTON && state == GLUT_DOWN)
 	{
-		int rgb[3];
-		iGetPixelColor(mx, my, rgb);
-		printf("Pos: %d %d, RGB: %d %d %d\n", mx, my, rgb[0], rgb[1], rgb[2]);
+		iMirrorImage(&mario, HORIZONTAL);
+	}
+	if(button == GLUT_RIGHT_BUTTON && state == GLUT_DOWN)
+	{
+		iMirrorImage(&mario, VERTICAL);
 	}
 }
 
@@ -67,6 +78,7 @@ void iSpecialKeyboard(unsigned char key)
 
 int main()
 {
+	loadResources();
 	iInitialize(900, 900, "ImageDemp");
 	return 0;
 }	

@@ -18,9 +18,19 @@
 #include <math.h>
 #include "glaux.h"
 #define STB_IMAGE_IMPLEMENTATION
-#include "stb_image.h"
+#include "extras/stb_image.h"
 #define STB_IMAGE_RESIZE_IMPLEMENTATION
-#include "stb_image_resize.h"
+#include "extras/stb_image_resize.h"
+
+typedef struct{
+    unsigned char* data;
+    int width, height, channels;
+} Image;
+
+enum MirrorState {
+    HORIZONTAL,
+    VERTICAL
+};
 
 int iScreenHeight, iScreenWidth;
 int iMouseX, iMouseY;
@@ -137,16 +147,30 @@ void iShowBMP(int x, int y, char filename[])
     iShowBMP2(x, y, filename, -1 /* ignoreColor */);
 }
 
-void iShowIMG2(int x, int y, const char filename[], int ignoreColor)
+
+// Additional functions for displaying images
+
+void iLoadImage(Image* img, const char filename[])
 {
     stbi_set_flip_vertically_on_load(true);
-    int width, height, channels;
-    unsigned char* data = stbi_load(filename, &width, &height, &channels, 0);
-    if (data == nullptr) {
+    img->data = stbi_load(filename, &img->width, &img->height, &img->channels, 0);
+    if (img->data == nullptr) {
         printf("Failed to load image\n");
         return;
     }
-    // make all pixels with value ignoreColor to 0
+}
+
+void iFreeImage(Image* img)
+{
+    stbi_image_free(img->data);
+}
+
+void iShowImage2(int x, int y, Image* img, int ignoreColor)
+{
+    int width = img->width;
+    int height = img->height;
+    int channels = img->channels;
+    unsigned char* data = img->data;
     if (ignoreColor != -1) {
         // Iterate over the pixels
         for (int y = 0; y < height; y++) {
@@ -169,30 +193,60 @@ void iShowIMG2(int x, int y, const char filename[], int ignoreColor)
     }
     glRasterPos2f(x, y);
     glDrawPixels(width, height, (channels == 4)? GL_RGBA:GL_RGB, GL_UNSIGNED_BYTE, data);
-    stbi_image_free(data);
 }
 
-void iShowIMG(int x, int y, const char filename[])
+void iShowImage(int x, int y, Image* img)
 {
-    iShowIMG2(x, y, filename, -1 /* ignoreColor */);
+    iShowImage2(x, y, img, -1 /* ignoreColor */);
 }
 
-void iShowIMGWithResize(int x, int y, int width, int height, const char filename[])
+void iResizeImage(Image* img, int width, int height)
 {
-    stbi_set_flip_vertically_on_load(true);
-    int imgWidth, imgHeight, channels;
-    unsigned char* data = stbi_load(filename, &imgWidth, &imgHeight, &channels, 0);
-    if (data == nullptr) {
-        printf("Failed to load image\n");
-        return;
-    }
+    int imgWidth = img->width;
+    int imgHeight = img->height;
+    int channels = img->channels;
+    unsigned char* data = img->data;
     unsigned char* resizedData = new unsigned char[width * height * channels];
     stbir_resize_uint8(data, imgWidth, imgHeight, 0, resizedData, width, height, 0, channels);
-    glRasterPos2f(x, y);
-    glDrawPixels(width, height, (channels == 4)? GL_RGBA:GL_RGB, GL_UNSIGNED_BYTE, resizedData);
     stbi_image_free(data);
-    delete[] resizedData;
+    img->data = resizedData;
+    img->width = width;
+    img->height = height;
 }
+
+void iMirrorImage(Image* img, MirrorState state)
+{
+    int width = img->width;
+    int height = img->height;
+    int channels = img->channels;
+    unsigned char* data = img->data;
+    unsigned char* mirroredData = new unsigned char[width * height * channels];
+    if (state == HORIZONTAL) {
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                int index = (y * width + x) * channels;
+                int mirroredIndex = (y * width + (width - x - 1)) * channels;
+                for (int c = 0; c < channels; c++) {
+                    mirroredData[mirroredIndex + c] = data[index + c];
+                }
+            }
+        }
+    } else if (state == VERTICAL) {
+        for (int y = 0; y < height; y++) {
+            int mirroredY = height - y - 1;
+            for (int x = 0; x < width; x++) {
+                int index = (y * width + x) * channels;
+                int mirroredIndex = (mirroredY * width + x) * channels;
+                for (int c = 0; c < channels; c++) {
+                    mirroredData[mirroredIndex + c] = data[index + c];
+                }
+            }
+        }
+    }
+    stbi_image_free(data);
+    img->data = mirroredData;
+}
+
 
 
 void iGetPixelColor (int cursorX, int cursorY, int rgb[])
