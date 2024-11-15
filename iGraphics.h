@@ -18,9 +18,9 @@
 #include <math.h>
 #include "glaux.h"
 #define STB_IMAGE_IMPLEMENTATION
-#include "extras/stb_image.h"
+#include "stb_image.h"
 #define STB_IMAGE_RESIZE_IMPLEMENTATION
-#include "extras/stb_image_resize.h"
+#include "stb_image_resize.h"
 
 typedef struct{
     unsigned char* data;
@@ -262,7 +262,7 @@ void iUpdateCollisionMask(Sprite* s)
     Image* img = &s->img;
     int ignorecolor = s->ignoreColor;
     if(ignorecolor == -1){
-        printf("Error: Ignore color not set for sprite\n");
+        s->collisionMask = nullptr;
         return;
     }
     int width = img->width;
@@ -279,7 +279,8 @@ void iUpdateCollisionMask(Sprite* s)
             int isTransparent = (channels == 4 && data[index + 3] == 0);
             if ((data[index] == (ignorecolor & 0xFF) &&
                 data[index + 1] == ((ignorecolor >> 8) & 0xFF) &&
-                data[index + 2] == ((ignorecolor >> 16) & 0xFF)) || isTransparent) {
+                data[index + 2] == ((ignorecolor >> 16) & 0xFF)) || 
+                isTransparent) {
                 collisionMask[y * width + x] = 0;
             } else {
                 collisionMask[y * width + x] = 1;
@@ -294,41 +295,34 @@ int iCheckCollision(Sprite* s1, Sprite* s2){
     int width1 = img1->width;
     int height1 = img1->height;
     unsigned char* collisionMask1 = s1->collisionMask;
-    if(collisionMask1 == nullptr){
-        printf("Error: Collision mask not found for image 1\n");
-        return 0;
-    }
     Image* img2 = &s2->img;
     int width2 = img2->width;
     int height2 = img2->height;
     unsigned char* collisionMask2 = s2->collisionMask;
-    if(collisionMask2 == nullptr){
-        printf("Error: Collision mask not found for image 2\n");
-        return 0;
-    }
     int x1 = s1->x;
     int y1 = s1->y;
     int x2 = s2->x;
     int y2 = s2->y;
     // check if the two images overlap
-    int startX = x1 < x2 ? x1 : x2;
-    int endX = (x1 + width1) > (x2 + width2) ? (x1 + width1) : (x2 + width2);
-    int startY = y1 < y2 ? y1 : y2;
-    int endY = (y1 + height1) > (y2 + height2) ? (y1 + height1) : (y2 + height2);
-
+    int startX = (x1 > x2) ? x1 : x2;
+    int endX = (x1 + width1 < x2 + width2) ? x1 + width1 : x2 + width2;
+    int startY = (y1 > y2) ? y1 : y2;
+    int endY = (y1 + height1 < y2 + height2) ? y1 + height1 : y2 + height2;
+    int noOverlap = startX >= endX || startY >= endY;
+    // If collisionMasks are not set, check the whole image for collision
+    if(collisionMask1 == nullptr || collisionMask2 == nullptr){
+        return noOverlap ? 0 : 1;
+    }
+    // now collisionMasks are set. Check only the overlapping region
+    if(noOverlap){
+        return 0;
+    }
     for(int y = startY; y < endY; y++){
         for(int x = startX; x < endX; x++){
-            int x1_ = x - x1;
-            int y1_ = y - y1;
-            int x2_ = x - x2;
-            int y2_ = y - y2;
-            if(x1_ >= 0 && x1_ < width1 && y1_ >= 0 && y1_ < height1 &&
-               x2_ >= 0 && x2_ < width2 && y2_ >= 0 && y2_ < height2){
-                int index1 = (y1_ * width1 + x1_);
-                int index2 = (y2_ * width2 + x2_);
-                if(collisionMask1[index1] && collisionMask2[index2]){
-                    return 1;
-                }
+            int index1 = (y - y1) * width1 + (x - x1);
+            int index2 = (y - y2) * width2 + (x - x2);
+            if(collisionMask1[index1] && collisionMask2[index2]){
+                return 1;
             }
         }
     }

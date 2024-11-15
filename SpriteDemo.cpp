@@ -2,32 +2,38 @@
 
 
 
-Sprite bg, mario1, mario2;
+Sprite bg, mario1, mario2, rect;
 
 void loadResources()
 {
-    iLoadSprite(&bg, "background.jpg", -1);
-    iSetSpritePosition(&bg, 200, 200);
+    iLoadSprite(&bg, "background.jpg", -1); // -1 for ignoring collisionMask. Whole image will be checked for collision
+    iSetSpritePosition(&bg, 200, 100);
     iLoadSprite(&mario1, "mario.png", 0);
-    iSetSpritePosition(&mario1, 411, 304);
+    iSetSpritePosition(&mario1, 411, 204);
     double marioAspectRatio = (double)mario1.img.width / mario1.img.height;
     iResizeSprite(&mario1, 48, 48.0 / marioAspectRatio);
 
     iLoadSprite(&mario2, "mario.png", 0);
     iResizeSprite(&mario2, 200, 200.0 / marioAspectRatio);
-    iSetSpritePosition(&mario2, 211, 304);
+    iSetSpritePosition(&mario2, 211, 204);
+
+    iLoadSprite(&rect, "rect.png", 0xFFFFFF); // Ignore white color for collision detection
+    iSetSpritePosition(&rect, 100, 400);
 }
 
 void iDraw()
 {
 	//place your drawing codes here	
-    // load background.jpg using stb_image
 	iClear();
     iShowSprite(&bg);
     iShowSprite(&mario1);
     iShowSprite(&mario2);
     if (iCheckCollision(&mario1, &mario2)) {
-        iText(500, 500, "Collision Detected", GLUT_BITMAP_TIMES_ROMAN_24);
+        iText(100, 500, "Collision Detected", GLUT_BITMAP_TIMES_ROMAN_24);
+    }
+    iShowSprite(&rect);
+    if (iCheckCollision(&mario1, &rect)) {
+        iText(100, 500, "Collision Detected", GLUT_BITMAP_TIMES_ROMAN_24);
     }
 }
 
@@ -48,11 +54,11 @@ void iMouse(int button, int state, int mx, int my)
 {
 	if(button == GLUT_LEFT_BUTTON && state == GLUT_DOWN)
 	{
-		iMirrorSprite(&mario1, HORIZONTAL);
+		iMirrorSprite(&mario2, HORIZONTAL);
 	}
 	if(button == GLUT_RIGHT_BUTTON && state == GLUT_DOWN)
 	{
-		iMirrorSprite(&mario1, VERTICAL);
+		iMirrorSprite(&mario2, VERTICAL);
 	}
 }
 
