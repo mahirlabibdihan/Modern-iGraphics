@@ -32,7 +32,24 @@ void iMirrorImage(Image* img, MirrorState state);
 ```
 void iFreeImage(Image* img);
 ```
-
+- Define new Sprite struct to store image, position and collision mask.
+```
+typedef struct{
+    int x, y;
+    Image img;
+    unsigned char* collisionMask;
+    int ignoreColor;
+} Sprite;
+```
+- Sprite functions:
+```
+void iLoadSprite(Sprite* s, const char* filename, int ignoreColor);
+void iSetSpritePosition(Sprite* s, int x, int y);
+void iFreeSprite(Sprite* s);
+void iShowSprite(Sprite* s);
+void iResizeSprite(Sprite* s, int width, int height);
+void iMirrorSprite(Sprite* s, MirrorState state);
+```
 ## How to Use
 - Include the iGraphics.h header file in your project.
 - Change line 11 in runner.bat to the path of MinGW directory in your system.

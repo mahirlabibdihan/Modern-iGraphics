@@ -354,6 +354,12 @@ void iMirrorSprite(Sprite* s, MirrorState state){
     iUpdateCollisionMask(s);
 }
 
+void iFreeSprite(Sprite* s){
+    iFreeImage(&s->img);
+    if(s->collisionMask != nullptr){
+        delete[] s->collisionMask;
+    }
+}
 
 void iGetPixelColor (int cursorX, int cursorY, int rgb[])
 {
