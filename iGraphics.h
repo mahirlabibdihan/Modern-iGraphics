@@ -18,14 +18,22 @@
 #include <math.h>
 #include "glaux.h"
 #define STB_IMAGE_IMPLEMENTATION
-#include "extras/stb_image.h"
+#include "stb_image.h"
 #define STB_IMAGE_RESIZE_IMPLEMENTATION
-#include "extras/stb_image_resize.h"
+#include "stb_image_resize.h"
 
 typedef struct{
     unsigned char* data;
     int width, height, channels;
 } Image;
+
+typedef struct{
+    int x, y;
+    Image img;
+    int visible;
+    unsigned char* collisionMask;
+    int ignoreColor;
+} Sprite;
 
 enum MirrorState {
     HORIZONTAL,
@@ -248,6 +256,110 @@ void iMirrorImage(Image* img, MirrorState state)
 }
 
 
+// ignorecolor = hex color code 0xRRGGBB
+void iUpdateCollisionMask(Sprite* s)
+{
+    Image* img = &s->img;
+    int ignorecolor = s->ignoreColor;
+    if(ignorecolor == -1){
+        s->collisionMask = nullptr;
+        return;
+    }
+    int width = img->width;
+    int height = img->height;
+    int channels = img->channels;
+    unsigned char* data = img->data;
+    if (s->collisionMask != nullptr) {
+        delete[] s->collisionMask;
+    }
+    unsigned char* collisionMask = new unsigned char[width * height];
+    for (int y = 0; y < height; y++) {
+        for (int x = 0; x < width; x++) {
+            int index = (y * width + x) * channels;
+            int isTransparent = (channels == 4 && data[index + 3] == 0);
+            if ((data[index] == (ignorecolor & 0xFF) &&
+                data[index + 1] == ((ignorecolor >> 8) & 0xFF) &&
+                data[index + 2] == ((ignorecolor >> 16) & 0xFF)) || 
+                isTransparent) {
+                collisionMask[y * width + x] = 0;
+            } else {
+                collisionMask[y * width + x] = 1;
+            }
+        }
+    }
+    s->collisionMask = collisionMask;
+}
+
+int iCheckCollision(Sprite* s1, Sprite* s2){
+    Image* img1 = &s1->img;
+    int width1 = img1->width;
+    int height1 = img1->height;
+    unsigned char* collisionMask1 = s1->collisionMask;
+    Image* img2 = &s2->img;
+    int width2 = img2->width;
+    int height2 = img2->height;
+    unsigned char* collisionMask2 = s2->collisionMask;
+    int x1 = s1->x;
+    int y1 = s1->y;
+    int x2 = s2->x;
+    int y2 = s2->y;
+    // check if the two images overlap
+    int startX = (x1 > x2) ? x1 : x2;
+    int endX = (x1 + width1 < x2 + width2) ? x1 + width1 : x2 + width2;
+    int startY = (y1 > y2) ? y1 : y2;
+    int endY = (y1 + height1 < y2 + height2) ? y1 + height1 : y2 + height2;
+    int noOverlap = startX >= endX || startY >= endY;
+    // If collisionMasks are not set, check the whole image for collision
+    if(collisionMask1 == nullptr || collisionMask2 == nullptr){
+        return noOverlap ? 0 : 1;
+    }
+    // now collisionMasks are set. Check only the overlapping region
+    if(noOverlap){
+        return 0;
+    }
+    for(int y = startY; y < endY; y++){
+        for(int x = startX; x < endX; x++){
+            int index1 = (y - y1) * width1 + (x - x1);
+            int index2 = (y - y2) * width2 + (x - x2);
+            if(collisionMask1[index1] && collisionMask2[index2]){
+                return 1;
+            }
+        }
+    }
+    return 0;
+}
+
+void iLoadSprite(Sprite* s, const char* filename, int ignoreColor){
+    iLoadImage(&s->img, filename);
+    s->ignoreColor = ignoreColor;
+    iUpdateCollisionMask(s);
+}
+
+void iSetSpritePosition(Sprite* s, int x, int y){
+    s->x = x;
+    s->y = y;
+}
+
+void iShowSprite(Sprite* s){
+    iShowImage2(s->x, s->y, &s->img, s->ignoreColor);
+}
+
+void iResizeSprite(Sprite* s, int width, int height){
+    iResizeImage(&s->img, width, height);
+    iUpdateCollisionMask(s);
+}
+
+void iMirrorSprite(Sprite* s, MirrorState state){
+    iMirrorImage(&s->img, state);
+    iUpdateCollisionMask(s);
+}
+
+void iFreeSprite(Sprite* s){
+    iFreeImage(&s->img);
+    if(s->collisionMask != nullptr){
+        delete[] s->collisionMask;
+    }
+}
 
 void iGetPixelColor (int cursorX, int cursorY, int rgb[])
 {
