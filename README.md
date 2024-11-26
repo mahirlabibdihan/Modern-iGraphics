@@ -9,34 +9,34 @@ See the following files for example usage of the new features.
 
 ## Additional Features
 - Define new Image structure to store image data. This structure is used to load the images in memory and display them on the screen without the need of reading from disk  every time.
-```
+```cpp
 typedef struct{
     unsigned char* data;
     int width, height, channels;
 } Image;
 ```
 - Load image from file. Supports multiple image formats (BMP, PNG, JPG, GIF) with the help of the stb_image library.
-```
+```cpp
 void iLoadImage(Image* img, const char filename[]);
 ```
 - Show image at position (x, y):
-```
+```cpp
 void iShowImage(int x, int y, Image* img);
 ```
 - Resize image:
-```
+```cpp
 void iResizeImage(Image* img, int width, int height);
 ```
 - Mirror image: (`MirrorState = HORIZONTAL or VERTICAL`)
-```
+```cpp
 void iMirrorImage(Image* img, MirrorState state);
 ```
 - Free image:
-```
+```cpp
 void iFreeImage(Image* img);
 ```
 - Define new Sprite struct to store image, position and collision mask. The functionalities of the Sprite struct are similar to the Image struct with additional features like setting positions and collision detection.
-```
+```cpp
 typedef struct{
     int x, y;
     Image img;
@@ -45,7 +45,7 @@ typedef struct{
 } Sprite;
 ```
 - The main difference with loading with the `Sprite` struct is that an `ignorecolor` parameter is passed during loading. Set this to `-1` to read the whole image, or `0xRRGGBB` to ignore the color `RRGGBB` while loading the image. The ignored part will be transparent. The collision mask is also generated during loading (`iLoadSprite` internally calls the `iUpdateCollisionMask` function), so there is no need to set it manually unless you want to change it.
-```
+```cpp
 void iLoadSprite(Sprite* s, const char* filename, int ignoreColor);
 void iSetSpritePosition(Sprite* s, int x, int y);
 void iFreeSprite(Sprite* s);
