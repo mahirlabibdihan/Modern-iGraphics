@@ -2,10 +2,13 @@
 
 This is an extended version of the iGraphics library with multiple image formats support and some additional features. New features will be added incrementally upon request. Original author of iGraphics is S. M. Shahriar Nirjon.
 
-See `imageDemo.cpp` for example usage of the new features.
+See the following files for example usage of the new features.
+- `imageDemo.cpp`
+- `SpriteDemo.cpp`
+- `MouseDemo.cpp`
 
 ## Additional Features
-- Define new Image structure to store image data. Load once, use multiple times. Reduces File I/O operations.
+- Define new Image structure to store image data. This structure is used to load the images in memory and display them on the screen without the need of reading from disk  every time.
 ```
 typedef struct{
     unsigned char* data;
@@ -16,7 +19,7 @@ typedef struct{
 ```
 void iLoadImage(Image* img, const char filename[]);
 ```
-- Show image:
+- Show image at position (x, y):
 ```
 void iShowImage(int x, int y, Image* img);
 ```
@@ -32,7 +35,7 @@ void iMirrorImage(Image* img, MirrorState state);
 ```
 void iFreeImage(Image* img);
 ```
-- Define new Sprite struct to store image, position and collision mask.
+- Define new Sprite struct to store image, position and collision mask. The functionalities of the Sprite struct are similar to the Image struct with additional features like setting positions and collision detection.
 ```
 typedef struct{
     int x, y;
@@ -41,7 +44,7 @@ typedef struct{
     int ignoreColor;
 } Sprite;
 ```
-- Sprite functions:
+- The main difference with loading with the `Sprite` struct is that an `ignorecolor` parameter is passed during loading. Set this to `-1` to read the whole image, or `0xRRGGBB` to ignore the color `RRGGBB` while loading the image. The ignored part will be transparent. The collision mask is also generated during loading (`iLoadSprite` internally calls the `iUpdateCollisionMask` function), so there is no need to set it manually unless you want to change it.
 ```
 void iLoadSprite(Sprite* s, const char* filename, int ignoreColor);
 void iSetSpritePosition(Sprite* s, int x, int y);
@@ -50,8 +53,13 @@ void iShowSprite(Sprite* s);
 void iResizeSprite(Sprite* s, int width, int height);
 void iMirrorSprite(Sprite* s, MirrorState state);
 ```
+
+- The collision detection is handled by the `int iCheckCollision(Sprite* s1, Sprite* s2)` function. Returns `1` or `0` depending on whether the two sprites are colliding or not. If the bounding box of two images do not overlap, this has a time complexity of `O(1)`. Otherwise, it has a time complexity of `O(wh)`, where `w` and `h` are the width and height of the overlapping area of the two images.
+
+- The `iPassiveMouseMove(int mx, int my)` function is called whenever the mouse moves on the window. The `mx` and `my` parameters are the current x and y coordinates of the mouse cursor on the window. This function can be used to get the coordinate of the mouse cursor on the window without having to click the mouse.
+
 ## How to Use
-- Include the iGraphics.h header file in your project.
+- Include the `iGraphics.h` header file in your project.
 - Change line 11 in runner.bat to the path of MinGW directory in your system.
-- Run `runner.bat your_file_name.c` to compile and run your project.
+- Run `runner.bat your_file_name.cpp` to compile and run your project.
 - Executable will be created in the `exec` directory.
