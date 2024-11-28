@@ -1,10 +1,8 @@
 //
 //  Original Author: S. M. Shahriar Nirjon
+//  last modified: November 28, 2024
 //
-//  Last Modified by: Mohammad Saifur Rahman
-//  last modified: December 20, 2015
-//
-//  Version: 2.0.2012.2015
+//  Version: 2.0.2012.2015.2024
 //
 
 #pragma comment(lib, "glut32.lib")
