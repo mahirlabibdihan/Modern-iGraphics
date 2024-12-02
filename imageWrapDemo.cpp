@@ -3,6 +3,7 @@
 
 
 Image bg;
+int speed = 2;
 
 void loadResources()
 {
@@ -16,7 +17,8 @@ void iDraw()
     // load background.jpg using stb_image
 	iClear();
     iShowImage(0, 0, &bg);
-    iWrapImage(&bg, 2);
+    iWrapImage(&bg, speed);
+	iText(70, 50, "Press LEFT to decrease speed, RIGHT to increase speed", GLUT_BITMAP_TIMES_ROMAN_24);
 }
 
 /* 
@@ -76,6 +78,14 @@ void iSpecialKeyboard(unsigned char key)
 	if(key == GLUT_KEY_END)
 	{
 		exit(0);	
+	}
+	if (key == GLUT_KEY_LEFT)
+	{
+		if(speed > 0) speed--;
+	}
+	if (key == GLUT_KEY_RIGHT)
+	{
+		speed++;
 	}
 
 	//place your codes for other keys here
