@@ -209,6 +209,29 @@ void iShowImage(int x, int y, Image* img)
     iShowImage2(x, y, img, -1 /* ignoreColor */);
 }
 
+
+void iWrapImage(Image* img, int dx)
+{
+    // Right circular shift the image by dx pixels
+    int width = img->width;
+    int height = img->height;
+    int channels = img->channels;
+    unsigned char* data = img->data;
+    unsigned char* wrappedData = new unsigned char[width * height * channels];
+    for (int y = 0; y < height; y++) {
+        for (int x = 0; x < width; x++) {
+            int index = (y * width + x) * channels;
+            int wrappedX = (x + dx) % width;
+            int wrappedIndex = (y * width + wrappedX) * channels;
+            for (int c = 0; c < channels; c++) {
+                wrappedData[wrappedIndex + c] = data[index + c];
+            }
+        }
+    }
+    stbi_image_free(data);
+    img->data = wrappedData;
+}
+
 void iResizeImage(Image* img, int width, int height)
 {
     int imgWidth = img->width;
@@ -347,6 +370,11 @@ void iShowSprite(Sprite* s){
 
 void iResizeSprite(Sprite* s, int width, int height){
     iResizeImage(&s->img, width, height);
+    iUpdateCollisionMask(s);
+}
+
+void iWrapSprite(Sprite* s, int dx){
+    iWrapImage(&s->img, dx);
     iUpdateCollisionMask(s);
 }
 

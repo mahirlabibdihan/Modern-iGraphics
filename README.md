@@ -8,6 +8,8 @@ See the following files for example usage of the new features.
 - `MouseDemo.cpp`
 
 ## Additional Features
+- The `iPassiveMouseMove(int mx, int my)` function is called whenever the mouse moves on the window. The `mx` and `my` parameters are the current x and y coordinates of the mouse cursor on the window. This function can be used to get the coordinate of the mouse cursor on the window without having to click the mouse.
+
 - Define new Image structure to store image data. This structure is used to load the images in memory and display them on the screen without the need of reading from disk  every time.
 ```cpp
 typedef struct{
@@ -22,6 +24,10 @@ void iLoadImage(Image* img, const char filename[]);
 - Show image at position (x, y):
 ```cpp
 void iShowImage(int x, int y, Image* img);
+```
+- Wrap an image around the window by `dx` pixels. This function is useful for creating infinite scrolling backgrounds.:
+```cpp
+void iWrapImage(Image* img, int dx);
 ```
 - Resize image:
 ```cpp
@@ -50,13 +56,13 @@ void iLoadSprite(Sprite* s, const char* filename, int ignoreColor);
 void iSetSpritePosition(Sprite* s, int x, int y);
 void iFreeSprite(Sprite* s);
 void iShowSprite(Sprite* s);
+void iWrapSprite(Sprite* s, int dx);
 void iResizeSprite(Sprite* s, int width, int height);
 void iMirrorSprite(Sprite* s, MirrorState state);
 ```
 
-- The collision detection is handled by the `int iCheckCollision(Sprite* s1, Sprite* s2)` function. Returns `1` or `0` depending on whether the two sprites are colliding or not. If the bounding box of two images do not overlap, this has a time complexity of `O(1)`. Otherwise, it has a time complexity of `O(wh)`, where `w` and `h` are the width and height of the overlapping area of the two images.
+- The collision detection is handled by the `int iCheckCollision(Sprite* s1, Sprite* s2)` function. Returns `1` or `0` depending on whether the two sprites are colliding or not. If the bounding box of two images do not overlap, this has a time complexity of `O(1)`. Otherwise, it has a time complexity of `O(wh)`, where `w` and `h` are the width and height of the overlapping area of the two images. Internally, whenever a sprite is created, it automatically creates a collision mask, which is a boolean 2D array of the same size as the image. 
 
-- The `iPassiveMouseMove(int mx, int my)` function is called whenever the mouse moves on the window. The `mx` and `my` parameters are the current x and y coordinates of the mouse cursor on the window. This function can be used to get the coordinate of the mouse cursor on the window without having to click the mouse.
 
 ## How to Use
 - Include the `iGraphics.h` header file in your project.
