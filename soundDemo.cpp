@@ -1,40 +1,11 @@
 #include "iGraphics.h"
 
 
-
-Sprite bg, mario1, mario2, rect;
-
-void loadResources()
-{
-    iLoadSprite(&bg, "background.jpg", -1); // -1 for ignoring collisionMask. Whole image will be checked for collision
-    iSetSpritePosition(&bg, 200, 100);
-    iLoadSprite(&mario1, "mario.png", 0);
-    iSetSpritePosition(&mario1, 411, 204);
-    double marioAspectRatio = (double)mario1.img.width / mario1.img.height;
-    iResizeSprite(&mario1, 48, 48.0 / marioAspectRatio);
-
-    iLoadSprite(&mario2, "mario.png", 0);
-    iResizeSprite(&mario2, 200, 200.0 / marioAspectRatio);
-    iSetSpritePosition(&mario2, 211, 204);
-
-    iLoadSprite(&rect, "rect.png", 0xFFFFFF); // Ignore white color for collision detection
-    iSetSpritePosition(&rect, 100, 400);
-}
-
 void iDraw()
 {
 	//place your drawing codes here	
 	iClear();
-    iShowSprite(&bg);
-    iShowSprite(&mario1);
-    iShowSprite(&mario2);
-    if (iCheckCollision(&mario1, &mario2)) {
-        iText(100, 500, "Collision Detected", GLUT_BITMAP_TIMES_ROMAN_24);
-    }
-    iShowSprite(&rect);
-    if (iCheckCollision(&mario1, &rect)) {
-        iText(100, 500, "Collision Detected", GLUT_BITMAP_TIMES_ROMAN_24);
-    }
+    iText(10, 10, "Left click to hear a chime", GLUT_BITMAP_HELVETICA_12);
 }
 
 /* 
@@ -52,6 +23,7 @@ void iMouseMove(int mx, int my)
 void iPassiveMouseMove(int mx, int my)
 {
 	//place your code here
+    // printf("x = %d, y = %d\n", mx, my);
 }
 
 /* 
@@ -62,13 +34,13 @@ void iMouse(int button, int state, int mx, int my)
 {
 	if(button == GLUT_LEFT_BUTTON && state == GLUT_DOWN)
 	{
-		iMirrorSprite(&mario2, HORIZONTAL);
+		PlaySound("chime.wav", NULL, SND_FILENAME | SND_ASYNC);
 	}
 	if(button == GLUT_RIGHT_BUTTON && state == GLUT_DOWN)
 	{
-		iMirrorSprite(&mario2, VERTICAL);
 	}
 }
+
 
 /*
 	function iKeyboard() is called whenever the user hits a key in keyboard.
@@ -96,29 +68,12 @@ void iSpecialKeyboard(unsigned char key)
 	{
 		exit(0);	
 	}
-    if(key == GLUT_KEY_LEFT)
-    {
-        mario1.x -= 10;
-    }
-    if(key == GLUT_KEY_RIGHT)
-    {
-        mario1.x += 10;
-    }
-    if(key == GLUT_KEY_UP)
-    {
-        mario1.y += 10;
-    }
-    if(key == GLUT_KEY_DOWN)
-    {
-        mario1.y -= 10;
-    }
 
 	//place your codes for other keys here
 }
 
 int main()
 {
-	loadResources();
-	iInitialize(900, 900, "ImageDemp");
+	iInitialize(600, 400, "Mousedemo");
 	return 0;
 }	

@@ -30,6 +30,14 @@ void iMouseMove(int mx, int my)
 	//place your codes here
 }
 
+/*
+	function iPassiveMouseMove() is called automatically when the mouse pointer is in motion
+*/
+void iPassiveMouseMove(int mx, int my)
+{
+	//place your code here
+}
+
 /* 
 	function iMouse() is called when the user presses/releases the mouse.
 	(mx, my) is the position where the mouse pointer is.
@@ -45,6 +53,7 @@ void iMouse(int button, int state, int mx, int my)
 		iMirrorImage(&mario, VERTICAL);
 	}
 }
+
 
 /*
 	function iKeyboard() is called whenever the user hits a key in keyboard.

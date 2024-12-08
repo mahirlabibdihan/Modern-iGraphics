@@ -1,10 +1,8 @@
 //
 //  Original Author: S. M. Shahriar Nirjon
+//  last modified: November 28, 2024
 //
-//  Last Modified by: Mohammad Saifur Rahman
-//  last modified: December 20, 2015
-//
-//  Version: 2.0.2012.2015
+//  Version: 2.0.2012.2015.2024
 //
 
 #pragma comment(lib, "glut32.lib")
@@ -52,6 +50,7 @@ void iDraw();
 void iKeyboard(unsigned char);
 void iSpecialKeyboard(unsigned char);
 void iMouseMove(int, int);
+void iPassiveMouseMove(int, int);
 void iMouse(int button, int state, int x, int y);
 
 static void  __stdcall iA0(HWND,unsigned int, unsigned int, unsigned long){if(!iAnimPause[0])iAnimFunction[0]();}
@@ -208,6 +207,29 @@ void iShowImage(int x, int y, Image* img)
     iShowImage2(x, y, img, -1 /* ignoreColor */);
 }
 
+
+void iWrapImage(Image* img, int dx)
+{
+    // Right circular shift the image by dx pixels
+    int width = img->width;
+    int height = img->height;
+    int channels = img->channels;
+    unsigned char* data = img->data;
+    unsigned char* wrappedData = new unsigned char[width * height * channels];
+    for (int y = 0; y < height; y++) {
+        for (int x = 0; x < width; x++) {
+            int index = (y * width + x) * channels;
+            int wrappedX = (x + dx) % width;
+            int wrappedIndex = (y * width + wrappedX) * channels;
+            for (int c = 0; c < channels; c++) {
+                wrappedData[wrappedIndex + c] = data[index + c];
+            }
+        }
+    }
+    stbi_image_free(data);
+    img->data = wrappedData;
+}
+
 void iResizeImage(Image* img, int width, int height)
 {
     int imgWidth = img->width;
@@ -346,6 +368,11 @@ void iShowSprite(Sprite* s){
 
 void iResizeSprite(Sprite* s, int width, int height){
     iResizeImage(&s->img, width, height);
+    iUpdateCollisionMask(s);
+}
+
+void iWrapSprite(Sprite* s, int dx){
+    iWrapImage(&s->img, dx);
     iUpdateCollisionMask(s);
 }
 
@@ -641,6 +668,16 @@ void mouseMoveHandlerFF(int mx, int my)
     glFlush();
 }
 
+
+void mousePassiveMoveHandlerFF(int x, int y)
+{
+    iMouseX = x;
+    iMouseY = iScreenHeight - y;
+    iPassiveMouseMove(iMouseX, iMouseY);
+
+    glFlush();
+}
+
 void mouseHandlerFF(int button, int state, int x, int y)
 {
     iMouseX = x;
@@ -674,6 +711,7 @@ void iInitialize(int width=500, int height=500, char *title="iGraphics")
     glutSpecialFunc(keyboardHandler2FF); //special keys
     glutMouseFunc(mouseHandlerFF);
     glutMotionFunc(mouseMoveHandlerFF);
+    glutPassiveMotionFunc(mousePassiveMoveHandlerFF);
     glutIdleFunc(animFF) ;
 
     //
