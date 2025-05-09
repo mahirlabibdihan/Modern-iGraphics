@@ -53,6 +53,8 @@ enum MirrorState
 };
 
 int iScreenHeight, iScreenWidth;
+int iSmallScreenHeight, iSmallScreenWidth;
+
 int iMouseX, iMouseY;
 int ifft = 0;
 void (*iAnimFunction[10])(void) = {0};
@@ -852,7 +854,7 @@ void iSetLineWidth(int width = 1.0)
 void iToggleFullscreen()
 {
     if (isFullScreen)
-        glutReshapeWindow(iScreenWidth, iScreenHeight);
+        glutReshapeWindow(iSmallScreenWidth, iSmallScreenHeight);
     else
         glutFullScreen();
     isFullScreen = !isFullScreen;
@@ -874,10 +876,20 @@ void iSetTransparentColor(double r, double g, double b, double a)
     glColor4f(r, g, b, a);
 }
 
+void reshapeFF(int width, int height)
+{
+    iScreenWidth = width;
+    iScreenHeight = height;
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    glOrtho(0.0, iScreenWidth, 0.0, iScreenHeight, -1.0, 1.0);
+    glViewport(0.0, 0.0, iScreenWidth, iScreenHeight);
+    glutPostRedisplay();
+}
 void iInitialize(int width = 500, int height = 500, char *title = "iGraphics")
 {
-    iScreenHeight = height;
-    iScreenWidth = width;
+    iSmallScreenHeight = iScreenHeight = height;
+    iSmallScreenWidth = iScreenWidth = width;
 
     glutSetOption(GLUT_MULTISAMPLE, 8);
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_ALPHA | GLUT_MULTISAMPLE);
@@ -895,6 +907,7 @@ void iInitialize(int width = 500, int height = 500, char *title = "iGraphics")
     iClear();
 
     glutDisplayFunc(displayFF);
+    // glutReshapeFunc(reshapeFF);
     glutKeyboardFunc(keyboardHandler1FF); // normal
     glutSpecialFunc(keyboardHandler2FF);  // special keys
     glutMouseFunc(mouseHandlerFF);
