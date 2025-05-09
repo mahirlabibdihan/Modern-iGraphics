@@ -8,15 +8,20 @@
 #pragma comment(lib, "glut32.lib")
 #pragma comment(lib, "glaux.lib")
 
-# include <stdio.h>
-# include <stdlib.h>
-#include <iostream>
+#include <stdio.h>
+#include <stdlib.h>
+#ifdef _WIN32
 #include <windows.h>
+#else
+// Include POSIX or Linux-specific headers if needed
+#include <unistd.h>
+#endif
+
 #include "glut.h"
 #include "freeglut_ext.h"
 #include <time.h>
 #include <math.h>
-#include "glaux.h"
+// #include "glaux.h"
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 #define STB_IMAGE_RESIZE_IMPLEMENTATION
@@ -27,29 +32,32 @@ using namespace std;
 
 static int transparent = 0;
 static int isFullScreen = 0;
-typedef struct{
-    unsigned char* data;
+typedef struct
+{
+    unsigned char *data;
     int width, height, channels;
 } Image;
 
-typedef struct{
+typedef struct
+{
     int x, y;
     Image img;
     int visible;
-    unsigned char* collisionMask;
+    unsigned char *collisionMask;
     int ignoreColor;
 } Sprite;
 
-enum MirrorState {
+enum MirrorState
+{
     HORIZONTAL,
     VERTICAL
 };
 
 int iScreenHeight, iScreenWidth;
 int iMouseX, iMouseY;
-int ifft=0;
-void (*iAnimFunction[10])(void)={0};
-int iAnimCount=0;
+int ifft = 0;
+void (*iAnimFunction[10])(void) = {0};
+int iAnimCount = 0;
 int iAnimDelays[10];
 int iAnimPause[10];
 
@@ -61,56 +69,124 @@ void iMouseMove(int, int);
 void iMouse(int button, int state, int x, int y);
 void iMouseWheel(int button, int dir, int x, int y);
 
-static void  __stdcall iA0(HWND,unsigned int, unsigned int, unsigned long){if(!iAnimPause[0])iAnimFunction[0]();}
-static void  __stdcall iA1(HWND,unsigned int, unsigned int, unsigned long){if(!iAnimPause[1])iAnimFunction[1]();}
-static void  __stdcall iA2(HWND,unsigned int, unsigned int, unsigned long){if(!iAnimPause[2])iAnimFunction[2]();}
-static void  __stdcall iA3(HWND,unsigned int, unsigned int, unsigned long){if(!iAnimPause[3])iAnimFunction[3]();}
-static void  __stdcall iA4(HWND,unsigned int, unsigned int, unsigned long){if(!iAnimPause[4])iAnimFunction[4]();}
-static void  __stdcall iA5(HWND,unsigned int, unsigned int, unsigned long){if(!iAnimPause[5])iAnimFunction[5]();}
-static void  __stdcall iA6(HWND,unsigned int, unsigned int, unsigned long){if(!iAnimPause[6])iAnimFunction[6]();}
-static void  __stdcall iA7(HWND,unsigned int, unsigned int, unsigned long){if(!iAnimPause[7])iAnimFunction[7]();}
-static void  __stdcall iA8(HWND,unsigned int, unsigned int, unsigned long){if(!iAnimPause[8])iAnimFunction[8]();}
-static void  __stdcall iA9(HWND,unsigned int, unsigned int, unsigned long){if(!iAnimPause[9])iAnimFunction[9]();}
-
 ISoundEngine *soundEngine = createIrrKlangDevice();
+
+#ifdef WIN32
+
+#ifdef __x86_64
+#define IMSEC unsigned long long
+#else
+#define IMSEC unsigned int
+#endif
+
+static void __stdcall iA0(HWND, unsigned int, unsigned int, unsigned long)
+{
+    if (!iAnimPause[0])
+        iAnimFunction[0]();
+}
+static void __stdcall iA1(HWND, unsigned int, unsigned int, unsigned long)
+{
+    if (!iAnimPause[1])
+        iAnimFunction[1]();
+}
+static void __stdcall iA2(HWND, unsigned int, unsigned int, unsigned long)
+{
+    if (!iAnimPause[2])
+        iAnimFunction[2]();
+}
+static void __stdcall iA3(HWND, unsigned int, unsigned int, unsigned long)
+{
+    if (!iAnimPause[3])
+        iAnimFunction[3]();
+}
+static void __stdcall iA4(HWND, unsigned int, unsigned int, unsigned long)
+{
+    if (!iAnimPause[4])
+        iAnimFunction[4]();
+}
+static void __stdcall iA5(HWND, unsigned int, unsigned int, unsigned long)
+{
+    if (!iAnimPause[5])
+        iAnimFunction[5]();
+}
+static void __stdcall iA6(HWND, unsigned int, unsigned int, unsigned long)
+{
+    if (!iAnimPause[6])
+        iAnimFunction[6]();
+}
+static void __stdcall iA7(HWND, unsigned int, unsigned int, unsigned long)
+{
+    if (!iAnimPause[7])
+        iAnimFunction[7]();
+}
+static void __stdcall iA8(HWND, unsigned int, unsigned int, unsigned long)
+{
+    if (!iAnimPause[8])
+        iAnimFunction[8]();
+}
+static void __stdcall iA9(HWND, unsigned int, unsigned int, unsigned long)
+{
+    if (!iAnimPause[9])
+        iAnimFunction[9]();
+}
 
 int iSetTimer(int msec, void (*f)(void))
 {
     int i = iAnimCount;
 
-    if(iAnimCount>=10){printf("Error: Maximum number of already timer used.\n");return -1;}
+    if (iAnimCount >= 10)
+    {
+        printf("Error: Maximum number of already timer used.\n");
+        return -1;
+    }
 
     iAnimFunction[i] = f;
     iAnimDelays[i] = msec;
     iAnimPause[i] = 0;
 
-    if(iAnimCount == 0) SetTimer(0, 0, msec, iA0);
-    if(iAnimCount == 1) SetTimer(0, 0, msec, iA1);
-    if(iAnimCount == 2) SetTimer(0, 0, msec, iA2);
-    if(iAnimCount == 3) SetTimer(0, 0, msec, iA3);
-    if(iAnimCount == 4) SetTimer(0, 0, msec, iA4);
+    if (iAnimCount == 0)
+        SetTimer(0, 0, msec, iA0);
+    if (iAnimCount == 1)
+        SetTimer(0, 0, msec, iA1);
+    if (iAnimCount == 2)
+        SetTimer(0, 0, msec, iA2);
+    if (iAnimCount == 3)
+        SetTimer(0, 0, msec, iA3);
+    if (iAnimCount == 4)
+        SetTimer(0, 0, msec, iA4);
 
-    if(iAnimCount == 5) SetTimer(0, 0, msec, iA5);
-    if(iAnimCount == 6) SetTimer(0, 0, msec, iA6);
-    if(iAnimCount == 7) SetTimer(0, 0, msec, iA7);
-    if(iAnimCount == 8) SetTimer(0, 0, msec, iA8);
-    if(iAnimCount == 9) SetTimer(0, 0, msec, iA9);
+    if (iAnimCount == 5)
+        SetTimer(0, 0, msec, iA5);
+    if (iAnimCount == 6)
+        SetTimer(0, 0, msec, iA6);
+    if (iAnimCount == 7)
+        SetTimer(0, 0, msec, iA7);
+    if (iAnimCount == 8)
+        SetTimer(0, 0, msec, iA8);
+    if (iAnimCount == 9)
+        SetTimer(0, 0, msec, iA9);
     iAnimCount++;
 
-    return iAnimCount-1;
+    return iAnimCount - 1;
 }
 
-void iPauseTimer(int index){
-    if(index>=0 && index <iAnimCount){
+void iPauseTimer(int index)
+{
+    if (index >= 0 && index < iAnimCount)
+    {
         iAnimPause[index] = 1;
     }
 }
 
-void iResumeTimer(int index){
-    if(index>=0 && index <iAnimCount){
+void iResumeTimer(int index)
+{
+    if (index >= 0 && index < iAnimCount)
+    {
         iAnimPause[index] = 0;
     }
 }
+
+#endif
 
 //
 // Puts a BMP image on screen
@@ -128,80 +204,85 @@ void iResumeTimer(int index){
 //
 //                To disable this feature, put -1 in this parameter
 //
-void iShowBMP2(int x, int y, char filename[], int ignoreColor)
-{
-    AUX_RGBImageRec *TextureImage;
-    TextureImage = auxDIBImageLoad(filename);
+// void iShowBMP2(int x, int y, char filename[], int ignoreColor)
+// {
+//     AUX_RGBImageRec *TextureImage;
+//     TextureImage = auxDIBImageLoad(filename);
 
-    int i,j,k;
-    int width = TextureImage->sizeX;
-    int height = TextureImage->sizeY;
-    int nPixels = width * height;
-    int *rgPixels = new int[nPixels];
+//     int i, j, k;
+//     int width = TextureImage->sizeX;
+//     int height = TextureImage->sizeY;
+//     int nPixels = width * height;
+//     int *rgPixels = new int[nPixels];
 
-    for (i = 0, j=0; i < nPixels; i++, j += 3)
-    {
-        int rgb = 0;
-        for(int k = 2; k >= 0; k--)
-        {
-            rgb = ((rgb << 8) | TextureImage->data[j+k]);
-        }
+//     for (i = 0, j = 0; i < nPixels; i++, j += 3)
+//     {
+//         int rgb = 0;
+//         for (int k = 2; k >= 0; k--)
+//         {
+//             rgb = ((rgb << 8) | TextureImage->data[j + k]);
+//         }
 
-        rgPixels[i] = (rgb == ignoreColor) ? 0 : 255;
-        rgPixels[i] = ((rgPixels[i] << 24) | rgb);
-    }
+//         rgPixels[i] = (rgb == ignoreColor) ? 0 : 255;
+//         rgPixels[i] = ((rgPixels[i] << 24) | rgb);
+//     }
 
-    glRasterPos2f(x, y);
-    glDrawPixels(width, height, GL_RGBA, GL_UNSIGNED_BYTE, rgPixels);
+//     glRasterPos2f(x, y);
+//     glDrawPixels(width, height, GL_RGBA, GL_UNSIGNED_BYTE, rgPixels);
 
-    delete []rgPixels;
-    free(TextureImage->data);
-    free(TextureImage);
-}
+//     delete[] rgPixels;
+//     free(TextureImage->data);
+//     free(TextureImage);
+// }
 
-void iShowBMP(int x, int y, char filename[])
-{
-    iShowBMP2(x, y, filename, -1 /* ignoreColor */);
-}
-
+// void iShowBMP(int x, int y, char filename[])
+// {
+//     iShowBMP2(x, y, filename, -1 /* ignoreColor */);
+// }
 
 // Additional functions for displaying images
 
-void iLoadImage(Image* img, const char filename[])
+void iLoadImage(Image *img, const char filename[])
 {
     stbi_set_flip_vertically_on_load(true);
     img->data = stbi_load(filename, &img->width, &img->height, &img->channels, 0);
-    if (img->data == nullptr) {
+    if (img->data == nullptr)
+    {
         printf("Failed to load image\n");
         return;
     }
 }
 
-void iFreeImage(Image* img)
+void iFreeImage(Image *img)
 {
     stbi_image_free(img->data);
 }
 
-void iShowImage2(int x, int y, Image* img, int ignoreColor)
+void iShowImage2(int x, int y, Image *img, int ignoreColor)
 {
     int width = img->width;
     int height = img->height;
     int channels = img->channels;
-    unsigned char* data = img->data;
-    if (ignoreColor != -1) {
+    unsigned char *data = img->data;
+    if (ignoreColor != -1)
+    {
         // Iterate over the pixels
-        for (int y = 0; y < height; y++) {
-            for (int x = 0; x < width; x++) {
+        for (int y = 0; y < height; y++)
+        {
+            for (int x = 0; x < width; x++)
+            {
                 int index = (y * width + x) * channels;
                 // Check if the pixel is the color we want to ignore
                 if (data[index] == (ignoreColor & 0xFF) &&
                     data[index + 1] == ((ignoreColor >> 8) & 0xFF) &&
-                    data[index + 2] == ((ignoreColor >> 16) & 0xFF)) {
+                    data[index + 2] == ((ignoreColor >> 16) & 0xFF))
+                {
                     // Set the pixel to 0
                     data[index] = 0;
                     data[index + 1] = 0;
                     data[index + 2] = 0;
-                    if (channels == 4) {
+                    if (channels == 4)
+                    {
                         data[index + 3] = 0;
                     }
                 }
@@ -209,29 +290,31 @@ void iShowImage2(int x, int y, Image* img, int ignoreColor)
         }
     }
     glRasterPos2f(x, y);
-    glDrawPixels(width, height, (channels == 4)? GL_RGBA:GL_RGB, GL_UNSIGNED_BYTE, data);
+    glDrawPixels(width, height, (channels == 4) ? GL_RGBA : GL_RGB, GL_UNSIGNED_BYTE, data);
 }
 
-void iShowImage(int x, int y, Image* img)
+void iShowImage(int x, int y, Image *img)
 {
     iShowImage2(x, y, img, -1 /* ignoreColor */);
 }
 
-
-void iWrapImage(Image* img, int dx)
+void iWrapImage(Image *img, int dx)
 {
     // Right circular shift the image by dx pixels
     int width = img->width;
     int height = img->height;
     int channels = img->channels;
-    unsigned char* data = img->data;
-    unsigned char* wrappedData = new unsigned char[width * height * channels];
-    for (int y = 0; y < height; y++) {
-        for (int x = 0; x < width; x++) {
+    unsigned char *data = img->data;
+    unsigned char *wrappedData = new unsigned char[width * height * channels];
+    for (int y = 0; y < height; y++)
+    {
+        for (int x = 0; x < width; x++)
+        {
             int index = (y * width + x) * channels;
             int wrappedX = (x + dx) % width;
             int wrappedIndex = (y * width + wrappedX) * channels;
-            for (int c = 0; c < channels; c++) {
+            for (int c = 0; c < channels; c++)
+            {
                 wrappedData[wrappedIndex + c] = data[index + c];
             }
         }
@@ -240,13 +323,13 @@ void iWrapImage(Image* img, int dx)
     img->data = wrappedData;
 }
 
-void iResizeImage(Image* img, int width, int height)
+void iResizeImage(Image *img, int width, int height)
 {
     int imgWidth = img->width;
     int imgHeight = img->height;
     int channels = img->channels;
-    unsigned char* data = img->data;
-    unsigned char* resizedData = new unsigned char[width * height * channels];
+    unsigned char *data = img->data;
+    unsigned char *resizedData = new unsigned char[width * height * channels];
     stbir_resize_uint8(data, imgWidth, imgHeight, 0, resizedData, width, height, 0, channels);
     stbi_image_free(data);
     img->data = resizedData;
@@ -254,30 +337,39 @@ void iResizeImage(Image* img, int width, int height)
     img->height = height;
 }
 
-void iMirrorImage(Image* img, MirrorState state)
+void iMirrorImage(Image *img, MirrorState state)
 {
     int width = img->width;
     int height = img->height;
     int channels = img->channels;
-    unsigned char* data = img->data;
-    unsigned char* mirroredData = new unsigned char[width * height * channels];
-    if (state == HORIZONTAL) {
-        for (int y = 0; y < height; y++) {
-            for (int x = 0; x < width; x++) {
+    unsigned char *data = img->data;
+    unsigned char *mirroredData = new unsigned char[width * height * channels];
+    if (state == HORIZONTAL)
+    {
+        for (int y = 0; y < height; y++)
+        {
+            for (int x = 0; x < width; x++)
+            {
                 int index = (y * width + x) * channels;
                 int mirroredIndex = (y * width + (width - x - 1)) * channels;
-                for (int c = 0; c < channels; c++) {
+                for (int c = 0; c < channels; c++)
+                {
                     mirroredData[mirroredIndex + c] = data[index + c];
                 }
             }
         }
-    } else if (state == VERTICAL) {
-        for (int y = 0; y < height; y++) {
+    }
+    else if (state == VERTICAL)
+    {
+        for (int y = 0; y < height; y++)
+        {
             int mirroredY = height - y - 1;
-            for (int x = 0; x < width; x++) {
+            for (int x = 0; x < width; x++)
+            {
                 int index = (y * width + x) * channels;
                 int mirroredIndex = (mirroredY * width + x) * channels;
-                for (int c = 0; c < channels; c++) {
+                for (int c = 0; c < channels; c++)
+                {
                     mirroredData[mirroredIndex + c] = data[index + c];
                 }
             }
@@ -287,34 +379,40 @@ void iMirrorImage(Image* img, MirrorState state)
     img->data = mirroredData;
 }
 
-
 // ignorecolor = hex color code 0xRRGGBB
-void iUpdateCollisionMask(Sprite* s)
+void iUpdateCollisionMask(Sprite *s)
 {
-    Image* img = &s->img;
+    Image *img = &s->img;
     int ignorecolor = s->ignoreColor;
-    if(ignorecolor == -1){
+    if (ignorecolor == -1)
+    {
         s->collisionMask = nullptr;
         return;
     }
     int width = img->width;
     int height = img->height;
     int channels = img->channels;
-    unsigned char* data = img->data;
-    if (s->collisionMask != nullptr) {
+    unsigned char *data = img->data;
+    if (s->collisionMask != nullptr)
+    {
         delete[] s->collisionMask;
     }
-    unsigned char* collisionMask = new unsigned char[width * height];
-    for (int y = 0; y < height; y++) {
-        for (int x = 0; x < width; x++) {
+    unsigned char *collisionMask = new unsigned char[width * height];
+    for (int y = 0; y < height; y++)
+    {
+        for (int x = 0; x < width; x++)
+        {
             int index = (y * width + x) * channels;
             int isTransparent = (channels == 4 && data[index + 3] == 0);
             if ((data[index] == (ignorecolor & 0xFF) &&
-                data[index + 1] == ((ignorecolor >> 8) & 0xFF) &&
-                data[index + 2] == ((ignorecolor >> 16) & 0xFF)) || 
-                isTransparent) {
+                 data[index + 1] == ((ignorecolor >> 8) & 0xFF) &&
+                 data[index + 2] == ((ignorecolor >> 16) & 0xFF)) ||
+                isTransparent)
+            {
                 collisionMask[y * width + x] = 0;
-            } else {
+            }
+            else
+            {
                 collisionMask[y * width + x] = 1;
             }
         }
@@ -322,15 +420,16 @@ void iUpdateCollisionMask(Sprite* s)
     s->collisionMask = collisionMask;
 }
 
-int iCheckCollision(Sprite* s1, Sprite* s2){
-    Image* img1 = &s1->img;
+int iCheckCollision(Sprite *s1, Sprite *s2)
+{
+    Image *img1 = &s1->img;
     int width1 = img1->width;
     int height1 = img1->height;
-    unsigned char* collisionMask1 = s1->collisionMask;
-    Image* img2 = &s2->img;
+    unsigned char *collisionMask1 = s1->collisionMask;
+    Image *img2 = &s2->img;
     int width2 = img2->width;
     int height2 = img2->height;
-    unsigned char* collisionMask2 = s2->collisionMask;
+    unsigned char *collisionMask2 = s2->collisionMask;
     int x1 = s1->x;
     int y1 = s1->y;
     int x2 = s2->x;
@@ -342,18 +441,23 @@ int iCheckCollision(Sprite* s1, Sprite* s2){
     int endY = (y1 + height1 < y2 + height2) ? y1 + height1 : y2 + height2;
     int noOverlap = startX >= endX || startY >= endY;
     // If collisionMasks are not set, check the whole image for collision
-    if(collisionMask1 == nullptr || collisionMask2 == nullptr){
+    if (collisionMask1 == nullptr || collisionMask2 == nullptr)
+    {
         return noOverlap ? 0 : 1;
     }
     // now collisionMasks are set. Check only the overlapping region
-    if(noOverlap){
+    if (noOverlap)
+    {
         return 0;
     }
-    for(int y = startY; y < endY; y++){
-        for(int x = startX; x < endX; x++){
+    for (int y = startY; y < endY; y++)
+    {
+        for (int x = startX; x < endX; x++)
+        {
             int index1 = (y - y1) * width1 + (x - x1);
             int index2 = (y - y2) * width2 + (x - x2);
-            if(collisionMask1[index1] && collisionMask2[index2]){
+            if (collisionMask1[index1] && collisionMask2[index2])
+            {
                 return 1;
             }
         }
@@ -361,48 +465,56 @@ int iCheckCollision(Sprite* s1, Sprite* s2){
     return 0;
 }
 
-void iLoadSprite(Sprite* s, const char* filename, int ignoreColor){
+void iLoadSprite(Sprite *s, const char *filename, int ignoreColor)
+{
     iLoadImage(&s->img, filename);
     s->ignoreColor = ignoreColor;
     iUpdateCollisionMask(s);
 }
 
-void iSetSpritePosition(Sprite* s, int x, int y){
+void iSetSpritePosition(Sprite *s, int x, int y)
+{
     s->x = x;
     s->y = y;
 }
 
-void iShowSprite(Sprite* s){
+void iShowSprite(Sprite *s)
+{
     iShowImage2(s->x, s->y, &s->img, s->ignoreColor);
 }
 
-void iResizeSprite(Sprite* s, int width, int height){
+void iResizeSprite(Sprite *s, int width, int height)
+{
     iResizeImage(&s->img, width, height);
     iUpdateCollisionMask(s);
 }
 
-void iWrapSprite(Sprite* s, int dx){
+void iWrapSprite(Sprite *s, int dx)
+{
     iWrapImage(&s->img, dx);
     iUpdateCollisionMask(s);
 }
 
-void iMirrorSprite(Sprite* s, MirrorState state){
+void iMirrorSprite(Sprite *s, MirrorState state)
+{
     iMirrorImage(&s->img, state);
     iUpdateCollisionMask(s);
 }
 
-void iFreeSprite(Sprite* s){
+void iFreeSprite(Sprite *s)
+{
     iFreeImage(&s->img);
-    if(s->collisionMask != nullptr){
+    if (s->collisionMask != nullptr)
+    {
         delete[] s->collisionMask;
     }
 }
 
-void iGetPixelColor (int cursorX, int cursorY, int rgb[])
+void iGetPixelColor(int cursorX, int cursorY, int rgb[])
 {
     GLubyte pixel[3];
-    glReadPixels(cursorX, cursorY,1,1,
-        GL_RGB,GL_UNSIGNED_BYTE,(void *)pixel);
+    glReadPixels(cursorX, cursorY, 1, 1,
+                 GL_RGB, GL_UNSIGNED_BYTE, (void *)pixel);
 
     rgb[0] = pixel[0];
     rgb[1] = pixel[1];
@@ -411,23 +523,24 @@ void iGetPixelColor (int cursorX, int cursorY, int rgb[])
     // printf("%d %d %d\n",pixel[0],pixel[1],pixel[2]);
 }
 
-void iText(double x, double y, char *str, void* font=GLUT_BITMAP_8_BY_13)
+void iText(double x, double y, char *str, void *font = GLUT_BITMAP_8_BY_13)
 {
     glRasterPos3d(x, y, 0);
     int i;
-    for (i=0; str[i]; i++) {
+    for (i = 0; str[i]; i++)
+    {
         glutBitmapCharacter(font, str[i]); //,GLUT_BITMAP_8_BY_13, GLUT_BITMAP_TIMES_ROMAN_24
     }
 }
 
-void iPoint(double x, double y, int size=0)
+void iPoint(double x, double y, int size = 0)
 {
     int i, j;
     glBegin(GL_POINTS);
     glVertex2f(x, y);
-    for(i=x-size;i<x+size;i++)
+    for (i = x - size; i < x + size; i++)
     {
-        for(j=y-size; j<y+size;j++)
+        for (j = y - size; j < y + size; j++)
         {
             glVertex2f(i, j);
         }
@@ -446,9 +559,11 @@ void iLine(double x1, double y1, double x2, double y2)
 void iFilledPolygon(double x[], double y[], int n)
 {
     int i;
-    if(n<3)return;
+    if (n < 3)
+        return;
     glBegin(GL_POLYGON);
-    for(i = 0; i < n; i++){
+    for (i = 0; i < n; i++)
+    {
         glVertex2f(x[i], y[i]);
     }
     glEnd();
@@ -457,9 +572,11 @@ void iFilledPolygon(double x[], double y[], int n)
 void iPolygon(double x[], double y[], int n)
 {
     int i;
-    if(n<3)return;
+    if (n < 3)
+        return;
     glBegin(GL_LINE_STRIP);
-    for(i = 0; i < n; i++){
+    for (i = 0; i < n; i++)
+    {
         glVertex2f(x[i], y[i]);
     }
     glVertex2f(x[0], y[0]);
@@ -472,8 +589,8 @@ void iRectangle(double left, double bottom, double dx, double dy)
 
     x1 = left;
     y1 = bottom;
-    x2=x1+dx;
-    y2=y1+dy;
+    x2 = x1 + dx;
+    y2 = y1 + dy;
 
     iLine(x1, y1, x2, y1);
     iLine(x2, y1, x2, y2);
@@ -488,29 +605,29 @@ void iFilledRectangle(double left, double bottom, double dx, double dy)
 
     x1 = left;
     y1 = bottom;
-    x2=x1+dx;
-    y2=y1+dy;
+    x2 = x1 + dx;
+    y2 = y1 + dy;
 
-    xx[0]=x1;
-    yy[0]=y1;
-    xx[1]=x2;
-    yy[1]=y1;
-    xx[2]=x2;
-    yy[2]=y2;
-    xx[3]=x1;
-    yy[3]=y2;
+    xx[0] = x1;
+    yy[0] = y1;
+    xx[1] = x2;
+    yy[1] = y1;
+    xx[2] = x2;
+    yy[2] = y2;
+    xx[3] = x1;
+    yy[3] = y2;
 
     iFilledPolygon(xx, yy, 4);
 }
 
-void iFilledCircle(double x, double y, double r, int slices=100)
+void iFilledCircle(double x, double y, double r, int slices = 100)
 {
-    double t, PI=acos(-1.0), dt, x1,y1, xp, yp;
-    dt = 2*PI/slices;
-    xp = x+r;
+    double t, PI = acos(-1.0), dt, x1, y1, xp, yp;
+    dt = 2 * PI / slices;
+    xp = x + r;
     yp = y;
     glBegin(GL_POLYGON);
-    for(t = 0; t <= 2*PI; t+=dt)
+    for (t = 0; t <= 2 * PI; t += dt)
     {
         x1 = x + r * cos(t);
         y1 = y + r * sin(t);
@@ -522,13 +639,13 @@ void iFilledCircle(double x, double y, double r, int slices=100)
     glEnd();
 }
 
-void iCircle(double x, double y, double r, int slices=100)
+void iCircle(double x, double y, double r, int slices = 100)
 {
-    double t, PI=acos(-1.0), dt, x1,y1, xp, yp;
-    dt = 2*PI/slices;
-    xp = x+r;
+    double t, PI = acos(-1.0), dt, x1, y1, xp, yp;
+    dt = 2 * PI / slices;
+    xp = x + r;
     yp = y;
-    for(t = 0; t <= 2*PI; t+=dt)
+    for (t = 0; t <= 2 * PI; t += dt)
     {
         x1 = x + r * cos(t);
         y1 = y + r * sin(t);
@@ -538,13 +655,13 @@ void iCircle(double x, double y, double r, int slices=100)
     }
 }
 
-void iEllipse(double x, double y, double a, double b, int slices=100)
+void iEllipse(double x, double y, double a, double b, int slices = 100)
 {
-    double t, PI=acos(-1.0), dt, x1,y1, xp, yp;
-    dt = 2*PI/slices;
-    xp = x+a;
+    double t, PI = acos(-1.0), dt, x1, y1, xp, yp;
+    dt = 2 * PI / slices;
+    xp = x + a;
     yp = y;
-    for(t = 0; t <= 2*PI; t+=dt)
+    for (t = 0; t <= 2 * PI; t += dt)
     {
         x1 = x + a * cos(t);
         y1 = y + b * sin(t);
@@ -554,14 +671,14 @@ void iEllipse(double x, double y, double a, double b, int slices=100)
     }
 }
 
-void iFilledEllipse(double x, double y, double a, double b, int slices=100)
+void iFilledEllipse(double x, double y, double a, double b, int slices = 100)
 {
-    double t, PI=acos(-1.0), dt, x1,y1, xp, yp;
-    dt = 2*PI/slices;
-    xp = x+a;
+    double t, PI = acos(-1.0), dt, x1, y1, xp, yp;
+    dt = 2 * PI / slices;
+    xp = x + a;
     yp = y;
     glBegin(GL_POLYGON);
-    for(t = 0; t <= 2*PI; t+=dt)
+    for (t = 0; t <= 2 * PI; t += dt)
     {
         x1 = x + a * cos(t);
         y1 = y + b * sin(t);
@@ -609,15 +726,17 @@ void iUnRotate()
     glPopMatrix();
 }
 
-
 void iSetColor(double r, double g, double b)
 {
     double mmx;
     mmx = r;
-    if(g > mmx)mmx = g;
-    if(b > mmx)mmx = b;
+    if (g > mmx)
+        mmx = g;
+    if (b > mmx)
+        mmx = b;
     mmx = 255;
-    if(mmx > 0){
+    if (mmx > 0)
+    {
         r /= mmx;
         g /= mmx;
         b /= mmx;
@@ -629,30 +748,33 @@ void iDelay(int sec)
 {
     int t1, t2;
     t1 = time(0);
-    while(1){
+    while (1)
+    {
         t2 = time(0);
-        if(t2-t1>=sec)
+        if (t2 - t1 >= sec)
             break;
     }
 }
 
 void iClear()
 {
-    glClear(GL_COLOR_BUFFER_BIT) ;
-    glMatrixMode(GL_MODELVIEW) ;
-    glClearColor(0,0,0,0);
+    glClear(GL_COLOR_BUFFER_BIT);
+    glMatrixMode(GL_MODELVIEW);
+    glClearColor(0, 0, 0, 0);
     glFlush();
 }
 
-void displayFF(void){
+void displayFF(void)
+{
 
     iDraw();
-    glutSwapBuffers() ;
+    glutSwapBuffers();
 }
 
 void animFF(void)
 {
-    if(ifft == 0){
+    if (ifft == 0)
+    {
         ifft = 1;
         iClear();
     }
@@ -678,7 +800,6 @@ void mouseMoveHandlerFF(int mx, int my)
 
     glFlush();
 }
-
 
 void mousePassiveMoveHandlerFF(int x, int y)
 {
@@ -710,7 +831,6 @@ void mouseWheelHandlerFF(int button, int dir, int x, int y)
     glFlush();
 }
 
-
 void iPlaySound(const char *filename, bool loop) // If loop==true , then the audio will play again and again
 {
     soundEngine->play2D(filename, loop); // Play an audio
@@ -720,7 +840,10 @@ void iStopAllSounds()
     soundEngine->stopAllSounds(); // Stop all sounds
 }
 
-void iSetTransparency(int state) { transparent = (state == 0) ? 0 : 1; }
+void iSetTransparency(int state)
+{
+    transparent = (state == 0) ? 0 : 1;
+}
 
 void iSetLineWidth(int width = 1.0)
 {
@@ -752,7 +875,7 @@ void iSetTransparentColor(double r, double g, double b, double a)
     glColor4f(r, g, b, a);
 }
 
-void iInitialize(int width=500, int height=500, char *title="iGraphics")
+void iInitialize(int width = 500, int height = 500, char *title = "iGraphics")
 {
     iScreenHeight = height;
     iScreenWidth = width;
@@ -760,21 +883,21 @@ void iInitialize(int width=500, int height=500, char *title="iGraphics")
     glutSetOption(GLUT_MULTISAMPLE, 8);
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_ALPHA | GLUT_MULTISAMPLE);
     glEnable(GLUT_MULTISAMPLE);
-    glutInitWindowSize(width , height ) ;
-    glutInitWindowPosition( 10 , 10 ) ;
-    glutCreateWindow(title) ;
-    glClearColor( 0.0 , 0.0 , 0.0 , 0.0 ) ;
-    glMatrixMode( GL_PROJECTION) ;
-    glLoadIdentity() ;
-    glOrtho(0.0 , width , 0.0 , height , -1.0 , 1.0) ;
-    //glOrtho(-100.0 , 100.0 , -100.0 , 100.0 , -1.0 , 1.0) ;
-    //SetTimer(0, 0, 10, timer_proc);
+    glutInitWindowSize(width, height);
+    glutInitWindowPosition(10, 10);
+    glutCreateWindow(title);
+    glClearColor(0.0, 0.0, 0.0, 0.0);
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    glOrtho(0.0, width, 0.0, height, -1.0, 1.0);
+    // glOrtho(-100.0 , 100.0 , -100.0 , 100.0 , -1.0 , 1.0) ;
+    // SetTimer(0, 0, 10, timer_proc);
 
     iClear();
 
-    glutDisplayFunc(displayFF) ;
-    glutKeyboardFunc(keyboardHandler1FF); //normal
-    glutSpecialFunc(keyboardHandler2FF); //special keys
+    glutDisplayFunc(displayFF);
+    glutKeyboardFunc(keyboardHandler1FF); // normal
+    glutSpecialFunc(keyboardHandler2FF);  // special keys
     glutMouseFunc(mouseHandlerFF);
     glutMotionFunc(mouseMoveHandlerFF);
     glutPassiveMotionFunc(mousePassiveMoveHandlerFF);
@@ -804,5 +927,5 @@ void iInitialize(int width=500, int height=500, char *title="iGraphics")
     }
 
     glutMainLoop();
-    soundEngine->drop();    
+    soundEngine->drop();
 }
