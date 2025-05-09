@@ -8,19 +8,19 @@ if "%~1"=="" (
 )
 
 :: Set the Base Directory
-set BASE_DIR=D:\CourseMaterials\CSE102\igraphics-demo\MinGW
+set BASE_DIR=D:\MINGW\bin
 :: Set the PATH
 set PATH=%BASE_DIR%;%BASE_DIR%\bin;%PATH%
 
-:: Compile the source file to an object file
-g++.exe -Wall -fexceptions -g -IOpenGL\include -c "%~1" -o exec\object.o
+:: Compile the source file to an object file (with irrKlang include path)
+g++.exe -Wall -fexceptions -g -IOpenGL\include -IOpenGL\include\irrKlang -c "%~1" -o exec\object.o
 if %ERRORLEVEL% neq 0 (
     echo Compilation failed.
     exit /b 1
 )
 
-:: Link the object file to create the executable
-g++.exe -static -static-libgcc -static-libstdc++ -L.\OpenGL\lib -o exec\opengl.exe exec\object.o OpenGL\lib\Glaux.lib OpenGL\lib\GLU32.LIB OpenGL\lib\glui32.lib OpenGL\lib\glut32.lib OpenGL\lib\OPENGL32.LIB -lGlaux -lGLU32 -lglui32 -lglut32 -lOPENGL32 -lgdi32 -lwinmm
+:: Link the object file to create the executable (with irrKlang lib)
+g++.exe -static -static-libgcc -static-libstdc++ -L.\OpenGL\lib -o exec\opengl.exe exec\object.o OpenGL\lib\Glaux.lib OpenGL\lib\GLU32.LIB OpenGL\lib\glui32.lib OpenGL\lib\OPENGL32.LIB -lGlaux -lGLU32 -lglui32 -lfreeglut -lOPENGL32 -lgdi32 -lwinmm -lirrKlang
 if %ERRORLEVEL% neq 0 (
     echo Linking failed.
     exit /b 1

@@ -22,18 +22,18 @@ void iDraw()
 }
 
 /* 
-	function iMouseMove() is called when the user presses and drags the mouse.
+	function iMouseDrag() is called when the user presses and drags the mouse.
 	(mx, my) is the position where the mouse pointer is.
 */
-void iMouseMove(int mx, int my)
+void iMouseDrag(int mx, int my)
 {
 	//place your codes here
 }
 
 /*
-	function iPassiveMouseMove() is called automatically when the mouse pointer is in motion
+	function iMouseMove() is called automatically when the mouse pointer is in motion
 */
-void iPassiveMouseMove(int mx, int my)
+void iMouseMove(int mx, int my)
 {
 	//place your code here
 }
@@ -85,9 +85,10 @@ void iSpecialKeyboard(unsigned char key)
 	//place your codes for other keys here
 }
 
-int main()
+int main(int argc, char *argv[])
 {
+	glutInit(&argc, argv);
 	loadResources();
 	iInitialize(900, 900, "ImageDemp");
 	return 0;
-}	
+}

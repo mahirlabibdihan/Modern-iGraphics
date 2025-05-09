@@ -10,8 +10,10 @@
 
 # include <stdio.h>
 # include <stdlib.h>
+#include <iostream>
 #include <windows.h>
 #include "glut.h"
+#include "freeglut_ext.h"
 #include <time.h>
 #include <math.h>
 #include "glaux.h"
@@ -19,7 +21,9 @@
 #include "stb_image.h"
 #define STB_IMAGE_RESIZE_IMPLEMENTATION
 #include "stb_image_resize.h"
-
+#include "irrKlang.h"
+using namespace irrklang;
+using namespace std;
 typedef struct{
     unsigned char* data;
     int width, height, channels;
@@ -49,9 +53,10 @@ int iAnimPause[10];
 void iDraw();
 void iKeyboard(unsigned char);
 void iSpecialKeyboard(unsigned char);
+void iMouseDrag(int, int);
 void iMouseMove(int, int);
-void iPassiveMouseMove(int, int);
 void iMouse(int button, int state, int x, int y);
+void iMouseWheel(int button, int dir, int x, int y);
 
 static void  __stdcall iA0(HWND,unsigned int, unsigned int, unsigned long){if(!iAnimPause[0])iAnimFunction[0]();}
 static void  __stdcall iA1(HWND,unsigned int, unsigned int, unsigned long){if(!iAnimPause[1])iAnimFunction[1]();}
@@ -63,6 +68,8 @@ static void  __stdcall iA6(HWND,unsigned int, unsigned int, unsigned long){if(!i
 static void  __stdcall iA7(HWND,unsigned int, unsigned int, unsigned long){if(!iAnimPause[7])iAnimFunction[7]();}
 static void  __stdcall iA8(HWND,unsigned int, unsigned int, unsigned long){if(!iAnimPause[8])iAnimFunction[8]();}
 static void  __stdcall iA9(HWND,unsigned int, unsigned int, unsigned long){if(!iAnimPause[9])iAnimFunction[9]();}
+
+ISoundEngine *soundEngine = createIrrKlangDevice();
 
 int iSetTimer(int msec, void (*f)(void))
 {
@@ -599,6 +606,21 @@ void iUnRotate()
     glPopMatrix();
 }
 
+void iSetTransparentColor(double r, double g, double b, double a)
+{
+    double mmx = 255;
+    if (r > mmx)
+        r = mmx;
+    if (g > mmx)
+        g = mmx;
+    if (b > mmx)
+        b = mmx;
+    r /= mmx;
+    g /= mmx;
+    b /= mmx;
+    glColor4f(r, g, b, a);
+}
+
 void iSetColor(double r, double g, double b)
 {
     double mmx;
@@ -663,7 +685,7 @@ void mouseMoveHandlerFF(int mx, int my)
 {
     iMouseX = mx;
     iMouseY = iScreenHeight - my;
-    iMouseMove(iMouseX, iMouseY);
+    iMouseDrag(iMouseX, iMouseY);
 
     glFlush();
 }
@@ -673,7 +695,16 @@ void mousePassiveMoveHandlerFF(int x, int y)
 {
     iMouseX = x;
     iMouseY = iScreenHeight - y;
-    iPassiveMouseMove(iMouseX, iMouseY);
+    iMouseMove(iMouseX, iMouseY);
+
+    glFlush();
+}
+
+void mouseWheelHandlerFF(int button, int dir, int x, int y)
+{
+    iMouseX = x;
+    iMouseY = iScreenHeight - y;
+    iMouseWheel(button, dir, iMouseX, iMouseY);
 
     glFlush();
 }
@@ -686,6 +717,15 @@ void mouseHandlerFF(int button, int state, int x, int y)
     iMouse(button, state, iMouseX, iMouseY);
 
     glFlush();
+}
+
+void iPlaySound(const char *filename, bool loop) // If loop==true , then the audio will play again and again
+{
+    soundEngine->play2D(filename, loop); // Play an audio
+}
+void iStopAllSounds()
+{
+    soundEngine->stopAllSounds(); // Stop all sounds
 }
 
 void iInitialize(int width=500, int height=500, char *title="iGraphics")
@@ -712,8 +752,8 @@ void iInitialize(int width=500, int height=500, char *title="iGraphics")
     glutMouseFunc(mouseHandlerFF);
     glutMotionFunc(mouseMoveHandlerFF);
     glutPassiveMotionFunc(mousePassiveMoveHandlerFF);
-    glutIdleFunc(animFF) ;
-
+    glutMouseWheelFunc(mouseWheelHandlerFF);
+    glutIdleFunc(animFF);
     //
     // Setup Alpha channel testing.
     // If alpha value is greater than 0, then those
@@ -721,6 +761,12 @@ void iInitialize(int width=500, int height=500, char *title="iGraphics")
     //
     glAlphaFunc(GL_GREATER,0.0f);
     glEnable(GL_ALPHA_TEST);
-
+    glEnable(GL_LINE_SMOOTH);
+    // glEnable(GL_POINT_SMOOTH);
+    // glEnable(GL_BLEND);
+    // glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    // glLineWidth(2.0);
+    // glutFullScreen();
     glutMainLoop();
+    soundEngine->drop();    
 }

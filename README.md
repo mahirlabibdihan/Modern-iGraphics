@@ -8,7 +8,7 @@ See the following files for example usage of the new features.
 - `MouseDemo.cpp`
 
 ## Additional Features
-- The `iPassiveMouseMove(int mx, int my)` function is called whenever the mouse moves on the window. The `mx` and `my` parameters are the current x and y coordinates of the mouse cursor on the window. This function can be used to get the coordinate of the mouse cursor on the window without having to click the mouse.
+- The `iMouseMove(int mx, int my)` function is called whenever the mouse moves on the window. The `mx` and `my` parameters are the current x and y coordinates of the mouse cursor on the window. This function can be used to get the coordinate of the mouse cursor on the window without having to click the mouse.
 
 - Define new Image structure to store image data. This structure is used to load the images in memory and display them on the screen without the need of reading from disk  every time.
 ```cpp

@@ -1,5 +1,6 @@
 #include "iGraphics.h"
-
+#include <iostream>
+using namespace std;
 
 void iDraw()
 {
@@ -9,18 +10,18 @@ void iDraw()
 }
 
 /* 
-	function iMouseMove() is called when the user presses and drags the mouse.
+	function iMouseDrag() is called when the user presses and drags the mouse.
 	(mx, my) is the position where the mouse pointer is.
 */
-void iMouseMove(int mx, int my)
+void iMouseDrag(int mx, int my)
 {
 	//place your codes here
 }
 
 /*
-	function iPassiveMouseMove() is called automatically when the mouse pointer is in motion
+	function iMouseMove() is called automatically when the mouse pointer is in motion
 */
-void iPassiveMouseMove(int mx, int my)
+void iMouseMove(int mx, int my)
 {
 	//place your code here
     // printf("x = %d, y = %d\n", mx, my);
@@ -34,17 +35,19 @@ void iMouse(int button, int state, int mx, int my)
 {
 	if(button == GLUT_LEFT_BUTTON && state == GLUT_DOWN)
 	{
-		PlaySound("chime.wav", NULL, SND_FILENAME | SND_ASYNC);
+		iPlaySound("chime.wav",false);
+			// PlaySound("chime.wav", NULL, SND_FILENAME | SND_ASYNC);
 	}
 	if(button == GLUT_RIGHT_BUTTON && state == GLUT_DOWN)
 	{
+		iPlaySound("Background.wav", true);
 	}
 }
 
 
 /*
 	function iKeyboard() is called whenever the user hits a key in keyboard.
-	key- holds the ASCII value of the key pressed. 
+	key- holds the ASCII value of the key pressed.
 */
 void iKeyboard(unsigned char key)
 {
@@ -72,8 +75,9 @@ void iSpecialKeyboard(unsigned char key)
 	//place your codes for other keys here
 }
 
-int main()
+int main(int argc, char *argv[])
 {
+	glutInit(&argc, argv);
 	iInitialize(600, 400, "Mousedemo");
 	return 0;
 }	
