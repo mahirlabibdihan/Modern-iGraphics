@@ -8,7 +8,11 @@ See the following files for example usage of the new features.
 - `MouseDemo.cpp`
 
 ## Additional Features
+- The `iMouseDrag(int mx, int my)` function is called whenever the mouse is dragged on the window. The `mx` and `my` parameters are the current x and y coordinates of the mouse cursor on the window. This function can be used to get the coordinate of the mouse cursor on the window while dragging the mouse.
+
 - The `iMouseMove(int mx, int my)` function is called whenever the mouse moves on the window. The `mx` and `my` parameters are the current x and y coordinates of the mouse cursor on the window. This function can be used to get the coordinate of the mouse cursor on the window without having to click the mouse.
+
+- The `iMouseWheel(int button, int dir, int mx, int my)` function is called whenever the mouse wheel is scrolled. The `dir` parameter is the direction of the scroll (1 for up, -1 for down).
 
 - Define new Image structure to store image data. This structure is used to load the images in memory and display them on the screen without the need of reading from disk  every time.
 ```cpp
@@ -62,6 +66,12 @@ void iMirrorSprite(Sprite* s, MirrorState state);
 ```
 
 - The collision detection is handled by the `int iCheckCollision(Sprite* s1, Sprite* s2)` function. Returns `1` or `0` depending on whether the two sprites are colliding or not. If the bounding box of two images do not overlap, this has a time complexity of `O(1)`. Otherwise, it has a time complexity of `O(wh)`, where `w` and `h` are the width and height of the overlapping area of the two images. Internally, whenever a sprite is created, it automatically creates a collision mask, which is a boolean 2D array of the same size as the image. 
+
+## irrKlang - The New Sound Library
+This library is used to play sound files. Original repo: https://github.com/jonas2602/irrKlang
+
+- To play a sound file, use the `iPlaySound` function.
+- To stop all sounds, use the `iStopAllSounds` function.
 
 
 ## How to Use
