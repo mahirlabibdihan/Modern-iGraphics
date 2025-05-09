@@ -51,6 +51,7 @@ void iMouse(int button, int state, int mx, int my)
 {
 	if(button == GLUT_LEFT_BUTTON && state == GLUT_DOWN)
 	{
+		iToggleFullscreen();
 	}
 	if(button == GLUT_RIGHT_BUTTON && state == GLUT_DOWN)
 	{
@@ -96,9 +97,7 @@ void iSpecialKeyboard(unsigned char key)
 	//place your codes for other keys here
 }
 
-int main(int argc, char *argv[])
-{
-	glutInit(&argc, argv);
+int main() {
 	loadResources();
 	iInitialize(900, 450, "ImageDemp");
 	return 0;

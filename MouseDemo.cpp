@@ -84,9 +84,7 @@ void iSpecialKeyboard(unsigned char key)
 	//place your codes for other keys here
 }
 
-int main(int argc, char *argv[])
-{
-	glutInit(&argc, argv);
+int main() {
 	iInitialize(600, 400, "Mousedemo");
 	return 0;
 }

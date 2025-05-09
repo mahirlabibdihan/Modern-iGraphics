@@ -891,6 +891,12 @@ void iInitialize(int width = 500, int height = 500, char *title = "iGraphics")
     iSmallScreenHeight = iScreenHeight = height;
     iSmallScreenWidth = iScreenWidth = width;
 
+    // Dummy variables for glutInit
+    int n = 1;
+    char *p[1];
+    p[0] = (char *)malloc(8);
+    glutInit(&n, p);
+
     glutSetOption(GLUT_MULTISAMPLE, 8);
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_ALPHA | GLUT_MULTISAMPLE);
     glEnable(GLUT_MULTISAMPLE);
