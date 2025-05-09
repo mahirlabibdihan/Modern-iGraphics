@@ -44,7 +44,10 @@ void iMouse(int button, int state, int mx, int my)
 	}
 }
 
+void iMouseWheel(int button, int dir, int mx, int my)
+{
 
+}
 /*
 	function iKeyboard() is called whenever the user hits a key in keyboard.
 	key- holds the ASCII value of the key pressed.

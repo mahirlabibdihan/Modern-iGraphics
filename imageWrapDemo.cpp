@@ -38,6 +38,11 @@ void iMouseMove(int mx, int my)
 	//place your code here
 }
 
+void iMouseWheel(int button, int dir, int mx, int my)
+{
+	// place your code here
+}
+
 /* 
 	function iMouse() is called when the user presses/releases the mouse.
 	(mx, my) is the position where the mouse pointer is.

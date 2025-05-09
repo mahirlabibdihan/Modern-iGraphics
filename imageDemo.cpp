@@ -54,6 +54,10 @@ void iMouse(int button, int state, int mx, int my)
 	}
 }
 
+void iMouseWheel(int button, int dir, int mx, int my)
+{
+	// place your code here
+}
 
 /*
 	function iKeyboard() is called whenever the user hits a key in keyboard.

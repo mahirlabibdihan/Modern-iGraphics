@@ -24,6 +24,9 @@
 #include "irrKlang.h"
 using namespace irrklang;
 using namespace std;
+
+static int transparent = 0;
+static int isFullScreen = 0;
 typedef struct{
     unsigned char* data;
     int width, height, channels;
@@ -615,6 +618,7 @@ void iSetTransparentColor(double r, double g, double b, double a)
         g = mmx;
     if (b > mmx)
         b = mmx;
+    // mmx = 255;
     r /= mmx;
     g /= mmx;
     b /= mmx;
@@ -728,12 +732,30 @@ void iStopAllSounds()
     soundEngine->stopAllSounds(); // Stop all sounds
 }
 
+void iSetTransparency(int state) { transparent = (state == 0) ? 0 : 1; }
+
+void iSetLineWidth(int width = 1.0)
+{
+    glLineWidth(width);
+}
+
+void iToggleFullscreen()
+{
+    if (isFullScreen)
+        glutReshapeWindow(iScreenWidth, iScreenHeight);
+    else
+        glutFullScreen();
+    isFullScreen = !isFullScreen;
+}
+
 void iInitialize(int width=500, int height=500, char *title="iGraphics")
 {
     iScreenHeight = height;
     iScreenWidth = width;
 
-    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_ALPHA) ;
+    glutSetOption(GLUT_MULTISAMPLE, 8);
+    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_ALPHA | GLUT_MULTISAMPLE);
+    glEnable(GLUT_MULTISAMPLE);
     glutInitWindowSize(width , height ) ;
     glutInitWindowPosition( 10 , 10 ) ;
     glutCreateWindow(title) ;
@@ -759,14 +781,24 @@ void iInitialize(int width=500, int height=500, char *title="iGraphics")
     // If alpha value is greater than 0, then those
     // pixels will be rendered. Otherwise, they would not be rendered
     //
-    glAlphaFunc(GL_GREATER,0.0f);
+    glAlphaFunc(GL_GREATER, 0.0f);
     glEnable(GL_ALPHA_TEST);
+
+    glEnable(GL_POINT_SMOOTH);
+    glHint(GL_POINT_SMOOTH_HINT, GL_LINEAR);
+
     glEnable(GL_LINE_SMOOTH);
-    // glEnable(GL_POINT_SMOOTH);
-    // glEnable(GL_BLEND);
-    // glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    // glLineWidth(2.0);
-    // glutFullScreen();
+    glHint(GL_LINE_SMOOTH_HINT, GL_LINEAR);
+
+    glEnable(GL_POLYGON_SMOOTH);
+    glHint(GL_POLYGON_SMOOTH_HINT, GL_LINEAR);
+
+    if (transparent)
+    { // added blending mode
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    }
+
     glutMainLoop();
     soundEngine->drop();    
 }

@@ -40,6 +40,19 @@ void iMouse(int button, int state, int mx, int my)
 	}
 }
 
+void iMouseWheel(int button, int dir, int mx, int my)
+{
+	if (dir > 0)
+	{
+		cout << "Mouse wheel moved up" << endl;
+	}
+	else
+	{
+		cout << "Mouse wheel moved down" << endl;
+	}
+
+	return;
+}
 
 /*
 	function iKeyboard() is called whenever the user hits a key in keyboard.
