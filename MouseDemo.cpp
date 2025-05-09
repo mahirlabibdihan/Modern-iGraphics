@@ -42,7 +42,7 @@ void iMouse(int button, int state, int mx, int my)
 
 void iMouseWheel(int button, int dir, int mx, int my)
 {
-	if (dir > 0)
+	if (dir == 1)
 	{
 		cout << "Mouse wheel moved up" << endl;
 	}

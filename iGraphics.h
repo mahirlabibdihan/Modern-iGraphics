@@ -609,21 +609,6 @@ void iUnRotate()
     glPopMatrix();
 }
 
-void iSetTransparentColor(double r, double g, double b, double a)
-{
-    double mmx = 255;
-    if (r > mmx)
-        r = mmx;
-    if (g > mmx)
-        g = mmx;
-    if (b > mmx)
-        b = mmx;
-    // mmx = 255;
-    r /= mmx;
-    g /= mmx;
-    b /= mmx;
-    glColor4f(r, g, b, a);
-}
 
 void iSetColor(double r, double g, double b)
 {
@@ -704,15 +689,6 @@ void mousePassiveMoveHandlerFF(int x, int y)
     glFlush();
 }
 
-void mouseWheelHandlerFF(int button, int dir, int x, int y)
-{
-    iMouseX = x;
-    iMouseY = iScreenHeight - y;
-    iMouseWheel(button, dir, iMouseX, iMouseY);
-
-    glFlush();
-}
-
 void mouseHandlerFF(int button, int state, int x, int y)
 {
     iMouseX = x;
@@ -722,6 +698,18 @@ void mouseHandlerFF(int button, int state, int x, int y)
 
     glFlush();
 }
+
+// Added by - Mahir Labib Dihan
+
+void mouseWheelHandlerFF(int button, int dir, int x, int y)
+{
+    iMouseX = x;
+    iMouseY = iScreenHeight - y;
+    iMouseWheel(button, dir, iMouseX, iMouseY);
+
+    glFlush();
+}
+
 
 void iPlaySound(const char *filename, bool loop) // If loop==true , then the audio will play again and again
 {
@@ -746,6 +734,22 @@ void iToggleFullscreen()
     else
         glutFullScreen();
     isFullScreen = !isFullScreen;
+}
+
+void iSetTransparentColor(double r, double g, double b, double a)
+{
+    double mmx = 255;
+    if (r > mmx)
+        r = mmx;
+    if (g > mmx)
+        g = mmx;
+    if (b > mmx)
+        b = mmx;
+    // mmx = 255;
+    r /= mmx;
+    g /= mmx;
+    b /= mmx;
+    glColor4f(r, g, b, a);
 }
 
 void iInitialize(int width=500, int height=500, char *title="iGraphics")
