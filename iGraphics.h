@@ -913,7 +913,7 @@ void iInitialize(int width = 500, int height = 500, char *title = "iGraphics")
     iClear();
 
     glutDisplayFunc(displayFF);
-    // glutReshapeFunc(reshapeFF);
+    glutReshapeFunc(reshapeFF);
     glutKeyboardFunc(keyboardHandler1FF); // normal
     glutSpecialFunc(keyboardHandler2FF);  // special keys
     glutMouseFunc(mouseHandlerFF);
