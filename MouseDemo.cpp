@@ -44,11 +44,11 @@ void iMouseWheel(int button, int dir, int mx, int my)
 {
 	if (dir == 1)
 	{
-		cout << "Mouse wheel moved up" << endl;
+		printf("Mouse wheel moved up\n");
 	}
 	else
 	{
-		cout << "Mouse wheel moved down" << endl;
+		printf("Mouse wheel moved down\n");
 	}
 
 	return;

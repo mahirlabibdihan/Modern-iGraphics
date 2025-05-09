@@ -1,12 +1,11 @@
 //
 //  Original Author: S. M. Shahriar Nirjon
-//  last modified: November 28, 2024
+//  last modified: May 9, 2025
 //
-//  Version: 2.0.2012.2015.2024
+//  Version: 2.0.2012.2015.2024.2025
 //
 
-#pragma comment(lib, "glut32.lib")
-#pragma comment(lib, "glaux.lib")
+#pragma once
 
 #include <stdio.h>
 #include <stdlib.h>

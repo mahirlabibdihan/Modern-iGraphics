@@ -22,7 +22,6 @@ g++ -Wall -fexceptions -g -IOpenGL/include -IOpenGL/include/irrKlang -c "$1" -o 
 # Link the object file to create the executable
 g++ -o exec/opengl exec/object.o -L./OpenGL/lib ./OpenGL/lib/libIrrKlang.so -lGL -lGLU -lglut -pthread
 
-
 echo "Finished building."
 
 # Run the executable
