@@ -16,7 +16,7 @@ cd Modern-iGraphics
 ```
 
 2. **Running the Example**:
-   Ensure that g++ is installed on your system and available in your PATH. Then, run the following command to compile and execute the example program:
+   Ensure that `g++` is installed on your system and available in your PATH. Then, run the following command to compile and execute the example program:
 
 -   **Windows**
 
