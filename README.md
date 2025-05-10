@@ -326,10 +326,6 @@ int main(int argc, char *argv[])
         -   `GLUT_BITMAP_HELVETICA_18`
 -   **Example:** `iText(50, 60, "This is a text", GLUT_BITMAP_TIMES_ROMAN_10);`
 
-### `void iToggleFullscreen()`
-
--   **Description:** Toggles between fullscreen and windowed mode.
-
 ### ⏱️ Animation and Timer
 
 #### `int iSetTimer(int msec, void (*f)(void))`
