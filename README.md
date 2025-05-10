@@ -443,6 +443,12 @@ void iMirrorSprite(Sprite* s, MirrorState state);
 
 -   **Description:** Stops all currently playing sounds.
 
+### 🧰 Miscellaneous
+
+#### `void iToggleFullscreen()`
+
+-   **Description:** Toggles between fullscreen and windowed mode.
+
 <!-- ## 🖼️ Graphics Functions
 
 ### `void iInitialize(int width, int height, const char* title)`
@@ -590,7 +596,3 @@ Toggles between fullscreen and windowed mode.
 ## 📄 License
 
 This library is for educational purposes and is typically used in academic or hobbyist OpenGL projects.
-
-```
-
-```
