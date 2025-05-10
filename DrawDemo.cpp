@@ -90,8 +90,14 @@ void iSpecialKeyboard(unsigned char key)
     // place your codes for other keys here
 }
 
-int main()
+void iResize(int width, int height)
 {
+    // place your codes here
+}
+
+int main(int argc, char *argv[])
+{
+    glutInit(&argc, argv);
     iSetTransparency(1); // To enable transparency
     iInitialize(width, height, "DrawDemo");
     return 0;

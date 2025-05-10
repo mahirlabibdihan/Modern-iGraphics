@@ -29,7 +29,7 @@
 using namespace irrklang;
 using namespace std;
 
-static int transparent = 0;
+static int transparent = 1;
 static int isFullScreen = 0;
 typedef struct
 {
@@ -80,96 +80,125 @@ ISoundEngine *soundEngine = createIrrKlangDevice();
 #define IMSEC unsigned int
 #endif
 
-static void __stdcall iA0(HWND, unsigned int, unsigned int, unsigned long)
+#endif
+
+// static void __stdcall iA0(HWND, unsigned int, unsigned int, unsigned long)
+// {
+//     if (!iAnimPause[0])
+//         iAnimFunction[0]();
+// }
+// static void __stdcall iA1(HWND, unsigned int, unsigned int, unsigned long)
+// {
+//     if (!iAnimPause[1])
+//         iAnimFunction[1]();
+// }
+// static void __stdcall iA2(HWND, unsigned int, unsigned int, unsigned long)
+// {
+//     if (!iAnimPause[2])
+//         iAnimFunction[2]();
+// }
+// static void __stdcall iA3(HWND, unsigned int, unsigned int, unsigned long)
+// {
+//     if (!iAnimPause[3])
+//         iAnimFunction[3]();
+// }
+// static void __stdcall iA4(HWND, unsigned int, unsigned int, unsigned long)
+// {
+//     if (!iAnimPause[4])
+//         iAnimFunction[4]();
+// }
+// static void __stdcall iA5(HWND, unsigned int, unsigned int, unsigned long)
+// {
+//     if (!iAnimPause[5])
+//         iAnimFunction[5]();
+// }
+// static void __stdcall iA6(HWND, unsigned int, unsigned int, unsigned long)
+// {
+//     if (!iAnimPause[6])
+//         iAnimFunction[6]();
+// }
+// static void __stdcall iA7(HWND, unsigned int, unsigned int, unsigned long)
+// {
+//     if (!iAnimPause[7])
+//         iAnimFunction[7]();
+// }
+// static void __stdcall iA8(HWND, unsigned int, unsigned int, unsigned long)
+// {
+//     if (!iAnimPause[8])
+//         iAnimFunction[8]();
+// }
+// static void __stdcall iA9(HWND, unsigned int, unsigned int, unsigned long)
+// {
+//     if (!iAnimPause[9])
+//         iAnimFunction[9]();
+// }
+
+void timerCallback(int index)
 {
-    if (!iAnimPause[0])
-        iAnimFunction[0]();
-}
-static void __stdcall iA1(HWND, unsigned int, unsigned int, unsigned long)
-{
-    if (!iAnimPause[1])
-        iAnimFunction[1]();
-}
-static void __stdcall iA2(HWND, unsigned int, unsigned int, unsigned long)
-{
-    if (!iAnimPause[2])
-        iAnimFunction[2]();
-}
-static void __stdcall iA3(HWND, unsigned int, unsigned int, unsigned long)
-{
-    if (!iAnimPause[3])
-        iAnimFunction[3]();
-}
-static void __stdcall iA4(HWND, unsigned int, unsigned int, unsigned long)
-{
-    if (!iAnimPause[4])
-        iAnimFunction[4]();
-}
-static void __stdcall iA5(HWND, unsigned int, unsigned int, unsigned long)
-{
-    if (!iAnimPause[5])
-        iAnimFunction[5]();
-}
-static void __stdcall iA6(HWND, unsigned int, unsigned int, unsigned long)
-{
-    if (!iAnimPause[6])
-        iAnimFunction[6]();
-}
-static void __stdcall iA7(HWND, unsigned int, unsigned int, unsigned long)
-{
-    if (!iAnimPause[7])
-        iAnimFunction[7]();
-}
-static void __stdcall iA8(HWND, unsigned int, unsigned int, unsigned long)
-{
-    if (!iAnimPause[8])
-        iAnimFunction[8]();
-}
-static void __stdcall iA9(HWND, unsigned int, unsigned int, unsigned long)
-{
-    if (!iAnimPause[9])
-        iAnimFunction[9]();
+    if (!iAnimPause[index] && iAnimFunction[index])
+    {
+        iAnimFunction[index]();
+    }
+    // Set the timer again to keep it repeating
+    glutTimerFunc(iAnimDelays[index], timerCallback, index);
 }
 
 int iSetTimer(int msec, void (*f)(void))
 {
-    int i = iAnimCount;
-
     if (iAnimCount >= 10)
     {
-        printf("Error: Maximum number of already timer used.\n");
+        printf("Error: Maximum number of timers reached.\n");
         return -1;
     }
 
-    iAnimFunction[i] = f;
-    iAnimDelays[i] = msec;
-    iAnimPause[i] = 0;
+    int index = iAnimCount++;
+    iAnimFunction[index] = f;
+    iAnimDelays[index] = msec;
+    iAnimPause[index] = 0;
 
-    if (iAnimCount == 0)
-        SetTimer(0, 0, msec, iA0);
-    if (iAnimCount == 1)
-        SetTimer(0, 0, msec, iA1);
-    if (iAnimCount == 2)
-        SetTimer(0, 0, msec, iA2);
-    if (iAnimCount == 3)
-        SetTimer(0, 0, msec, iA3);
-    if (iAnimCount == 4)
-        SetTimer(0, 0, msec, iA4);
-
-    if (iAnimCount == 5)
-        SetTimer(0, 0, msec, iA5);
-    if (iAnimCount == 6)
-        SetTimer(0, 0, msec, iA6);
-    if (iAnimCount == 7)
-        SetTimer(0, 0, msec, iA7);
-    if (iAnimCount == 8)
-        SetTimer(0, 0, msec, iA8);
-    if (iAnimCount == 9)
-        SetTimer(0, 0, msec, iA9);
-    iAnimCount++;
-
-    return iAnimCount - 1;
+    glutTimerFunc(msec, timerCallback, index);
+    return index;
 }
+
+// int iSetTimer(int msec, void (*f)(void))
+// {
+//     int i = iAnimCount;
+
+//     if (iAnimCount >= 10)
+//     {
+//         printf("Error: Maximum number of already timer used.\n");
+//         return -1;
+//     }
+
+//     iAnimFunction[i] = f;
+//     iAnimDelays[i] = msec;
+//     iAnimPause[i] = 0;
+
+//     if (iAnimCount == 0)
+//         SetTimer(0, 0, msec, iA0);
+//     if (iAnimCount == 1)
+//         SetTimer(0, 0, msec, iA1);
+//     if (iAnimCount == 2)
+//         SetTimer(0, 0, msec, iA2);
+//     if (iAnimCount == 3)
+//         SetTimer(0, 0, msec, iA3);
+//     if (iAnimCount == 4)
+//         SetTimer(0, 0, msec, iA4);
+
+//     if (iAnimCount == 5)
+//         SetTimer(0, 0, msec, iA5);
+//     if (iAnimCount == 6)
+//         SetTimer(0, 0, msec, iA6);
+//     if (iAnimCount == 7)
+//         SetTimer(0, 0, msec, iA7);
+//     if (iAnimCount == 8)
+//         SetTimer(0, 0, msec, iA8);
+//     if (iAnimCount == 9)
+//         SetTimer(0, 0, msec, iA9);
+//     iAnimCount++;
+
+//     return iAnimCount - 1;
+// }
 
 void iPauseTimer(int index)
 {
@@ -186,8 +215,6 @@ void iResumeTimer(int index)
         iAnimPause[index] = 0;
     }
 }
-
-#endif
 
 //
 // Puts a BMP image on screen
@@ -876,12 +903,15 @@ void iSetTransparentColor(double r, double g, double b, double a)
     glColor4f(r, g, b, a);
 }
 
+void iResize(int width, int height);
+
 void reshapeFF(int width, int height)
 {
     iScreenWidth = width;
     iScreenHeight = height;
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
+    iResize(width, height);
     glOrtho(0.0, iScreenWidth, 0.0, iScreenHeight, -1.0, 1.0);
     glViewport(0.0, 0.0, iScreenWidth, iScreenHeight);
     glutPostRedisplay();
@@ -890,12 +920,6 @@ void iInitialize(int width = 500, int height = 500, char *title = "iGraphics")
 {
     iSmallScreenHeight = iScreenHeight = height;
     iSmallScreenWidth = iScreenWidth = width;
-
-    // Dummy variables for glutInit
-    int n = 1;
-    char *p[1];
-    p[0] = (char *)malloc(8);
-    glutInit(&n, p);
 
     glutSetOption(GLUT_MULTISAMPLE, 8);
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_ALPHA | GLUT_MULTISAMPLE);

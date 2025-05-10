@@ -123,8 +123,15 @@ void hour()
     yh = 360 + hy;
     ph = ph - 1 / 600;
 }
-int main()
+
+void iResize(int width, int height)
 {
+    // place your codes here
+}
+
+int main(int argc, char *argv[])
+{
+    glutInit(&argc, argv);
     time_t rawtime;
     tm *ptm;
 

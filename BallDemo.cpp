@@ -1,7 +1,8 @@
 #include "iGraphics.h"
 
 int ball_x, ball_y;
-int dx, dy;
+int dx = 5, dy = 7;
+int ball_radius = 7;
 
 /*
     function iDraw() is called again and again by the system.
@@ -13,7 +14,7 @@ void iDraw()
     iClear();
 
     iSetColor(255, 100, 10);
-    iFilledCircle(ball_x, ball_y, 7);
+    iFilledCircle(ball_x, ball_y, ball_radius);
 
     iSetColor(255, 255, 255);
     iText(10, 10, "Press p for pause, r for resume, END for exit.");
@@ -97,18 +98,39 @@ void ballChange()
     ball_x += dx;
     ball_y += dy;
 
-    if (ball_x > iScreenWidth || ball_x < 0)
+    if (ball_x + ball_radius > iScreenWidth || ball_x - ball_radius < 0)
+    {
+        if (ball_x + ball_radius > iScreenWidth)
+            ball_x = iScreenWidth - ball_radius;
+        else
+            ball_x = ball_radius;
         dx = -dx;
-    if (ball_y > iScreenHeight || ball_y < 0)
+    }
+        
+    if (ball_y + ball_radius > iScreenHeight || ball_y - ball_radius < 0)
+    {
+        if (ball_y + ball_radius > iScreenHeight)
+            ball_y = iScreenHeight - ball_radius;
+        else
+            ball_y = ball_radius;
         dy = -dy;
+    }
 }
 
-int main()
+void iResize(int width, int height)
 {
+    // place your codes here
+    ball_radius = width / 70.0;
+    dx = width / 100.0;
+    dy = height / 90.0;
+}
+
+int main(int argc, char *argv[])
+{
+    glutInit(&argc, argv);
     // place your own initialization codes here.
-    iSetTimer(5, ballChange);
-    dx = 5;
-    dy = 7;
+    iSetTimer(20, ballChange);
+
     iInitialize(400, 400, "Ball Demo");
 
     return 0;

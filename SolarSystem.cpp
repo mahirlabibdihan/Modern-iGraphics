@@ -261,8 +261,14 @@ void movePlanets()
     }
 }
 
-int main()
+void iResize(int width, int height)
 {
+    // place your codes here
+}
+
+int main(int argc, char *argv[])
+{
+    glutInit(&argc, argv);
     const int CX_MAX = 1366;
     const int CY_MAX = 768;
 

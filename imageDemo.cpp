@@ -89,7 +89,14 @@ void iSpecialKeyboard(unsigned char key)
 	//place your codes for other keys here
 }
 
-int main() {
+void iResize(int width, int height)
+{
+	// place your codes here
+}
+
+int main(int argc, char *argv[])
+{
+    glutInit(&argc, argv);
 	loadResources();
 	iInitialize(900, 900, "ImageDemp");
 	return 0;
