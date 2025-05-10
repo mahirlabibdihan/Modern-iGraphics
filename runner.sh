@@ -3,21 +3,15 @@
 # Exit immediately on error
 set -e
 
-# Check for source file argument
-if [ -z "$1" ]; then
-    echo "Usage: $0 source_file"
-    exit 1
-fi
+# Use default source file if none is provided
+SOURCE_FILE="${1:-iMain.cpp}"
+echo "Using source file: $SOURCE_FILE"
 
-# Set the base directory for g++ (optional if g++ is in your PATH)
-# BASE_DIR=/usr/bin
-# export PATH="$BASE_DIR:$PATH"
-
-# Make sure the output directory exists
-mkdir -p bin
+# Make sure the output directories exist
+mkdir -p bin obj
 
 # Compile the source file to an object file
-g++ -Wall -fexceptions -g -IOpenGL/include -IOpenGL/include/irrKlang -c "$1" -o obj/object.o
+g++ -Wall -fexceptions -g -IOpenGL/include -IOpenGL/include/irrKlang -c "$SOURCE_FILE" -o obj/object.o
 
 # Link the object file to create the executable
 g++ -o bin/opengl obj/object.o -L./OpenGL/lib ./OpenGL/lib/libIrrKlang.so -lGL -lGLU -lglut -pthread
