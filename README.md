@@ -596,3 +596,11 @@ Toggles between fullscreen and windowed mode.
 ## 📄 License
 
 This library is for educational purposes and is typically used in academic or hobbyist OpenGL projects.
+
+<!-- Contributors -->
+
+## ✨ Contributors
+
+| [![Mahir Labib Dihan](https://github.com/mahirlabibdihan.png?size=100)](https://github.com/mahirlabibdihan) | [![Anwarul Bashar Shuaib](https://github.com/shuaibw.png?size=100)](https://github.com/shuaibw) |
+| :---------------------------------------------------------------------------------------------------------: | ----------------------------------------------------------------------------------------------- |
+|                                              Mahir Labib Dihan                                              | Anwarul Bashar Shuaib                                                                           |
