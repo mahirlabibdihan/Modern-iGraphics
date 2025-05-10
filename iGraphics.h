@@ -69,6 +69,7 @@ void iMouseDrag(int, int);
 void iMouseMove(int, int);
 void iMouse(int button, int state, int x, int y);
 void iMouseWheel(int button, int dir, int x, int y);
+void iResize(int width, int height);
 
 ISoundEngine *soundEngine = createIrrKlangDevice();
 
@@ -82,56 +83,6 @@ ISoundEngine *soundEngine = createIrrKlangDevice();
 
 #endif
 
-// static void __stdcall iA0(HWND, unsigned int, unsigned int, unsigned long)
-// {
-//     if (!iAnimPause[0])
-//         iAnimFunction[0]();
-// }
-// static void __stdcall iA1(HWND, unsigned int, unsigned int, unsigned long)
-// {
-//     if (!iAnimPause[1])
-//         iAnimFunction[1]();
-// }
-// static void __stdcall iA2(HWND, unsigned int, unsigned int, unsigned long)
-// {
-//     if (!iAnimPause[2])
-//         iAnimFunction[2]();
-// }
-// static void __stdcall iA3(HWND, unsigned int, unsigned int, unsigned long)
-// {
-//     if (!iAnimPause[3])
-//         iAnimFunction[3]();
-// }
-// static void __stdcall iA4(HWND, unsigned int, unsigned int, unsigned long)
-// {
-//     if (!iAnimPause[4])
-//         iAnimFunction[4]();
-// }
-// static void __stdcall iA5(HWND, unsigned int, unsigned int, unsigned long)
-// {
-//     if (!iAnimPause[5])
-//         iAnimFunction[5]();
-// }
-// static void __stdcall iA6(HWND, unsigned int, unsigned int, unsigned long)
-// {
-//     if (!iAnimPause[6])
-//         iAnimFunction[6]();
-// }
-// static void __stdcall iA7(HWND, unsigned int, unsigned int, unsigned long)
-// {
-//     if (!iAnimPause[7])
-//         iAnimFunction[7]();
-// }
-// static void __stdcall iA8(HWND, unsigned int, unsigned int, unsigned long)
-// {
-//     if (!iAnimPause[8])
-//         iAnimFunction[8]();
-// }
-// static void __stdcall iA9(HWND, unsigned int, unsigned int, unsigned long)
-// {
-//     if (!iAnimPause[9])
-//         iAnimFunction[9]();
-// }
 
 void timerCallback(int index)
 {
@@ -160,46 +111,6 @@ int iSetTimer(int msec, void (*f)(void))
     return index;
 }
 
-// int iSetTimer(int msec, void (*f)(void))
-// {
-//     int i = iAnimCount;
-
-//     if (iAnimCount >= 10)
-//     {
-//         printf("Error: Maximum number of already timer used.\n");
-//         return -1;
-//     }
-
-//     iAnimFunction[i] = f;
-//     iAnimDelays[i] = msec;
-//     iAnimPause[i] = 0;
-
-//     if (iAnimCount == 0)
-//         SetTimer(0, 0, msec, iA0);
-//     if (iAnimCount == 1)
-//         SetTimer(0, 0, msec, iA1);
-//     if (iAnimCount == 2)
-//         SetTimer(0, 0, msec, iA2);
-//     if (iAnimCount == 3)
-//         SetTimer(0, 0, msec, iA3);
-//     if (iAnimCount == 4)
-//         SetTimer(0, 0, msec, iA4);
-
-//     if (iAnimCount == 5)
-//         SetTimer(0, 0, msec, iA5);
-//     if (iAnimCount == 6)
-//         SetTimer(0, 0, msec, iA6);
-//     if (iAnimCount == 7)
-//         SetTimer(0, 0, msec, iA7);
-//     if (iAnimCount == 8)
-//         SetTimer(0, 0, msec, iA8);
-//     if (iAnimCount == 9)
-//         SetTimer(0, 0, msec, iA9);
-//     iAnimCount++;
-
-//     return iAnimCount - 1;
-// }
-
 void iPauseTimer(int index)
 {
     if (index >= 0 && index < iAnimCount)
@@ -215,58 +126,6 @@ void iResumeTimer(int index)
         iAnimPause[index] = 0;
     }
 }
-
-//
-// Puts a BMP image on screen
-//
-// parameters:
-//  x - x coordinate
-//  y - y coordinate
-//  filename - name of the BMP file
-//  ignoreColor - A specified color that should not be rendered. If you have an
-//                image strip that should be rendered on top of another back
-//                ground image, then the background of the image strip should
-//                not get rendered. Use the background color of the image strip
-//                in ignoreColor parameter. Then the strip's background does
-//                not get rendered.
-//
-//                To disable this feature, put -1 in this parameter
-//
-// void iShowBMP2(int x, int y, char filename[], int ignoreColor)
-// {
-//     AUX_RGBImageRec *TextureImage;
-//     TextureImage = auxDIBImageLoad(filename);
-
-//     int i, j, k;
-//     int width = TextureImage->sizeX;
-//     int height = TextureImage->sizeY;
-//     int nPixels = width * height;
-//     int *rgPixels = new int[nPixels];
-
-//     for (i = 0, j = 0; i < nPixels; i++, j += 3)
-//     {
-//         int rgb = 0;
-//         for (int k = 2; k >= 0; k--)
-//         {
-//             rgb = ((rgb << 8) | TextureImage->data[j + k]);
-//         }
-
-//         rgPixels[i] = (rgb == ignoreColor) ? 0 : 255;
-//         rgPixels[i] = ((rgPixels[i] << 24) | rgb);
-//     }
-
-//     glRasterPos2f(x, y);
-//     glDrawPixels(width, height, GL_RGBA, GL_UNSIGNED_BYTE, rgPixels);
-
-//     delete[] rgPixels;
-//     free(TextureImage->data);
-//     free(TextureImage);
-// }
-
-// void iShowBMP(int x, int y, char filename[])
-// {
-//     iShowBMP2(x, y, filename, -1 /* ignoreColor */);
-// }
 
 // Additional functions for displaying images
 
@@ -903,8 +762,6 @@ void iSetTransparentColor(double r, double g, double b, double a)
     glColor4f(r, g, b, a);
 }
 
-void iResize(int width, int height);
-
 void reshapeFF(int width, int height)
 {
     iScreenWidth = width;
@@ -931,9 +788,7 @@ void iInitialize(int width = 500, int height = 500, char *title = "iGraphics")
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
     glOrtho(0.0, width, 0.0, height, -1.0, 1.0);
-    // glOrtho(-100.0 , 100.0 , -100.0 , 100.0 , -1.0 , 1.0) ;
-    // SetTimer(0, 0, 10, timer_proc);
-
+   
     iClear();
 
     glutDisplayFunc(displayFF);
