@@ -2,7 +2,7 @@
 
 `iGraphics.h` header file contains some drawing functions that can be used to draw basic graphical shapes in C++. These functions are implemented in OpenGL. Users of iGraphics do not need any knowledge of OpenGL to use it. Simply calling the drawing functions a user can draw any 2D shape on screen. This library also provides easy ways for animation, keyboard and mouse event handling.
 
-It was originally created by [S. M. Shahriar Nirjon](https://www.cs.unc.edu/~nirjon/) on 2009 with limited functionalities and only for Windows. This is an extended version of the original iGraphics library with support for multiple image formats, sound engine, sprite management, collision detection and advanced mouse control. The library is now **cross-platform** and works on both Windows and Linux. Besides, the original library used `glut`, which is upgraded to `freeglut` in this version. Updates will be added incrementally based on requests.
+It was originally created by [Shahriar Nirjon](https://www.cs.unc.edu/~nirjon/) on 2009 with limited functionalities and only for Windows. This is an extended version of the original iGraphics library with support for multiple image formats, sound engine, sprite management, collision detection and advanced mouse control. The library is now **cross-platform** and works on both Windows and Linux. Besides, the original library used `glut`, which is upgraded to `freeglut` in this version. Updates will be added incrementally based on requests.
 
 ---
 
@@ -593,9 +593,9 @@ Toggles between fullscreen and windowed mode.
 
 ## ✨ Contributors
 
-| [![Mahir Labib Dihan](https://github.com/mahirlabibdihan.png?size=100)](https://github.com/mahirlabibdihan) | [![Anwarul Bashar Shuaib](https://github.com/shuaibw.png?size=100)](https://github.com/shuaibw) | [![Ashrafur Rahman Khan](https://github.com/risenfromashes.png?size=100)](https://github.com/risenfromashes) |
-| :---------------------------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------------: | :----------------------------------------------------------------------------------------------------------: |
-|                                            **Mahir Labib Dihan**                                            |                                    **Anwarul Bashar Shuaib**                                    |                                         **Md. Ashrafur Rahman Khan**                                         |
+| [![Shahriar Nirjon](https://github.com/nirjon.png?size=100)](https://github.com/nirjon) | [![Mahir Labib Dihan](https://github.com/mahirlabibdihan.png?size=100)](https://github.com/mahirlabibdihan) | [![Anwarul Bashar Shuaib](https://github.com/shuaibw.png?size=100)](https://github.com/shuaibw) | [![Ashrafur Rahman Khan](https://github.com/risenfromashes.png?size=100)](https://github.com/risenfromashes) |
+| :-------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------------: | :----------------------------------------------------------------------------------------------------------: |
+|                                   **Shahriar Nirjon**                                   |                                            **Mahir Labib Dihan**                                            |                                    **Anwarul Bashar Shuaib**                                    |                                         **Md. Ashrafur Rahman Khan**                                         |
 
 ## 📄 License
 
