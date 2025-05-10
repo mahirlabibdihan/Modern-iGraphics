@@ -15,6 +15,8 @@ git clone https://github.com/mahirlabibdihan/Modern-iGraphics
 cd Modern-iGraphics
 ```
 
+Alternatively, you can download the ZIP file from [here](https://github.com/mahirlabibdihan/Modern-iGraphics/archive/refs/heads/main.zip) and extract it.
+
 2. **Running the Example**:
    Ensure that `g++` is installed on your system and available in your PATH. Then, run the following command to compile and execute the example program:
 
