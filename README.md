@@ -114,7 +114,7 @@ void iSpecialKeyboard(unsigned char key)
 {
     if(key == GLUT_KEY_END)
     {
-    exit(0);
+        exit(0);
     }
     //place your codes for other keys here
 }
@@ -367,7 +367,7 @@ int main(int argc, char *argv[])
 -   **Parameters:** `index` of the timer.
 -   **Example:** `iResumeTimer(t);`
 
-### `void iDelay(int sec)`
+#### `void iDelay(int sec)`
 
 -   **Description:** Pauses execution for a given duration.
 -   **Parameters:** `sec` in seconds.
