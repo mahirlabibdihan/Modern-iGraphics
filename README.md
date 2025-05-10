@@ -2,11 +2,11 @@
 
 `iGraphics.h` header file contains some drawing functions that can be used to draw basic graphical shapes in C++. These functions are implemented in OpenGL. Users of iGraphics do not need any knowledge of OpenGL to use it. Simply calling the drawing functions a user can draw any 2D shape on screen. This library also provides easy ways for animation, keyboard and mouse event handling.
 
-It was originally created by [S. M. Shahriar Nirjon](https://www.cs.unc.edu/~nirjon/) on 2009 with limited functionalities and only for Windows. This is an extended version of the original iGraphics library with support for multiple image formats, sound engine, sprite management, collision detection and advanced mouse control. The library is now **cross-platform** and works on both Windows and Linux. Updates will be added incrementally based on requests.
+It was originally created by [S. M. Shahriar Nirjon](https://www.cs.unc.edu/~nirjon/) on 2009 with limited functionalities and only for Windows. This is an extended version of the original iGraphics library with support for multiple image formats, sound engine, sprite management, collision detection and advanced mouse control. The library is now **cross-platform** and works on both Windows and Linux. Besides, the original library used `glut`, which is upgraded to `freeglut` in this version. Updates will be added incrementally based on requests.
 
 ---
 
-## Setup
+## ⚙️ Setup
 
 1. **Download the Library**: Clone or download the iGraphics library from the repository.
 
@@ -30,7 +30,7 @@ cd Modern-iGraphics
 ./runner.sh BallDemo.cpp
 ```
 
-## Description of `iMain.cpp`
+## 👨‍💻 Description of `iMain.cpp`
 
 Users of `iGraphics` only have to edit, compile and run `iMain.cpp`. See the listing of `iMain.cpp` below:
 
@@ -140,7 +140,7 @@ int main(int argc, char *argv[])
 
 ---
 
-## Functions in `iGraphics.h`
+## 🛠️ Functions in `iGraphics.h`
 
 ### 🖼️ Graphics Functions
 
@@ -593,14 +593,22 @@ Toggles between fullscreen and windowed mode.
 
 --- -->
 
-## 📄 License
-
-This library is for educational purposes and is typically used in academic or hobbyist OpenGL projects.
-
 <!-- Contributors -->
 
 ## ✨ Contributors
 
 | [![Mahir Labib Dihan](https://github.com/mahirlabibdihan.png?size=100)](https://github.com/mahirlabibdihan) | [![Anwarul Bashar Shuaib](https://github.com/shuaibw.png?size=100)](https://github.com/shuaibw) |
 | :---------------------------------------------------------------------------------------------------------: | ----------------------------------------------------------------------------------------------- |
-|                                              Mahir Labib Dihan                                              | Anwarul Bashar Shuaib                                                                           |
+|                                            **Mahir Labib Dihan**                                            | **Anwarul Bashar Shuaib**                                                                       |
+
+## 📄 License
+
+This library is for educational purposes and is typically used in academic or hobbyist OpenGL projects.
+
+<!-- Acknowledgements -->
+
+## 🙏 Acknowledgements
+
+-   [Extended iGraphics by Ash](https://github.com/risenfromashes/Curves/) - Implementation of cross-platform iGraphics library with additional features.
+-   [irrKlang](https://github.com/jonas2602/irrKlang) - The sound engine used for sound playback.
+-   [freeglut](https://freeglut.sourceforge.net/) - The OpenGL Utility Toolkit.
