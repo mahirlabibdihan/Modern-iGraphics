@@ -9,7 +9,7 @@ if "%~1"=="" (
 
 :: Set the base directory for g++ (optional if g++ is in your PATH)
 :: Set the Base Directory
-set BASE_DIR=D:\MINGW\bin
+set BASE_DIR=C:\MINGW
 :: Set the PATH
 set PATH=%BASE_DIR%;%BASE_DIR%\bin;%PATH%
 
