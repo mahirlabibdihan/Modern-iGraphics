@@ -38,6 +38,7 @@ Users of `iGraphics` only have to edit, compile and run `iMain.cpp`. See the lis
 
 ```cpp
 #include "iGraphics.h"
+
 /*
 function iDraw() is called again and again by the system.
 */
@@ -103,6 +104,7 @@ void iKeyboard(unsigned char key)
     }
     //place your codes for other keys here
 }
+
 /*
 function iSpecialKeyboard() is called whenver user hits special keys likefunction
 keys, home, end, pg up, pg down, arraows etc. you have to use
@@ -129,7 +131,6 @@ void iResize(int width, int height)
 {
     // place your codes here
 }
-
 
 int main(int argc, char *argv[])
 {
