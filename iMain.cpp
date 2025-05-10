@@ -1,57 +1,9 @@
 #include "iGraphics.h"
 
-char name[100];
-char prev_names[5][100];
-char *filename = "names.txt";
-
-void saveName()
-{
-    FILE *file = fopen(filename, "a");
-    if (file == nullptr)
-    {
-        printf("Failed to open file\n");
-        return;
-    }
-    fprintf(file, "%s\n", name);
-    fclose(file);
-}
-
-void loadNames()
-{
-    FILE *file = fopen(filename, "r");
-    if (file == nullptr)
-    {
-        printf("Failed to open file\n");
-        return;
-    }
-    for (int i = 0; i < 5; i++)
-    {
-        if (fgets(prev_names[i], 100, file) == nullptr)
-        {
-            break;
-        }
-    }
-    fclose(file);
-}
-
 void iDraw()
 {
     // place your drawing codes here
-    iClear();
-    // iText(10, 10, "Move the mouse cursor to see real-time coordinates", GLUT_BITMAP_HELVETICA_12);
-    // textbox to take input
-    iText(50, 50, "Enter your name: ", GLUT_BITMAP_HELVETICA_18);
-    iRectangle(190, 40, 200, 30);
-    if (strlen(name) > 0)
-    {
-        iText(192, 48, name, GLUT_BITMAP_HELVETICA_18);
-    }
-    // previous names
-    iText(50, 100, "Previous names: ", GLUT_BITMAP_HELVETICA_18);
-    for (int i = 0; i < 5; i++)
-    {
-        iText(50, 120 + 20 * i, prev_names[i], GLUT_BITMAP_HELVETICA_18);
-    }
+
 }
 
 /*
@@ -96,30 +48,10 @@ void iMouseWheel(int button, int dir, int mx, int my)
 */
 void iKeyboard(unsigned char key)
 {
-
-    // place your codes for other keys here
-    if (key == '\r')
+    if (key == 27)
     {
-        saveName();
-        loadNames();
-        name[0] = '\0';
+        exit(0);
     }
-    else if (key == '\b')
-    {
-        if (strlen(name) > 0)
-        {
-            name[strlen(name) - 1] = '\0';
-        }
-    }
-    else
-    {
-        if (strlen(name) < 99)
-        {
-            name[strlen(name)] = key;
-            name[strlen(name) + 1] = '\0';
-        }
-    }
-    printf("name = %s\n", name);
 }
 
 /*
@@ -133,12 +65,10 @@ void iKeyboard(unsigned char key)
 */
 void iSpecialKeyboard(unsigned char key)
 {
-
     if (key == GLUT_KEY_END)
     {
         exit(0);
     }
-
     // place your codes for other keys here
 }
 
@@ -150,7 +80,6 @@ void iResize(int width, int height)
 int main(int argc, char *argv[])
 {
     glutInit(&argc, argv);
-    loadNames();
-    iInitialize(600, 400, "Mousedemo");
+    iInitialize(500, 500, "iGraphics Demo");
     return 0;
 }

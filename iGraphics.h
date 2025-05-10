@@ -65,8 +65,8 @@ int iAnimPause[10];
 void iDraw();
 void iKeyboard(unsigned char);
 void iSpecialKeyboard(unsigned char);
-void iMouseDrag(int, int);
-void iMouseMove(int, int);
+void iMouseDrag(int, int); // Renamed from iMouseMove to iMouseDrag
+void iMouseMove(int, int); // New function
 void iMouse(int button, int state, int x, int y);
 void iMouseWheel(int button, int dir, int x, int y);
 void iResize(int width, int height);
@@ -82,7 +82,6 @@ ISoundEngine *soundEngine = createIrrKlangDevice();
 #endif
 
 #endif
-
 
 void timerCallback(int index)
 {
@@ -613,22 +612,9 @@ void iUnRotate()
     glPopMatrix();
 }
 
-void iSetColor(double r, double g, double b)
+void iSetColor(int r, int g, int b)
 {
-    double mmx;
-    mmx = r;
-    if (g > mmx)
-        mmx = g;
-    if (b > mmx)
-        mmx = b;
-    mmx = 255;
-    if (mmx > 0)
-    {
-        r /= mmx;
-        g /= mmx;
-        b /= mmx;
-    }
-    glColor3f(r, g, b);
+    glColor3f(r / 255.0, g / 255.0, b / 255.0);
 }
 
 void iDelay(int sec)
@@ -653,7 +639,7 @@ void iClear()
 
 void displayFF(void)
 {
-
+    iClear();
     iDraw();
     glutSwapBuffers();
 }
@@ -746,20 +732,9 @@ void iToggleFullscreen()
     isFullScreen = !isFullScreen;
 }
 
-void iSetTransparentColor(double r, double g, double b, double a)
+void iSetTransparentColor(int r, int g, int b, double a)
 {
-    double mmx = 255;
-    if (r > mmx)
-        r = mmx;
-    if (g > mmx)
-        g = mmx;
-    if (b > mmx)
-        b = mmx;
-    // mmx = 255;
-    r /= mmx;
-    g /= mmx;
-    b /= mmx;
-    glColor4f(r, g, b, a);
+    glColor4f(r / 255.0, g / 255.0, b / 255.0, a);
 }
 
 void reshapeFF(int width, int height)
@@ -788,7 +763,7 @@ void iInitialize(int width = 500, int height = 500, char *title = "iGraphics")
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
     glOrtho(0.0, width, 0.0, height, -1.0, 1.0);
-   
+
     iClear();
 
     glutDisplayFunc(displayFF);

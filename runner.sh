@@ -14,15 +14,15 @@ fi
 # export PATH="$BASE_DIR:$PATH"
 
 # Make sure the output directory exists
-mkdir -p exec
+mkdir -p bin
 
 # Compile the source file to an object file
-g++ -Wall -fexceptions -g -IOpenGL/include -IOpenGL/include/irrKlang -c "$1" -o exec/object.o
+g++ -Wall -fexceptions -g -IOpenGL/include -IOpenGL/include/irrKlang -c "$1" -o obj/object.o
 
 # Link the object file to create the executable
-g++ -o exec/opengl exec/object.o -L./OpenGL/lib ./OpenGL/lib/libIrrKlang.so -lGL -lGLU -lglut -pthread
+g++ -o bin/opengl obj/object.o -L./OpenGL/lib ./OpenGL/lib/libIrrKlang.so -lGL -lGLU -lglut -pthread
 
 echo "Finished building."
 
 # Run the executable
-./exec/opengl
+./bin/opengl
