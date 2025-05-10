@@ -597,18 +597,17 @@ Toggles between fullscreen and windowed mode.
 
 ## ✨ Contributors
 
-| [![Mahir Labib Dihan](https://github.com/mahirlabibdihan.png?size=100)](https://github.com/mahirlabibdihan) | [![Anwarul Bashar Shuaib](https://github.com/shuaibw.png?size=100)](https://github.com/shuaibw) |
-| :---------------------------------------------------------------------------------------------------------: | ----------------------------------------------------------------------------------------------- |
-|                                            **Mahir Labib Dihan**                                            | **Anwarul Bashar Shuaib**                                                                       |
+| [![Mahir Labib Dihan](https://github.com/mahirlabibdihan.png?size=100)](https://github.com/mahirlabibdihan) | [![Anwarul Bashar Shuaib](https://github.com/shuaibw.png?size=100)](https://github.com/shuaibw) | [![Ashrafur Rahman Khan](https://github.com/risenfromashes.png?size=100)](https://github.com/risenfromashes) |
+| :---------------------------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------------: | :----------------------------------------------------------------------------------------------------------: |
+|                                            **Mahir Labib Dihan**                                            |                                    **Anwarul Bashar Shuaib**                                    |                                         **Md. Ashrafur Rahman Khan**                                         |
 
 ## 📄 License
 
 This library is for educational purposes and is typically used in academic or hobbyist OpenGL projects.
 
-<!-- Acknowledgements -->
-
+<!--
 ## 🙏 Acknowledgements
 
 -   [Extended iGraphics by Ash](https://github.com/risenfromashes/Curves/) - Implementation of cross-platform iGraphics library with additional features.
 -   [irrKlang](https://github.com/jonas2602/irrKlang) - The sound engine used for sound playback.
--   [freeglut](https://freeglut.sourceforge.net/) - The OpenGL Utility Toolkit.
+-   [freeglut](https://freeglut.sourceforge.net/) - The OpenGL Utility Toolkit. -->
