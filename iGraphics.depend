@@ -1,0 +1,168 @@
+# depslib dependency file v1.0
+1746976636 source:f:\buet-pt\igraphics-lecture\igraphics-extended\imain.cpp
+	"iGraphics.h"
+
+1746974367 f:\buet-pt\igraphics-lecture\igraphics-extended\igraphics.h
+	<stdio.h>
+	<stdlib.h>
+	<windows.h>
+	<unistd.h>
+	"glut.h"
+	"freeglut_ext.h"
+	<time.h>
+	<math.h>
+	<string>
+	<vector>
+	<algorithm>
+	<dirent.h>
+	"stb_image.h"
+	"stb_image_resize.h"
+	"irrKlang.h"
+
+1746546283 f:\buet-pt\igraphics-lecture\igraphics-extended\opengl\include\glut.h
+	"freeglut_std.h"
+
+1746808913 f:\buet-pt\igraphics-lecture\igraphics-extended\opengl\include\freeglut_std.h
+	<windows.h>
+	<EGL/egl.h>
+	<GLES/gl.h>
+	<GLES2/gl2.h>
+	<OpenGL/gl.h>
+	<OpenGL/glu.h>
+	<GL/gl.h>
+	<GL/glu.h>
+	<stdlib.h>
+
+1746534834 f:\buet-pt\igraphics-lecture\igraphics-extended\opengl\include\gl\gl.h
+
+1746534834 f:\buet-pt\igraphics-lecture\igraphics-extended\opengl\include\gl\glu.h
+	<GL/gl.h>
+
+1746546283 f:\buet-pt\igraphics-lecture\igraphics-extended\opengl\include\freeglut_ext.h
+	<stdarg.h>
+
+1746534834 f:\buet-pt\igraphics-lecture\igraphics-extended\opengl\include\stb_image.h
+	"stb_image.h"
+	<stdio.h>
+	<stdlib.h>
+	<stdarg.h>
+	<stddef.h>
+	<stdlib.h>
+	<string.h>
+	<limits.h>
+	<math.h>
+	<stdio.h>
+	<assert.h>
+	<stdint.h>
+	<emmintrin.h>
+	<intrin.h>
+	<arm_neon.h>
+
+1746946157 f:\buet-pt\igraphics-lecture\igraphics-extended\opengl\include\stb_image_resize.h
+	"stb_image_resize.h"
+	<stdint.h>
+	<assert.h>
+	<string.h>
+	<math.h>
+	<stdlib.h>
+
+1746543789 f:\buet-pt\igraphics-lecture\igraphics-extended\opengl\include\irrklang\irrklang.h
+	"ik_irrKlangTypes.h"
+	"ik_vec3d.h"
+	"ik_IRefCounted.h"
+	"ik_IVirtualRefCounted.h"
+	"ik_ESoundOutputDrivers.h"
+	"ik_ESoundEngineOptions.h"
+	"ik_EStreamModes.h"
+	"ik_SAudioStreamFormat.h"
+	"ik_ISoundEngine.h"
+	"ik_ISoundSource.h"
+	"ik_ISound.h"
+	"ik_IAudioStream.h"
+	"ik_IAudioStreamLoader.h"
+	"ik_ISoundEffectControl.h"
+	"ik_ISoundStopEventReceiver.h"
+	"ik_IFileFactory.h"
+	"ik_IFileReader.h"
+	"ik_ISoundDeviceList.h"
+	"ik_IAudioRecorder.h"
+	"ik_ISoundMixedOutputReceiver.h"
+
+1746543789 f:\buet-pt\igraphics-lecture\igraphics-extended\opengl\include\irrklang\ik_irrklangtypes.h
+	<wchar.h>
+
+1746543789 f:\buet-pt\igraphics-lecture\igraphics-extended\opengl\include\irrklang\ik_vec3d.h
+	<math.h>
+	"ik_irrKlangTypes.h"
+
+1746543789 f:\buet-pt\igraphics-lecture\igraphics-extended\opengl\include\irrklang\ik_irefcounted.h
+	"ik_irrKlangTypes.h"
+
+1746543789 f:\buet-pt\igraphics-lecture\igraphics-extended\opengl\include\irrklang\ik_ivirtualrefcounted.h
+	"ik_irrKlangTypes.h"
+
+1746543789 f:\buet-pt\igraphics-lecture\igraphics-extended\opengl\include\irrklang\ik_esoundoutputdrivers.h
+
+1746543789 f:\buet-pt\igraphics-lecture\igraphics-extended\opengl\include\irrklang\ik_esoundengineoptions.h
+
+1746543789 f:\buet-pt\igraphics-lecture\igraphics-extended\opengl\include\irrklang\ik_estreammodes.h
+
+1746543789 f:\buet-pt\igraphics-lecture\igraphics-extended\opengl\include\irrklang\ik_saudiostreamformat.h
+	"ik_IRefCounted.h"
+
+1746543789 f:\buet-pt\igraphics-lecture\igraphics-extended\opengl\include\irrklang\ik_isoundengine.h
+	"ik_IRefCounted.h"
+	"ik_vec3d.h"
+	"ik_ISoundSource.h"
+	"ik_ISound.h"
+	"ik_EStreamModes.h"
+	"ik_IFileFactory.h"
+	"ik_ISoundMixedOutputReceiver.h"
+
+1746543789 f:\buet-pt\igraphics-lecture\igraphics-extended\opengl\include\irrklang\ik_isoundsource.h
+	"ik_IVirtualRefCounted.h"
+	"ik_vec3d.h"
+	"ik_EStreamModes.h"
+	"ik_SAudioStreamFormat.h"
+
+1746543789 f:\buet-pt\igraphics-lecture\igraphics-extended\opengl\include\irrklang\ik_isound.h
+	"ik_IVirtualRefCounted.h"
+	"ik_ISoundEffectControl.h"
+	"ik_vec3d.h"
+
+1746543789 f:\buet-pt\igraphics-lecture\igraphics-extended\opengl\include\irrklang\ik_isoundeffectcontrol.h
+	"ik_IVirtualRefCounted.h"
+	"ik_vec3d.h"
+
+1746543789 f:\buet-pt\igraphics-lecture\igraphics-extended\opengl\include\irrklang\ik_ifilefactory.h
+	"ik_IRefCounted.h"
+
+1746543789 f:\buet-pt\igraphics-lecture\igraphics-extended\opengl\include\irrklang\ik_isoundmixedoutputreceiver.h
+	"ik_IRefCounted.h"
+	"ik_SAudioStreamFormat.h"
+
+1746543789 f:\buet-pt\igraphics-lecture\igraphics-extended\opengl\include\irrklang\ik_iaudiostream.h
+	"ik_IRefCounted.h"
+	"ik_SAudioStreamFormat.h"
+
+1746543789 f:\buet-pt\igraphics-lecture\igraphics-extended\opengl\include\irrklang\ik_iaudiostreamloader.h
+	"ik_IRefCounted.h"
+	"ik_IFileReader.h"
+
+1746543789 f:\buet-pt\igraphics-lecture\igraphics-extended\opengl\include\irrklang\ik_ifilereader.h
+	"ik_IRefCounted.h"
+
+1746543789 f:\buet-pt\igraphics-lecture\igraphics-extended\opengl\include\irrklang\ik_isoundstopeventreceiver.h
+	"ik_IRefCounted.h"
+	"ik_SAudioStreamFormat.h"
+
+1746543789 f:\buet-pt\igraphics-lecture\igraphics-extended\opengl\include\irrklang\ik_isounddevicelist.h
+	"ik_IRefCounted.h"
+
+1746543789 f:\buet-pt\igraphics-lecture\igraphics-extended\opengl\include\irrklang\ik_iaudiorecorder.h
+	"ik_IRefCounted.h"
+	"ik_ISoundSource.h"
+
+1746974409 source:f:\buet-pt\igraphics-lecture\igraphics-extended\spritedemo.cpp
+	"iGraphics.h"
+
