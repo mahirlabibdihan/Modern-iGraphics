@@ -106,7 +106,7 @@ void ballChange()
             ball_x = ball_radius;
         dx = -dx;
     }
-        
+
     if (ball_y + ball_radius > iScreenHeight || ball_y - ball_radius < 0)
     {
         if (ball_y + ball_radius > iScreenHeight)
@@ -115,14 +115,6 @@ void ballChange()
             ball_y = ball_radius;
         dy = -dy;
     }
-}
-
-void iResize(int width, int height)
-{
-    // place your codes here
-    ball_radius = width / 70.0;
-    dx = width / 100.0;
-    dy = height / 90.0;
 }
 
 int main(int argc, char *argv[])

@@ -49,7 +49,6 @@ void iMouse(int button, int state, int mx, int my)
 {
     if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN)
     {
-       
     }
     if (button == GLUT_RIGHT_BUTTON && state == GLUT_DOWN)
     {
@@ -67,7 +66,6 @@ void iMouseWheel(int button, int dir, int mx, int my)
 */
 void iKeyboard(unsigned char key)
 {
-
 }
 
 /*
@@ -88,11 +86,6 @@ void iSpecialKeyboard(unsigned char key)
     }
 
     // place your codes for other keys here
-}
-
-void iResize(int width, int height)
-{
-    // place your codes here
 }
 
 int main(int argc, char *argv[])

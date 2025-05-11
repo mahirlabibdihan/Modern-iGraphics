@@ -3,7 +3,6 @@
 void iDraw()
 {
     // place your drawing codes here
-
 }
 
 /*
@@ -70,11 +69,6 @@ void iSpecialKeyboard(unsigned char key)
         exit(0);
     }
     // place your codes for other keys here
-}
-
-void iResize(int width, int height)
-{
-    // place your codes here
 }
 
 int main(int argc, char *argv[])

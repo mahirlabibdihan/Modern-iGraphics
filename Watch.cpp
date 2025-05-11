@@ -124,11 +124,6 @@ void hour()
     ph = ph - 1 / 600;
 }
 
-void iResize(int width, int height)
-{
-    // place your codes here
-}
-
 int main(int argc, char *argv[])
 {
     glutInit(&argc, argv);

@@ -2,7 +2,7 @@
 
 char name[100];
 char prev_names[5][100];
-char *filename = "names.txt";
+char *filename = "saves\\names.txt";
 
 void saveName()
 {
@@ -140,11 +140,6 @@ void iSpecialKeyboard(unsigned char key)
     }
 
     // place your codes for other keys here
-}
-
-void iResize(int width, int height)
-{
-    // place your codes here
 }
 
 int main(int argc, char *argv[])

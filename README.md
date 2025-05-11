@@ -33,6 +33,8 @@ Ensure that `g++` is installed on your system and available in your PATH. Then, 
 ./runner.sh BallDemo.cpp
 ```
 
+---
+
 ## 👨‍💻 Description of `iMain.cpp`
 
 Users of `iGraphics` only have to edit, compile and run `iMain.cpp`. See the listing of `iMain.cpp` below:
@@ -122,15 +124,6 @@ void iSpecialKeyboard(unsigned char key)
         exit(0);
     }
     //place your codes for other keys here
-}
-
-/*
-function iResize() is called when the window is resized.
-width, height - the new width and height of the window.
-*/
-void iResize(int width, int height)
-{
-    // place your codes here
 }
 
 int main(int argc, char *argv[])
@@ -381,7 +374,7 @@ int main(int argc, char *argv[])
 -   Load image from file. Supports multiple image formats (BMP, PNG, JPG, GIF) with the help of the stb_image library.
 
 ```cpp
-void iLoadImage(Image* img, const char filename[]);
+bool iLoadImage(Image* img, const char filename[]);
 ```
 
 -   Show image at position (x, y):
@@ -594,6 +587,8 @@ Toggles between fullscreen and windowed mode.
 --- -->
 
 <!-- Contributors -->
+
+---
 
 ## ✨ Contributors
 
