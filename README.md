@@ -6,7 +6,7 @@ It was originally created by [Shahriar Nirjon](https://www.cs.unc.edu/~nirjon/) 
 
 ---
 
-## ⚙️ Setup
+## ⚙️ Setup in Terminal
 
 **Download the Library**:
 Clone or download the iGraphics library from the repository.
