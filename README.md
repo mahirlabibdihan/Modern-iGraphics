@@ -36,6 +36,7 @@ Ensure that `g++` is installed on your system and available in your PATH. Then, 
 ## 🧱 Setup in Code::Blocks
 
 Download the ZIP file from [here](https://github.com/mahirlabibdihan/Modern-iGraphics/archive/refs/heads/main.zip) and extract it.
+
 Open `iGraphics.cbp` in Code::Blocks. The project is already configured with all the necessary settings. You can directly run the project. By default, the main file is `iMain.cpp`. You can remove it and add a different file if you want.
 
 <!-- ### Step 1: Create a New Project
