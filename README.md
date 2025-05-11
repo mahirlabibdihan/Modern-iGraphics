@@ -2,7 +2,7 @@
 
 `iGraphics.h` header file contains some drawing functions that can be used to draw basic graphical shapes in C++. These functions are implemented in OpenGL. Users of iGraphics do not need any knowledge of OpenGL to use it. Simply calling the drawing functions a user can draw any 2D shape on screen. This library also provides easy ways for animation, keyboard and mouse event handling.
 
-It was originally created by [Shahriar Nirjon](https://www.cs.unc.edu/~nirjon/) on 2009 with limited functionalities and only for Windows. This is an extended version of the original iGraphics library with support for multiple image formats, sound engine, sprite management, collision detection and advanced mouse control. The library is now **cross-platform** and works on both Windows and Linux. Besides, the original library used `glut`, which is upgraded to `freeglut` in this version. Updates will be added incrementally based on requests.
+It was originally created by [Shahriar Nirjon](https://www.cs.unc.edu/~nirjon/) on 2009 with limited functionalities and only for Windows. This is an extended version of the original iGraphics library with support for multiple image formats, sound engine, sprite management, collision detection and advanced mouse control. The library is now **cross-platform** and works on both **Windows** and **Linux**. Besides, the original library used `glut`, which is upgraded to `freeglut` in this version. Updates will be added incrementally based on requests.
 
 ---
 
@@ -32,6 +32,8 @@ Ensure that `g++` is installed on your system and available in your PATH. Then, 
 ```bash
 ./runner.sh BallDemo.cpp
 ```
+
+---
 
 ## 🧱 Setup in Code::Blocks
 
@@ -649,6 +651,19 @@ Toggles between fullscreen and windowed mode.
 --- -->
 
 <!-- Contributors -->
+
+---
+
+<!-- Youtube Demo -->
+
+## 🎥 Example Games
+
+-   [DxBall](https://youtu.be/J9kCPZOhV7A?si=nP5pI-Xvn4eHt2Tw)
+-   [Platformer Game](https://youtu.be/Fb0ucPYe3sE?si=vNgahtO5K5mCn1Eb)
+-   [Flappy Bird](https://youtu.be/hjveGbF3tzE?si=M9HfChSBx1hdfUtU)
+-   [Chess](https://youtu.be/8GeTDn3IZIY?si=hjPXHMog1PPCoPAI)
+-   [Tetris](https://youtu.be/jC8eX8RNuUM?si=ai22EmpSUbyJSyTN)
+-   [Snake Game](https://youtu.be/mjOVhspXOjY?si=VVC-PrjMz3F79m_f)
 
 ---
 
