@@ -2,7 +2,6 @@
 
 Sprite bg, mario1, mario2, rect;
 
-SpriteSheet pinkMonsterSheet, golemSpriteSheet;
 Sprite pinkMonster, golem;
 bool isMirroredX[2] = {false, false};
 #define PINK_MONSTER 0
@@ -10,13 +9,11 @@ bool isMirroredX[2] = {false, false};
 
 void loadResources()
 {
-    iLoadSpriteSheet(&pinkMonsterSheet, "assets\\images\\sprites\\1 Pink_Monster\\Pink_Monster_Idle_4.png", 4, 1);
-    iLoadSprite(&pinkMonster, &pinkMonsterSheet, 0, 4, 100);
+    iLoadSprite(&pinkMonster, "assets\\images\\sprites\\1 Pink_Monster\\Pink_Monster_Idle_4.png", 1, 4, 0, 4, 100, -2);
     iSetSpritePosition(&pinkMonster, 100, 100);
     iScaleSprite(&pinkMonster, 5.0);
 
-    iLoadSpriteSheet(&golemSpriteSheet, "assets\\images\\sprites\\Golem_2\\Walking");
-    iLoadSprite(&golem, &golemSpriteSheet, 0, 17, 50, -2);
+    iLoadSprite(&golem, "assets\\images\\sprites\\Golem_2\\Walking", 0, 23, 50, -2);
     iSetSpritePosition(&golem, 300, 200);
     iScaleSprite(&golem, 0.5);
 
@@ -34,6 +31,7 @@ void loadResources()
     iLoadSprite(&rect, "assets\\images\\rect.png", 0xFFFFFF); // Ignore white color for collision detection
     iSetSpritePosition(&rect, -100, -50);
     iScaleSprite(&rect, 2);
+    // iWrapSprite(&rect, 500);
 }
 
 void iDraw()

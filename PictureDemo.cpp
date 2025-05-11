@@ -10,7 +10,7 @@ Image smurf;
 
 void loadResources()
 {
-    iLoadImage(&smurf, "smurf.bmp");
+    iLoadImage(&smurf, "assets\\images\\smurf.bmp");
     double smurfAspectRatio = (double)smurf.width / smurf.height;
     iResizeImage(&smurf, 48, 48.0 / smurfAspectRatio);
 }

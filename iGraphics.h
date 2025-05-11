@@ -36,6 +36,7 @@ using namespace std;
 static int transparent = 1;
 static int isFullScreen = 0;
 static int old_t = -1;
+
 typedef struct
 {
     unsigned char *data;
@@ -44,15 +45,8 @@ typedef struct
 
 typedef struct
 {
-    Image *frames;      // Array of individual frame images
-    int totalFrames;    // Total number of frames
-    bool isSingleFrame; // If true, only one frame is used
-} SpriteSheet;
-
-typedef struct
-{
     int x, y;
-    SpriteSheet *sheet;
+    Image *frames; // Array of individual frame images
     int startFrame;
     int currentFrame;
     int totalFrames;
@@ -77,6 +71,8 @@ void (*iAnimFunction[10])(void) = {0};
 int iAnimCount = 0;
 int iAnimDelays[10];
 int iAnimPause[10];
+
+int iSoundCount = 0;
 
 void iDraw();
 void iKeyboard(unsigned char);
@@ -369,21 +365,18 @@ void iMirrorImage(Image *img, MirrorState state)
 // ignorecolor = hex color code 0xRRGGBB
 void iUpdateCollisionMask(Sprite *s)
 {
-    if (!s || !s->sheet)
-        return;
-
-    Image *frame = &s->sheet->frames[s->currentFrame];
-    int width = frame->width;
-    int height = frame->height;
-    int channels = frame->channels;
-    unsigned char *data = frame->data;
-
     int ignorecolor = s->ignoreColor;
     if (ignorecolor == -1)
     {
         s->collisionMask = nullptr;
         return;
     }
+
+    Image *frame = &s->frames[s->currentFrame];
+    int width = frame->width;
+    int height = frame->height;
+    int channels = frame->channels;
+    unsigned char *data = frame->data;
 
     if (s->collisionMask != nullptr)
     {
@@ -405,7 +398,7 @@ void iUpdateCollisionMask(Sprite *s)
 
             bool isTransparent = (channels == 4 && a == 0);
 
-            bool isIgnoredColor = ignorecolor == -2 ? false : ((r == (ignorecolor & 0xFF)) && (g == ((ignorecolor >> 8) & 0xFF)) && (b == ((ignorecolor >> 16) & 0xFF)));
+            bool isIgnoredColor = (ignorecolor == -2 ? false : ((r == (ignorecolor & 0xFF)) && (g == ((ignorecolor >> 8) & 0xFF)) && (b == ((ignorecolor >> 16) & 0xFF))));
 
             collisionMask[y * width + x] = (isTransparent || isIgnoredColor) ? 0 : 1;
         }
@@ -415,15 +408,24 @@ void iUpdateCollisionMask(Sprite *s)
 
 int iCheckCollision(Sprite *s1, Sprite *s2)
 {
-    SpriteSheet *sheet1 = s1->sheet;
-    int width1 = sheet1->frames[s1->currentFrame].width;
-    int height1 = sheet1->frames[s1->currentFrame].height;
+    if (!s1 || !s2)
+    {
+        return 0;
+    }
+
+    if (!s1->frames || !s2->frames)
+    {
+        return 0;
+    }
+
+    int width1 = s1->frames[s1->currentFrame].width;
+    int height1 = s1->frames[s1->currentFrame].height;
     unsigned char *collisionMask1 = s1->collisionMask;
 
-    SpriteSheet *sheet2 = s2->sheet;
-    int width2 = sheet2->frames[s2->currentFrame].width;
-    int height2 = sheet2->frames[s2->currentFrame].height;
+    int width2 = s2->frames[s2->currentFrame].width;
+    int height2 = s2->frames[s2->currentFrame].height;
     unsigned char *collisionMask2 = s2->collisionMask;
+
     int x1 = s1->x;
     int y1 = s1->y;
     int x2 = s2->x;
@@ -434,6 +436,7 @@ int iCheckCollision(Sprite *s1, Sprite *s2)
     int startY = (y1 > y2) ? y1 : y2;
     int endY = (y1 + height1 < y2 + height2) ? y1 + height1 : y2 + height2;
     int noOverlap = startX >= endX || startY >= endY;
+
     // If collisionMasks are not set, check the whole image for collision
     if (collisionMask1 == nullptr || collisionMask2 == nullptr)
     {
@@ -444,12 +447,18 @@ int iCheckCollision(Sprite *s1, Sprite *s2)
     {
         return 0;
     }
+
     for (int y = startY; y < endY; y++)
     {
         for (int x = startX; x < endX; x++)
         {
-            int index1 = (y - y1) * width1 + (x - x1);
-            int index2 = (y - y2) * width2 + (x - x2);
+            int ix1 = x - x1;
+            int iy1 = y - y1;
+            int ix2 = x - x2;
+            int iy2 = y - y2;
+
+            int index1 = iy1 * width1 + ix1;
+            int index2 = iy2 * width2 + ix2;
             if (collisionMask1[index1] && collisionMask2[index2])
             {
                 return 1;
@@ -461,7 +470,7 @@ int iCheckCollision(Sprite *s1, Sprite *s2)
 
 void iAnimateSprite(Sprite *sprite, float deltaTime)
 {
-    if (!sprite || sprite->totalFrames <= 1 || !sprite->sheet)
+    if (!sprite || sprite->totalFrames <= 1 || !sprite->frames)
         return;
 
     sprite->timeSinceLastFrame += deltaTime;
@@ -476,7 +485,7 @@ void iAnimateSprite(Sprite *sprite, float deltaTime)
     }
 }
 
-void iLoadSpriteSheet(SpriteSheet *sheet, const char *filename, int columns, int rows)
+void iLoadSpriteSheet(Sprite *sprite, const char *filename, int columns, int rows)
 {
     // Load the sprite sheet image
     Image tmp;
@@ -487,8 +496,7 @@ void iLoadSpriteSheet(SpriteSheet *sheet, const char *filename, int columns, int
     int totalFrames = columns * rows;
 
     // Allocate memory for the individual frames
-    sheet->frames = new Image[totalFrames];
-    sheet->totalFrames = totalFrames;
+    sprite->frames = new Image[totalFrames];
 
     // Loop to extract each frame
     for (int i = 0; i < totalFrames; ++i)
@@ -497,7 +505,7 @@ void iLoadSpriteSheet(SpriteSheet *sheet, const char *filename, int columns, int
         int row = i / columns;
 
         // Create an Image structure for each frame
-        Image *frame = &sheet->frames[i];
+        Image *frame = &sprite->frames[i];
         frame->width = frameWidth;
         frame->height = frameHeight;
         frame->channels = tmp.channels;
@@ -528,7 +536,7 @@ bool compareFilenames(const string &a, const string &b)
     return a < b;
 }
 
-void iLoadSpriteSheet(SpriteSheet *sheet, const char *folderPath)
+void iLoadSpriteSheet(Sprite *sprite, const char *folderPath)
 {
     DIR *dir = opendir(folderPath);
     if (dir == nullptr)
@@ -545,7 +553,7 @@ void iLoadSpriteSheet(SpriteSheet *sheet, const char *folderPath)
             continue;
 
         // Filter for image files (e.g., *.png, *.jpg)
-        std::string filename(entry->d_name);
+        string filename(entry->d_name);
         // if (filename.find(".png") != std::string::npos || filename.find(".jpg") != std::string::npos || filename.find(".jpeg") != std::string::npos)
         {
             filenames.push_back(filename);
@@ -553,11 +561,11 @@ void iLoadSpriteSheet(SpriteSheet *sheet, const char *folderPath)
     }
     closedir(dir);
     sort(filenames.begin(), filenames.end(), compareFilenames);
-    sheet->totalFrames = filenames.size();
-    sheet->frames = (Image *)malloc(sizeof(Image) * sheet->totalFrames);
+
+    sprite->frames = (Image *)malloc(sizeof(Image) * sprite->totalFrames);
 
     // Load each image
-    for (int i = 0; i < sheet->totalFrames; ++i)
+    for (int i = 0; i < sprite->totalFrames; ++i)
     {
         std::string fullPath = std::string(folderPath) + "/" + filenames[i];
 
@@ -569,17 +577,15 @@ void iLoadSpriteSheet(SpriteSheet *sheet, const char *folderPath)
             exit(1);
         }
 
-        sheet->frames[i].data = data;
-        sheet->frames[i].width = w;
-        sheet->frames[i].height = h;
-        sheet->frames[i].channels = ch;
+        sprite->frames[i].data = data;
+        sprite->frames[i].width = w;
+        sprite->frames[i].height = h;
+        sprite->frames[i].channels = ch;
     }
 }
 
-void iLoadSprite(Sprite *s, SpriteSheet *sheet, int startFrame, int totalFrames, int frameDuration, int ignoreColor = -2)
+void iLoadSprite(Sprite *s, const char *filename, int rows, int cols, int startFrame, int totalFrames, int frameDuration, int ignoreColor = -2)
 {
-
-    s->sheet = sheet;
     s->x = 0;
     s->y = 0;
     s->startFrame = startFrame;
@@ -589,27 +595,41 @@ void iLoadSprite(Sprite *s, SpriteSheet *sheet, int startFrame, int totalFrames,
     s->timeSinceLastFrame = 0.0f;
     s->collisionMask = nullptr;
     s->ignoreColor = ignoreColor;
+    iLoadSpriteSheet(s, filename, rows, cols);
+    iUpdateCollisionMask(s);
+}
+
+void iLoadSprite(Sprite *s, const char *folderPath, int startFrame, int totalFrames, int frameDuration, int ignoreColor = -2)
+{
+    s->x = 0;
+    s->y = 0;
+    s->startFrame = startFrame;
+    s->currentFrame = startFrame;
+    s->totalFrames = totalFrames;
+    s->frameDuration = frameDuration;
+    s->timeSinceLastFrame = 0.0f;
+    s->collisionMask = nullptr;
+    s->ignoreColor = ignoreColor;
+
+    iLoadSpriteSheet(s, folderPath);
     iUpdateCollisionMask(s);
 }
 
 // Need to delete the sprite sheet after using it
 void iLoadSprite(Sprite *s, const char filename[], int ignoreColor = -2)
 {
-    SpriteSheet *sheet = new SpriteSheet;
-    sheet->frames = new Image[1];
-    sheet->totalFrames = 1;
-    sheet->isSingleFrame = true;
-    iLoadImage(&sheet->frames[0], filename);
-    s->sheet = sheet;
     s->x = 0;
     s->y = 0;
     s->startFrame = 0;
+    s->totalFrames = 1;
     s->currentFrame = 0;
     s->totalFrames = 1;
     s->frameDuration = 0;
     s->timeSinceLastFrame = 0.0f;
     s->collisionMask = nullptr;
     s->ignoreColor = ignoreColor;
+    s->frames = new Image[1];
+    iLoadImage(&s->frames[0], filename);
     iUpdateCollisionMask(s);
 }
 
@@ -621,17 +641,17 @@ void iSetSpritePosition(Sprite *s, int x, int y)
 
 void iShowSprite(Sprite *s)
 {
-    if (!s || !s->sheet)
+    if (!s || !s->frames)
         return;
 
-    iShowImage2(s->x, s->y, &s->sheet->frames[s->currentFrame], s->ignoreColor);
+    iShowImage2(s->x, s->y, &s->frames[s->currentFrame], s->ignoreColor);
 }
 
 void iResizeSprite(Sprite *s, int width, int height)
 {
-    for (int i = 0; i < s->sheet->totalFrames; ++i)
+    for (int i = 0; i < s->totalFrames; ++i)
     {
-        Image *frame = &s->sheet->frames[i];
+        Image *frame = &s->frames[i];
         iResizeImage(frame, width, height);
     }
     iUpdateCollisionMask(s);
@@ -642,9 +662,9 @@ void iScaleSprite(Sprite *s, double scale)
     if (!s || scale <= 0.0f)
         return;
 
-    for (int i = 0; i < s->sheet->totalFrames; ++i)
+    for (int i = 0; i < s->totalFrames; ++i)
     {
-        Image *frame = &s->sheet->frames[i];
+        Image *frame = &s->frames[i];
         iScaleImage(frame, scale);
     }
 
@@ -653,9 +673,9 @@ void iScaleSprite(Sprite *s, double scale)
 
 void iWrapSprite(Sprite *s, int dx)
 {
-    for (int i = 0; i < s->sheet->totalFrames; ++i)
+    for (int i = 0; i < s->totalFrames; ++i)
     {
-        Image *frame = &s->sheet->frames[i];
+        Image *frame = &s->frames[i];
         iWrapImage(frame, dx);
     }
     iUpdateCollisionMask(s);
@@ -663,9 +683,9 @@ void iWrapSprite(Sprite *s, int dx)
 
 void iMirrorSprite(Sprite *s, MirrorState state)
 {
-    for (int i = 0; i < s->sheet->totalFrames; ++i)
+    for (int i = 0; i < s->totalFrames; ++i)
     {
-        Image *frame = &s->sheet->frames[i];
+        Image *frame = &s->frames[i];
         iMirrorImage(frame, state);
     }
     iUpdateCollisionMask(s);
@@ -673,28 +693,15 @@ void iMirrorSprite(Sprite *s, MirrorState state)
 
 void iFreeSprite(Sprite *s)
 {
-    for (int i = 0; i < s->sheet->totalFrames; ++i)
+    for (int i = 0; i < s->totalFrames; ++i)
     {
-        iFreeImage(&s->sheet->frames[i]);
+        iFreeImage(&s->frames[i]);
     }
-    delete[] s->sheet->frames;
-    if (s->sheet->isSingleFrame)
-    {
-        delete s->sheet;
-    }
+    delete[] s->frames;
     if (s->collisionMask != nullptr)
     {
         delete[] s->collisionMask;
     }
-}
-
-void iFreeSpriteSheet(SpriteSheet *sheet)
-{
-    for (int i = 0; i < sheet->totalFrames; ++i)
-    {
-        iFreeImage(&sheet->frames[i]);
-    }
-    delete[] sheet->frames;
 }
 
 void iGetPixelColor(int cursorX, int cursorY, int rgb[])

@@ -4,8 +4,8 @@ Image bg, mario;
 
 void loadResources()
 {
-	iLoadImage(&bg, "background.jpg");
-	iLoadImage(&mario, "mario.png");
+	iLoadImage(&bg, "assets\\images\\background.jpg");
+	iLoadImage(&mario, "assets\\images\\mario.png");
 	double marioAspectRatio = (double)mario.width / mario.height;
 	iResizeImage(&mario, 48, 48.0 / marioAspectRatio);
 }

@@ -35,12 +35,12 @@ void iMouse(int button, int state, int mx, int my)
 {
 	if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN)
 	{
-		iPlaySound("chime.wav", false);
+		iPlaySound("assets\\sounds\\chime.wav", false);
 		// PlaySound("chime.wav", NULL, SND_FILENAME | SND_ASYNC);
 	}
 	if (button == GLUT_RIGHT_BUTTON && state == GLUT_DOWN)
 	{
-		iPlaySound("background.wav", true);
+		iPlaySound("assets\\sounds\\background.wav", true);
 	}
 }
 
