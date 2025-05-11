@@ -411,12 +411,14 @@ void iFreeImage(Image* img);
 
 ```cpp
 void iLoadSprite(Sprite* s, const char* filename, int ignoreColor);
+void iLoadSprite(Sprite *s, const char *folderPath, int frameDuration, int ignoreColor);
+void iLoadSprite(Sprite *s, const char *filename, int rows, int cols, int startFrame, int endFrame, int frameDuration, int ignoreColor);
 void iSetSpritePosition(Sprite* s, int x, int y);
-void iFreeSprite(Sprite* s);
 void iShowSprite(Sprite* s);
-void iWrapSprite(Sprite* s, int dx);
 void iResizeSprite(Sprite* s, int width, int height);
 void iMirrorSprite(Sprite* s, MirrorState state);
+void iWrapSprite(Sprite* s, int dx);
+void iFreeSprite(Sprite* s);
 ```
 
 ### 🔉 Sound Functions

@@ -9,11 +9,11 @@ bool isMirroredX[2] = {false, false};
 
 void loadResources()
 {
-    iLoadSprite(&pinkMonster, "assets\\images\\sprites\\1 Pink_Monster\\Pink_Monster_Idle_4.png", 1, 4, 0, 4, 100, -2);
+    iLoadSpriteFile(&pinkMonster, "assets\\images\\sprites\\1 Pink_Monster\\Pink_Monster_Idle_4.png", 1, 4, 0, 3, -2);
     iSetSpritePosition(&pinkMonster, 100, 100);
     iScaleSprite(&pinkMonster, 5.0);
 
-    iLoadSprite(&golem, "assets\\images\\sprites\\Golem_2\\Walking", 0, 23, 50, -2);
+    iLoadSpriteFolder(&golem, "assets\\images\\sprites\\Golem_2\\Walking", -2);
     iSetSpritePosition(&golem, 300, 200);
     iScaleSprite(&golem, 0.5);
 
@@ -162,18 +162,11 @@ void iSpecialKeyboard(unsigned char key)
     // place your codes for other keys here
 }
 
-int flag = 0;
 void iAnim()
 {
-    if (flag == 0)
-    {
-        iPlaySound("assets\\sounds\\background.wav", true);
-        flag = 1;
-    }
     // place your codes here
-    int dt = iGetDeltaTime();
-    // iAnimateSprite(&pinkMonster, dt);
-    iAnimateSprite(&golem, dt);
+    iAnimateSprite(&golem);
+    // iAnimateSprite(&pinkMonster, deltaTime);
     // iUpdateSprite(&mario1);
     // iUpdateSprite(&mario2);
     // iUpdateSprite(&rect);
@@ -183,7 +176,8 @@ int main(int argc, char *argv[])
 {
     glutInit(&argc, argv);
     loadResources();
-    iSetTimer(10, iAnim);
-    iInitialize(1920, 1057, "ImageDemp");
+    iPlaySound("assets\\sounds\\background.wav", true);
+    iSetTimer(50, iAnim);
+    iInitialize(1920, 1057, "Sprite Demo");
     return 0;
 }

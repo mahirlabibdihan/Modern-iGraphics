@@ -35,8 +35,6 @@ using namespace std;
 
 static int transparent = 1;
 static int isFullScreen = 0;
-static int old_t = -1;
-
 typedef struct
 {
     unsigned char *data;
@@ -50,8 +48,6 @@ typedef struct
     int startFrame;
     int currentFrame;
     int totalFrames;
-    int frameDuration; // in milliseconds
-    int timeSinceLastFrame;
     unsigned char *collisionMask;
     int ignoreColor;
 } Sprite;
@@ -67,11 +63,14 @@ int iSmallScreenHeight, iSmallScreenWidth;
 
 int iMouseX, iMouseY;
 int ifft = 0;
-void (*iAnimFunction[10])(void) = {0};
-int iAnimCount = 0;
-int iAnimDelays[10];
-int iAnimPause[10];
 
+#define MAX_TIMERS 10
+
+void (*iAnimFunction[MAX_TIMERS])(void) = {0};
+int iAnimCount = 0;
+int iAnimDelays[MAX_TIMERS];
+int iAnimPause[MAX_TIMERS];
+// int iAnimLastCallTime[MAX_TIMERS];
 int iSoundCount = 0;
 
 void iDraw();
@@ -99,9 +98,12 @@ void timerCallback(int index)
 {
     if (!iAnimPause[index] && iAnimFunction[index])
     {
+        // int currentTime = glutGet(GLUT_ELAPSED_TIME);             // milliseconds since start
+        // int deltaTime = (currentTime - iAnimLastCallTime[index]); // in seconds
+        // iAnimLastCallTime[index] = currentTime;
         iAnimFunction[index]();
     }
-    // Set the timer again to keep it repeating
+
     glutTimerFunc(iAnimDelays[index], timerCallback, index);
 }
 
@@ -155,6 +157,53 @@ bool iLoadImage(Image *img, const char filename[])
 void iFreeImage(Image *img)
 {
     stbi_image_free(img->data);
+}
+
+GLuint loadTexture(Image *img)
+{
+    GLuint texId;
+    glGenTextures(1, &texId);
+    glBindTexture(GL_TEXTURE_2D, texId);
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+    GLenum format = (img->channels == 4) ? GL_RGBA : GL_RGB;
+
+    glTexImage2D(GL_TEXTURE_2D, 0, format,
+                 img->width, img->height, 0,
+                 format, GL_UNSIGNED_BYTE, img->data);
+
+    return texId;
+}
+
+void iShowImageRotated(int x, int y, Image *img, float angleDegrees)
+{
+    GLuint tex = loadTexture(img);
+
+    glEnable(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, tex);
+
+    glPushMatrix();
+    glTranslatef(x + img->width / 2, y + img->height / 2, 0); // move to center
+    glRotatef(angleDegrees, 0.0f, 0.0f, 1.0f);                // rotate
+    glTranslatef(-img->width / 2, -img->height / 2, 0);       // move back
+
+    glBegin(GL_QUADS);
+    glTexCoord2f(0, 0);
+    glVertex2i(0, 0);
+    glTexCoord2f(1, 0);
+    glVertex2i(img->width, 0);
+    glTexCoord2f(1, 1);
+    glVertex2i(img->width, img->height);
+    glTexCoord2f(0, 1);
+    glVertex2i(0, img->height);
+    glEnd();
+
+    glPopMatrix();
+    glDisable(GL_TEXTURE_2D);
+
+    glDeleteTextures(1, &tex); // cleanup
 }
 
 void iShowImage2(int x, int y, Image *img, int ignoreColor)
@@ -225,9 +274,9 @@ void iShowImage2(int x, int y, Image *img, int ignoreColor)
             unsigned char g = data[srcIndex + 1];
             unsigned char b = data[srcIndex + 2];
             bool ignore = (ignoreColor != -1 &&
-                           r == (ignoreColor & 0xFF) &&
+                           r == (ignoreColor >> 16 & 0xFF) &&
                            g == ((ignoreColor >> 8) & 0xFF) &&
-                           b == ((ignoreColor >> 16) & 0xFF));
+                           b == ((ignoreColor) & 0xFF));
 
             if (ignore)
             {
@@ -398,7 +447,7 @@ void iUpdateCollisionMask(Sprite *s)
 
             bool isTransparent = (channels == 4 && a == 0);
 
-            bool isIgnoredColor = (ignorecolor == -2 ? false : ((r == (ignorecolor & 0xFF)) && (g == ((ignorecolor >> 8) & 0xFF)) && (b == ((ignorecolor >> 16) & 0xFF))));
+            bool isIgnoredColor = (ignorecolor == -2 ? false : ((r == (ignorecolor >> 16 & 0xFF)) && (g == ((ignorecolor >> 8) & 0xFF)) && (b == ((ignorecolor) & 0xFF))));
 
             collisionMask[y * width + x] = (isTransparent || isIgnoredColor) ? 0 : 1;
         }
@@ -468,21 +517,13 @@ int iCheckCollision(Sprite *s1, Sprite *s2)
     return 0;
 }
 
-void iAnimateSprite(Sprite *sprite, float deltaTime)
+void iAnimateSprite(Sprite *sprite)
 {
     if (!sprite || sprite->totalFrames <= 1 || !sprite->frames)
         return;
 
-    sprite->timeSinceLastFrame += deltaTime;
-
-    if (sprite->timeSinceLastFrame >= sprite->frameDuration)
-    {
-        sprite->currentFrame = (sprite->currentFrame + 1) % sprite->totalFrames;
-        sprite->timeSinceLastFrame = 0.0f;
-
-        // Optional: update collision mask after frame change
-        iUpdateCollisionMask(sprite);
-    }
+    sprite->currentFrame = (sprite->currentFrame + 1) % sprite->totalFrames;
+    iUpdateCollisionMask(sprite);
 }
 
 void iLoadSpriteSheet(Sprite *sprite, const char *filename, int columns, int rows)
@@ -562,6 +603,7 @@ void iLoadSpriteSheet(Sprite *sprite, const char *folderPath)
     closedir(dir);
     sort(filenames.begin(), filenames.end(), compareFilenames);
 
+    sprite->totalFrames = filenames.size();
     sprite->frames = (Image *)malloc(sizeof(Image) * sprite->totalFrames);
 
     // Load each image
@@ -584,39 +626,8 @@ void iLoadSpriteSheet(Sprite *sprite, const char *folderPath)
     }
 }
 
-void iLoadSprite(Sprite *s, const char *filename, int rows, int cols, int startFrame, int totalFrames, int frameDuration, int ignoreColor = -2)
-{
-    s->x = 0;
-    s->y = 0;
-    s->startFrame = startFrame;
-    s->currentFrame = startFrame;
-    s->totalFrames = totalFrames;
-    s->frameDuration = frameDuration;
-    s->timeSinceLastFrame = 0.0f;
-    s->collisionMask = nullptr;
-    s->ignoreColor = ignoreColor;
-    iLoadSpriteSheet(s, filename, rows, cols);
-    iUpdateCollisionMask(s);
-}
-
-void iLoadSprite(Sprite *s, const char *folderPath, int startFrame, int totalFrames, int frameDuration, int ignoreColor = -2)
-{
-    s->x = 0;
-    s->y = 0;
-    s->startFrame = startFrame;
-    s->currentFrame = startFrame;
-    s->totalFrames = totalFrames;
-    s->frameDuration = frameDuration;
-    s->timeSinceLastFrame = 0.0f;
-    s->collisionMask = nullptr;
-    s->ignoreColor = ignoreColor;
-
-    iLoadSpriteSheet(s, folderPath);
-    iUpdateCollisionMask(s);
-}
-
 // Need to delete the sprite sheet after using it
-void iLoadSprite(Sprite *s, const char filename[], int ignoreColor = -2)
+void iLoadSprite(Sprite *s, const char *filename, int ignoreColor)
 {
     s->x = 0;
     s->y = 0;
@@ -624,12 +635,36 @@ void iLoadSprite(Sprite *s, const char filename[], int ignoreColor = -2)
     s->totalFrames = 1;
     s->currentFrame = 0;
     s->totalFrames = 1;
-    s->frameDuration = 0;
-    s->timeSinceLastFrame = 0.0f;
     s->collisionMask = nullptr;
     s->ignoreColor = ignoreColor;
     s->frames = new Image[1];
     iLoadImage(&s->frames[0], filename);
+    iUpdateCollisionMask(s);
+}
+
+void iLoadSpriteFolder(Sprite *s, const char *folderPath, int ignoreColor)
+{
+    s->x = 0;
+    s->y = 0;
+    s->startFrame = 0;
+    s->currentFrame = 0;
+    s->collisionMask = nullptr;
+    s->ignoreColor = ignoreColor;
+
+    iLoadSpriteSheet(s, folderPath);
+    iUpdateCollisionMask(s);
+}
+
+void iLoadSpriteFile(Sprite *s, const char *filename, int rows, int cols, int startFrame, int endFrame, int ignoreColor)
+{
+    s->x = 0;
+    s->y = 0;
+    s->startFrame = startFrame;
+    s->currentFrame = startFrame;
+    s->totalFrames = endFrame - startFrame + 1;
+    s->collisionMask = nullptr;
+    s->ignoreColor = ignoreColor;
+    iLoadSpriteSheet(s, filename, rows, cols);
     iUpdateCollisionMask(s);
 }
 
@@ -945,17 +980,17 @@ void iClear()
     glFlush();
 }
 
-int iGetDeltaTime()
-{
-    if (old_t == -1)
-    {
-        old_t = glutGet(GLUT_ELAPSED_TIME);
-    }
-    int t = glutGet(GLUT_ELAPSED_TIME);
-    int deltaTime = t - old_t;
-    old_t = t;
-    return deltaTime;
-}
+// int iGetDeltaTime()
+// {
+//     if (old_t == -1)
+//     {
+//         old_t = glutGet(GLUT_ELAPSED_TIME);
+//     }
+//     int t = glutGet(GLUT_ELAPSED_TIME);
+//     int deltaTime = t - old_t;
+//     old_t = t;
+//     return deltaTime;
+// }
 void displayFF(void)
 {
     iClear();
