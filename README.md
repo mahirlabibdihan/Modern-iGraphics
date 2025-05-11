@@ -33,6 +33,64 @@ Ensure that `g++` is installed on your system and available in your PATH. Then, 
 ./runner.sh BallDemo.cpp
 ```
 
+## 🧱 Setup in Code::Blocks
+
+Open `iGraphics.cbp` in Code::Blocks. The project is already configured with all the necessary settings. You can directly run the project. By default, the main file is `iMain.cpp`. You can remove it and add a different file if you want.
+
+<!-- ### Step 1: Create a New Project
+
+1. `File → New → Project → Empty Project`
+2. Give project title: `iGraphics`
+3. Edit `Resulting filename` from `....\iGraphics\iGraphics.cbp` to `....\iGraphics.cbp`
+4. Keep other things as default and finish.
+
+### Step 2: Add Source File
+
+1. Right-click `Project → Add Files...`
+2. Select `iMain.cpp` (or your main file)
+
+### Step 3: Configure Compiler & Linker
+
+#### A. Compiler Settings
+
+1. `Project → Build options...`
+2. Go to the **Compiler settings** tab:
+    - **Other options** (add these flags):
+        ```
+        -Wall -fexceptions -g
+        ```
+    - **Search directories → Compiler** (add these paths):
+        ```
+        OpenGL\include
+        OpenGL\include\irrKlang
+        ```
+
+#### B. Linker Settings
+
+1. In the same `Build options` window, go to the **Linker settings** tab.
+    - **Other linker options** (add these flags):
+        ```
+        -static -static-libgcc -static-libstdc++
+        ```
+    - **Link libraries** (add these libraries):
+        ```
+        GLU32
+        freeglut
+        OPENGL32
+        gdi32
+        winmm
+        irrKlang
+        ```
+    - **Search directories → Linker** (add this path):
+        ```
+        OpenGL\lib
+        ```
+
+### Step 4: Build & Run
+
+-   **F9**: Build & Run
+-   **Ctrl+F9**: Build only -->
+
 ---
 
 ## 👨‍💻 Description of `iMain.cpp`
