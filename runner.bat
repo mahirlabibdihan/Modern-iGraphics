@@ -14,7 +14,7 @@ set BASE_DIR=C:\MINGW
 set PATH=%BASE_DIR%;%BASE_DIR%\bin;%PATH%
 
 :: Compile the source file to an object file (with irrKlang include path)
-g++.exe -Wall -fexceptions -g -IOpenGL\include -IOpenGL\include\irrKlang -c "%SOURCE_FILE%" -o obj\object.o
+g++.exe -Wall -fexceptions -g -I. -IOpenGL\include -IOpenGL\include\irrKlang -c "%SOURCE_FILE%" -o obj\object.o
 if %ERRORLEVEL% neq 0 (
     echo Compilation failed.
     exit /b 1

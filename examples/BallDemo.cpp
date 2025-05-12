@@ -117,11 +117,17 @@ void ballChange()
     }
 }
 
+void randomizeBallPosition()
+{
+    ball_x = rand() % (iScreenWidth - 2 * ball_radius) + ball_radius;
+    ball_y = rand() % (iScreenHeight - 2 * ball_radius) + ball_radius;
+}
 int main(int argc, char *argv[])
 {
     glutInit(&argc, argv);
     // place your own initialization codes here.
     iSetTimer(20, ballChange);
+    // iSetTimer(2000, randomizeBallPosition);
 
     iInitialize(400, 400, "Ball Demo");
 

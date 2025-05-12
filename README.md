@@ -24,13 +24,13 @@ Ensure that `g++` is installed on your system and available in your PATH. Then, 
 -   **Windows**
 
 ```bash
-.\runner.bat BallDemo.cpp
+.\runner.bat examples\BallDemo.cpp
 ```
 
 -   **Linux**
 
 ```bash
-./runner.sh BallDemo.cpp
+./runner.sh examples/BallDemo.cpp
 ```
 
 ---
@@ -65,6 +65,7 @@ Open `iGraphics.cbp` in Code::Blocks. The project is already configured with all
         ```
     - **Search directories → Compiler** (add these paths):
         ```
+        .
         OpenGL\include
         OpenGL\include\irrKlang
         ```
@@ -163,11 +164,15 @@ key- holds the ASCII value of the key pressed.
 */
 void iKeyboard(unsigned char key)
 {
-    if(key == 'q')
+    switch (key)
     {
-        //do something with 'q'
+    case 'q':
+        // do something with 'q'
+        break;
+    // place your codes for other keys here
+    default:
+        break;
     }
-    //place your codes for other keys here
 }
 
 /*
@@ -181,11 +186,15 @@ GLUT_KEY_PAGE UP, GLUT_KEY_PAGE DOWN, GLUT_KEY_HOME, GLUT_KEY_END,
 GLUT_KEY_INSERT */
 void iSpecialKeyboard(unsigned char key)
 {
-    if(key == GLUT_KEY_END)
+    switch (key)
     {
-        exit(0);
+    case GLUT_KEY_END:
+        // do something with 'q'
+        break;
+    // place your codes for other keys here
+    default:
+        break;
     }
-    //place your codes for other keys here
 }
 
 int main(int argc, char *argv[])
@@ -718,6 +727,27 @@ int main(int argc, char *argv[])
 #### `void iStopAllSounds()`
 
 -   **Description:** Stops all currently playing sounds.
+
+#### `void iSetVolume(int index, int volume)`
+
+-   **Description:** Sets the volume for a specific sound.
+-   **Parameters:**
+    -   `index`: Index of the sound.
+    -   `volume`: Volume level (0-100).
+
+#### `void iIncreaseVolume(int index, int amount)`
+
+-   **Description:** Increases the volume of a specific sound by a specified amount.
+-   **Parameters:**
+    -   `index`: Index of the sound.
+    -   `amount`: Amount to increase the volume by (0-100).
+
+#### `void iDecreaseVolume(int index, int amount)`
+
+-   **Description:** Decreases the volume of a specific sound by a specified amount.
+-   **Parameters:**
+    -   `index`: Index of the sound.
+    -   `amount`: Amount to decrease the volume by (0-100).
 
 ### 🧰 Miscellaneous
 

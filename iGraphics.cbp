@@ -15,6 +15,7 @@
 				<Compiler>
 					<Add option="-g" />
 					<Add option="-Wall -fexceptions -g" />
+					<Add directory="." />
 					<Add directory="OpenGL/include" />
 					<Add directory="OpenGL/include/irrKlang" />
 				</Compiler>
