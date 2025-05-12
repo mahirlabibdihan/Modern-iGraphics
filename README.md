@@ -394,6 +394,10 @@ int main(int argc, char *argv[])
         -   `GLUT_BITMAP_HELVETICA_18`
 -   **Example:** `iText(50, 60, "This is a text", GLUT_BITMAP_TIMES_ROMAN_10);`
 
+#### `void iTextBold(GLdouble x, GLdouble y, char *str, void* font=GLUT_BITMAP_8_BY_13)`
+
+-   **Description:** Displays a bold string on screen.
+
 ### ⏱️ Animation and Timer
 
 #### `int iSetTimer(int msec, void (*f)(void))`
