@@ -122,6 +122,7 @@ void randomizeBallPosition()
     ball_x = rand() % (iScreenWidth - 2 * ball_radius) + ball_radius;
     ball_y = rand() % (iScreenHeight - 2 * ball_radius) + ball_radius;
 }
+
 int main(int argc, char *argv[])
 {
     glutInit(&argc, argv);
