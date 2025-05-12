@@ -86,7 +86,6 @@ void iKeyboard(unsigned char key)
 */
 void iSpecialKeyboard(unsigned char key)
 {
-
 	switch (key)
 	{
 	case GLUT_KEY_UP:
@@ -98,7 +97,6 @@ void iSpecialKeyboard(unsigned char key)
 	default:
 		break;
 	}
-
 	// place your codes for other keys here
 }
 
