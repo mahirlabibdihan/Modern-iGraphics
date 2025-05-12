@@ -989,6 +989,28 @@ void iStrokeText(double x, double y, const char *str, float scale = 0.1)
     glPopMatrix();
 }
 
+void iSetLineWidth(float width = 1.0)
+{
+    glLineWidth(width);
+}
+
+float iGetLineWidth()
+{
+    float width;
+    glGetFloatv(GL_LINE_WIDTH, &width);
+    return width;
+}
+
+void iText(double x, double y, const char *str, void *font = GLUT_BITMAP_8_BY_13)
+{
+    glRasterPos3d(x, y, 0);
+    int i;
+    for (i = 0; str[i]; i++)
+    {
+        glutBitmapCharacter(font, str[i]); //,GLUT_BITMAP_8_BY_13, GLUT_BITMAP_TIMES_ROMAN_24
+    }
+}
+
 void iTextBold(double x, double y, const char *str, void *font = GLUT_BITMAP_8_BY_13)
 {
     const double offset = 0.5;
@@ -1005,14 +1027,21 @@ void iTextBold(double x, double y, const char *str, void *font = GLUT_BITMAP_8_B
     }
 }
 
-void iText(double x, double y, const char *str, void *font = GLUT_BITMAP_8_BY_13)
+void iTextAdvanced(double x, double y, const char *str, float scale = 0.3, float weight = 1.0, void *font = GLUT_STROKE_ROMAN)
 {
-    glRasterPos3d(x, y, 0);
-    int i;
-    for (i = 0; str[i]; i++)
+    glPushMatrix(); // Save current transformation matrix
+
+    glTranslatef(x, y, 0);         // Move to (x, y)
+    glScalef(scale, scale, scale); // Scale down the large stroke fonts
+
+    float width = iGetLineWidth();
+    glLineWidth(weight); // Set line width for stroke font
+    for (int i = 0; str[i]; i++)
     {
-        glutBitmapCharacter(font, str[i]); //,GLUT_BITMAP_8_BY_13, GLUT_BITMAP_TIMES_ROMAN_24
+        glutStrokeCharacter(font, str[i]);
     }
+    glLineWidth(width); // Reset line width to default
+    glPopMatrix();      // Restore transformation matrix
 }
 
 void iPoint(double x, double y, int size = 0)
@@ -1414,11 +1443,6 @@ void iStopAllSounds()
 void iSetTransparency(int state)
 {
     transparent = (state == 0) ? 0 : 1;
-}
-
-void iSetLineWidth(int width = 1.0)
-{
-    glLineWidth(width);
 }
 
 void iToggleFullscreen()

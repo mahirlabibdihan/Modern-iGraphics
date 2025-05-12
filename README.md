@@ -378,7 +378,12 @@ int main(int argc, char *argv[])
     iFilledPolygon(xa, ya, 3);
     ```
 
-#### `void iText(GLdouble x, GLdouble y, char *str, void* font=GLUT_BITMAP_8_BY_13)`
+#### `void iSetLineWidth(float width)`
+
+-   **Description:** Sets the width of lines to be drawn.
+-   **Parameters:** `width`
+
+#### `void iText(double x, double y, char *str, void* font=GLUT_BITMAP_8_BY_13)`
 
 -   **Description:** Displays a string on screen.
 -   **Parameters:**
@@ -394,9 +399,20 @@ int main(int argc, char *argv[])
         -   `GLUT_BITMAP_HELVETICA_18`
 -   **Example:** `iText(50, 60, "This is a text", GLUT_BITMAP_TIMES_ROMAN_10);`
 
-#### `void iTextBold(GLdouble x, GLdouble y, char *str, void* font=GLUT_BITMAP_8_BY_13)`
+#### `void iTextBold(double x, double y, char *str, void* font=GLUT_BITMAP_8_BY_13)`
 
 -   **Description:** Displays a bold string on screen.
+
+#### `void iTextAdvanced(double x, double y, const char *str, float scale = 0.3, float weight = 1.0, void *font = GLUT_STROKE_ROMAN)`
+
+-   **Description:** Displays a string on screen with specified scale and weight.
+-   **Parameters:**
+    -   `x`, `y`: Coordinates of the first character.
+    -   `str`: The text to display.
+    -   `scale`: Scale factor for the text.
+    -   `weight`: Weight of the text (1.0 for normal, 2.0 for bold).
+    -   `font`: Font type (default is `GLUT_STROKE_ROMAN`).
+-   **Example:** `iTextAdvanced(50, 60, "This is a text", 0.5, 2.0);`
 
 ### ⏱️ Animation and Timer
 

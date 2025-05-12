@@ -7,8 +7,7 @@ void iDraw()
 {
     // place your drawing codes here
     iClear();
-
-    iText(140, 180, "Hello World", GLUT_BITMAP_TIMES_ROMAN_24);
+    iText(140, 180, "Hello World");
 }
 
 /*
