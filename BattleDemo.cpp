@@ -38,7 +38,7 @@ void loadPinkMonster()
     pinkMonster.jump = iLoadFramesFromSheet("assets\\images\\sprites\\1 Pink_Monster\\Pink_Monster_Jump_8.png", 1, 8);
 
     iInitSprite(&pinkMonster.sprite, -1);
-    iChangeSpriteFrames(&pinkMonster.sprite, pinkMonster.idle, 0, 4);
+    iChangeSpriteFrames(&pinkMonster.sprite, pinkMonster.idle, 4);
     iSetSpritePosition(&pinkMonster.sprite, 20, 0);
     iScaleSprite(&pinkMonster.sprite, 3.0);
     pinkMonster.state = IDLE;
@@ -51,9 +51,8 @@ void loadGolem()
     golem.walk = iLoadFramesFromFolder("assets\\images\\sprites\\Golem_2\\Walking");
     golem.jump = iLoadFramesFromFolder("assets\\images\\sprites\\Golem_2\\Jump Start");
 
-    printf("Golem Idle: %d\n", golem.idle);
     iInitSprite(&golem.sprite, -1);
-    iChangeSpriteFrames(&golem.sprite, golem.idle, 0, 18);
+    iChangeSpriteFrames(&golem.sprite, golem.idle, 18);
     iSetSpritePosition(&golem.sprite, 300, -75);
     iScaleSprite(&golem.sprite, 0.5);
     iMirrorSprite(&golem.sprite, HORIZONTAL);
@@ -73,7 +72,7 @@ void iAnim()
         if (pinkMonster.sprite.y == 0)
         {
             pinkMonster.state = IDLE;
-            iChangeSpriteFrames(&pinkMonster.sprite, pinkMonster.idle, 0, 4);
+            iChangeSpriteFrames(&pinkMonster.sprite, pinkMonster.idle, 4);
         }
         break;
     }
@@ -187,7 +186,7 @@ void iSpecialKeyboard(unsigned char key)
             if (pinkMonster.state != WALK)
             {
                 pinkMonster.state = WALK;
-                iChangeSpriteFrames(&pinkMonster.sprite, pinkMonster.walk, 0, 6);
+                iChangeSpriteFrames(&pinkMonster.sprite, pinkMonster.walk, 6);
             }
         }
     }
@@ -204,7 +203,7 @@ void iSpecialKeyboard(unsigned char key)
             if (pinkMonster.state != WALK)
             {
                 pinkMonster.state = WALK;
-                iChangeSpriteFrames(&pinkMonster.sprite, pinkMonster.walk, 0, 6);
+                iChangeSpriteFrames(&pinkMonster.sprite, pinkMonster.walk, 6);
             }
         }
     }
@@ -214,7 +213,7 @@ void iSpecialKeyboard(unsigned char key)
         if (pinkMonster.state != JUMP)
         {
             pinkMonster.state = JUMP;
-            iChangeSpriteFrames(&pinkMonster.sprite, pinkMonster.jump, 0, 8);
+            iChangeSpriteFrames(&pinkMonster.sprite, pinkMonster.jump, 8);
         }
     }
     if (key == GLUT_KEY_DOWN)

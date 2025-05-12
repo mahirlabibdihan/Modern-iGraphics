@@ -18,12 +18,12 @@ Sprite monster;
 
 void loadResources()
 {
-	idleMonster = iLoadFramesFromSheet("assets\\images\\sprites\\1 Pink_Monster\\Pink_Monster_Idle_4.png", 1, 4);
+	idleMonster = iLoadFramesFromFolder("assets\\images\\sprites\\Golem_2\\Idle Blinking");
 	walkMonster = iLoadFramesFromSheet("assets\\images\\sprites\\1 Pink_Monster\\Pink_Monster_Walk_6.png", 1, 6);
 	jumpMonster = iLoadFramesFromSheet("assets\\images\\sprites\\1 Pink_Monster\\Pink_Monster_Jump_8.png", 1, 8);
 
 	iInitSprite(&monster, -1);
-	iChangeSpriteFrames(&monster, idleMonster, 0, 4);
+	iChangeSpriteFrames(&monster, idleMonster, 4);
 	iSetSpritePosition(&monster, 20, 0);
 	iScaleSprite(&monster, 3.0);
 }
@@ -40,7 +40,7 @@ void updateMonster()
 		if (monster.y == 0)
 		{
 			state = IDLE;
-			iChangeSpriteFrames(&monster, idleMonster, 0, 4);
+			iChangeSpriteFrames(&monster, idleMonster, 4);
 		}
 		break;
 	}
@@ -145,7 +145,7 @@ void iSpecialKeyboard(unsigned char key)
 			if (state != WALK)
 			{
 				state = WALK;
-				iChangeSpriteFrames(&monster, walkMonster, 0, 6);
+				iChangeSpriteFrames(&monster, walkMonster, 6);
 			}
 		}
 	}
@@ -162,7 +162,7 @@ void iSpecialKeyboard(unsigned char key)
 			if (state != WALK)
 			{
 				state = WALK;
-				iChangeSpriteFrames(&monster, walkMonster, 0, 6);
+				iChangeSpriteFrames(&monster, walkMonster, 6);
 			}
 		}
 	}
@@ -172,7 +172,7 @@ void iSpecialKeyboard(unsigned char key)
 		if (state != JUMP)
 		{
 			state = JUMP;
-			iChangeSpriteFrames(&monster, jumpMonster, 0, 8);
+			iChangeSpriteFrames(&monster, jumpMonster, 8);
 		}
 	}
 	if (key == GLUT_KEY_DOWN)

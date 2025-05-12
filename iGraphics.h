@@ -1333,6 +1333,41 @@ int iPlaySound(const char *filename, bool loop = false, int volume = 100) // If 
     return -1; // Return -1 if sound failed to play
 }
 
+void iSetVolume(int index, int volume)
+{
+    int n = sounds.size();
+    if (index >= 0 && index < n && sounds[index])
+    {
+        sounds[index]->setVolume(volume / 100.0); // Set the volume
+    }
+}
+
+void iIncreaseVolume(int index, int amount)
+{
+    int n = sounds.size();
+    if (index >= 0 && index < n && sounds[index])
+    {
+        float currentVolume = sounds[index]->getVolume() * 100.0;
+        float newVolume = currentVolume + amount;
+        if (newVolume > 100)
+            newVolume = 100;                         // Limit the increase to 100
+        sounds[index]->setVolume(newVolume / 100.0); // Increase the volume
+    }
+}
+
+void iDecreaseVolume(int index, int amount)
+{
+    int n = sounds.size();
+    if (index >= 0 && index < n && sounds[index])
+    {
+        float currentVolume = sounds[index]->getVolume() * 100.0;
+        float newVolume = currentVolume - amount;
+        if (newVolume < 0)
+            newVolume = 0;                           // Limit the decrease to 0
+        sounds[index]->setVolume(newVolume / 100.0); // Decrease the volume
+    }
+}
+
 void iPauseSound(int index)
 {
     int n = sounds.size();

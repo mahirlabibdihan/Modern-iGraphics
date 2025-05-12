@@ -61,11 +61,15 @@ key- holds the ASCII value of the key pressed.
 */
 void iKeyboard(unsigned char key)
 {
-    if (key == 'q')
+    switch (key)
     {
+    case 'q':
         // do something with 'q'
-    }
+        break;
     // place your codes for other keys here
+    default:
+        break;
+    }
 }
 
 /*
@@ -79,11 +83,15 @@ GLUT_KEY_PAGE UP, GLUT_KEY_PAGE DOWN, GLUT_KEY_HOME, GLUT_KEY_END,
 GLUT_KEY_INSERT */
 void iSpecialKeyboard(unsigned char key)
 {
-    if (key == GLUT_KEY_END)
+    switch (key)
     {
-        exit(0);
-    }
+    case GLUT_KEY_END:
+        // do something with 'q'
+        break;
     // place your codes for other keys here
+    default:
+        break;
+    }
 }
 
 int main(int argc, char *argv[])
