@@ -82,6 +82,7 @@ void iMouse(int button, int state, int x, int y);
 void iMouseWheel(int button, int dir, int x, int y);
 // void iResize(int width, int height);
 
+vector<ISound *> sounds; // Array of ISound*
 ISoundEngine *soundEngine = createIrrKlangDevice();
 
 #ifdef WIN32
@@ -306,15 +307,18 @@ void iShowImage(int x, int y, Image *img)
 {
     iShowImage2(x, y, img, -1 /* ignoreColor */);
 }
-
 void iWrapImage(Image *img, int dx)
 {
-    // Right circular shift the image by dx pixels
+    // Circular shift the image horizontally by dx pixels (positive = right, negative = left)
     int width = img->width;
     int height = img->height;
     int channels = img->channels;
     unsigned char *data = img->data;
     unsigned char *wrappedData = new unsigned char[width * height * channels];
+
+    // Normalize dx to be within [0, width)
+    dx = ((dx % width) + width) % width;
+
     for (int y = 0; y < height; y++)
     {
         for (int x = 0; x < width; x++)
@@ -328,6 +332,7 @@ void iWrapImage(Image *img, int dx)
             }
         }
     }
+
     stbi_image_free(data);
     img->data = wrappedData;
 }
@@ -415,11 +420,11 @@ void iMirrorImage(Image *img, MirrorState state)
 void iUpdateCollisionMask(Sprite *s)
 {
     int ignorecolor = s->ignoreColor;
-    if (ignorecolor == -1)
-    {
-        s->collisionMask = nullptr;
-        return;
-    }
+    // if (ignorecolor == -1)
+    // {
+    //     s->collisionMask = nullptr;
+    //     return;
+    // }
 
     Image *frame = &s->frames[s->currentFrame];
     int width = frame->width;
@@ -447,7 +452,7 @@ void iUpdateCollisionMask(Sprite *s)
 
             bool isTransparent = (channels == 4 && a == 0);
 
-            bool isIgnoredColor = (ignorecolor == -2 ? false : ((r == (ignorecolor >> 16 & 0xFF)) && (g == ((ignorecolor >> 8) & 0xFF)) && (b == ((ignorecolor) & 0xFF))));
+            bool isIgnoredColor = (ignorecolor == -1 ? false : ((r == (ignorecolor >> 16 & 0xFF)) && (g == ((ignorecolor >> 8) & 0xFF)) && (b == ((ignorecolor) & 0xFF))));
 
             collisionMask[y * width + x] = (isTransparent || isIgnoredColor) ? 0 : 1;
         }
@@ -526,15 +531,17 @@ void iAnimateSprite(Sprite *sprite)
     iUpdateCollisionMask(sprite);
 }
 
-void iLoadSpriteSheet(Sprite *sprite, const char *filename, int columns, int rows)
+void iLoadSpriteSheet(Sprite *sprite, const char *filename, int rows, int cols)
 {
     // Load the sprite sheet image
     Image tmp;
     iLoadImage(&tmp, filename);
 
-    int frameWidth = tmp.width / columns;
+    int frameWidth = tmp.width / cols;
     int frameHeight = tmp.height / rows;
-    int totalFrames = columns * rows;
+    int totalFrames = cols * rows;
+
+    printf("Width: %d, Height: %d, Frame Width: %d, Frame Height: %d\n", tmp.width, tmp.height, frameWidth, frameHeight);
 
     // Allocate memory for the individual frames
     sprite->frames = new Image[totalFrames];
@@ -542,8 +549,8 @@ void iLoadSpriteSheet(Sprite *sprite, const char *filename, int columns, int row
     // Loop to extract each frame
     for (int i = 0; i < totalFrames; ++i)
     {
-        int col = i % columns;
-        int row = i / columns;
+        int col = i % cols;
+        int row = i / cols;
 
         // Create an Image structure for each frame
         Image *frame = &sprite->frames[i];
@@ -627,7 +634,7 @@ void iLoadSpriteSheet(Sprite *sprite, const char *folderPath)
 }
 
 // Need to delete the sprite sheet after using it
-void iLoadSprite(Sprite *s, const char *filename, int ignoreColor)
+void iLoadSpriteFromImage(Sprite *s, const char *filename, int ignoreColor)
 {
     s->x = 0;
     s->y = 0;
@@ -642,7 +649,7 @@ void iLoadSprite(Sprite *s, const char *filename, int ignoreColor)
     iUpdateCollisionMask(s);
 }
 
-void iLoadSpriteFolder(Sprite *s, const char *folderPath, int ignoreColor)
+void iLoadSpriteFromFolder(Sprite *s, const char *folderPath, int ignoreColor)
 {
     s->x = 0;
     s->y = 0;
@@ -655,7 +662,7 @@ void iLoadSpriteFolder(Sprite *s, const char *folderPath, int ignoreColor)
     iUpdateCollisionMask(s);
 }
 
-void iLoadSpriteFile(Sprite *s, const char *filename, int rows, int cols, int startFrame, int endFrame, int ignoreColor)
+void iLoadSpriteFromSheet(Sprite *s, const char *filename, int rows, int cols, int startFrame, int endFrame, int ignoreColor)
 {
     s->x = 0;
     s->y = 0;
@@ -1058,13 +1065,65 @@ void mouseWheelHandlerFF(int button, int dir, int x, int y)
     glFlush();
 }
 
-void iPlaySound(const char *filename, bool loop) // If loop==true , then the audio will play again and again
+int iPlaySound(const char *filename, bool loop = false, int volume = 100) // If loop==true , then the audio will play again and again
 {
-    soundEngine->play2D(filename, loop); // Play an audio
+    ISound *sound = soundEngine->play2D(filename, loop, true, true); // Play an audio
+    if (sound)
+    {
+        sound->setVolume(volume / 100.0); // Set initial volume
+        sound->setIsPaused(false);        // Unpause the sound
+        for (int i = 0; i < sounds.size(); i++)
+        {
+            if (sounds[i] == nullptr)
+            {
+                sounds[i] = sound; // Store the pointer
+                return i;          // Return the index of the sound
+            }
+        }
+        sounds.push_back(sound);  // Store the pointer
+        return sounds.size() - 1; // Return the index of the sound
+    }
+    return -1; // Return -1 if sound failed to play
 }
+
+void iPauseSound(int index)
+{
+    if (index >= 0 && index < sounds.size() && sounds[index])
+    {
+        sounds[index]->setIsPaused(true); // Pause the sound
+    }
+}
+
+void iResumeSound(int index)
+{
+    if (index >= 0 && index < sounds.size() && sounds[index])
+    {
+        sounds[index]->setIsPaused(false); // Resume the sound
+    }
+}
+
+void iStopSound(int index)
+{
+    if (index >= 0 && index < sounds.size() && sounds[index])
+    {
+        sounds[index]->stop();   // Stop the sound
+        sounds[index]->drop();   // Drop the sound
+        sounds[index] = nullptr; // Set the pointer to null
+    }
+}
+
 void iStopAllSounds()
 {
-    soundEngine->stopAllSounds(); // Stop all sounds
+    printf("Stopping all sounds\n");
+    for (ISound *sound : sounds)
+    {
+        if (sound)
+        {
+            sound->stop(); // stop each sound instance
+            sound->drop(); // release each sound instance
+        }
+    }
+    sounds.clear();
 }
 
 void iSetTransparency(int state)
@@ -1111,7 +1170,7 @@ void iInitialize(int width = 500, int height = 500, const char *title = "iGraphi
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_ALPHA | GLUT_MULTISAMPLE);
     glEnable(GLUT_MULTISAMPLE);
     glutInitWindowSize(width, height);
-    glutInitWindowPosition(0, 0);
+    glutInitWindowPosition(10, 10);
     glutCreateWindow(title);
     glClearColor(0.0, 0.0, 0.0, 0.0);
     glMatrixMode(GL_PROJECTION);

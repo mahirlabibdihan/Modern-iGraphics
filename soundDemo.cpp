@@ -2,6 +2,8 @@
 #include <iostream>
 using namespace std;
 
+int bgSoundIdx = -1;
+
 void iDraw()
 {
 	// place your drawing codes here
@@ -40,7 +42,6 @@ void iMouse(int button, int state, int mx, int my)
 	}
 	if (button == GLUT_RIGHT_BUTTON && state == GLUT_DOWN)
 	{
-		iPlaySound("assets\\sounds\\background.wav", true);
 	}
 }
 
@@ -53,7 +54,20 @@ void iMouseWheel(int button, int dir, int mx, int my)
 */
 void iKeyboard(unsigned char key)
 {
-
+	switch (key)
+	{
+	case 'r':
+		iResumeSound(bgSoundIdx);
+		break;
+	case 'p':
+		iPauseSound(bgSoundIdx);
+		break;
+	case 'x':
+		iStopAllSounds();
+		break;
+	default:
+		break;
+	}
 	// place your codes for other keys here
 }
 
@@ -80,6 +94,7 @@ void iSpecialKeyboard(unsigned char key)
 int main(int argc, char *argv[])
 {
 	glutInit(&argc, argv);
+	bgSoundIdx = iPlaySound("assets\\sounds\\background.wav", true, 10);
 	iInitialize(600, 400, "Mousedemo");
 	return 0;
 }

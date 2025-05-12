@@ -433,67 +433,286 @@ int main(int argc, char *argv[])
 
 ### 🖼️ Image Functions
 
--   Load image from file. Supports multiple image formats (BMP, PNG, JPG, GIF) with the help of the stb_image library.
+#### `bool iLoadImage(Image* img, const char filename[])`
 
-```cpp
-bool iLoadImage(Image* img, const char filename[]);
-```
+-   **Description:** Loads an image from file. Supports multiple image formats (BMP, PNG, JPG, GIF) with the help of the stb_image library.
 
--   Show image at position (x, y):
+-   **Parameters:**
+    -   `img`: Pointer to an `Image` structure.
+    -   `filename`: Path to the image file.
+-   **Returns:** `true` if successful, `false` otherwise.
+-   **Example:**
+    ```cpp
+    Image img;
+    if (iLoadImage(&img, "image.png")) {
+        // Image loaded successfully
+    } else {
+        // Failed to load image
+    }
+    ```
+-   **Image Structure**
+    ```cpp
+    typedef struct
+    {
+        unsigned char *data;
+        int width, height, channels;
+    } Image;
+    ```
 
-```cpp
-void iShowImage(int x, int y, Image* img);
-```
+#### `void iShowImage(int x, int y, Image* img)`
 
--   Wrap an image around the window by `dx` pixels. This function is useful for creating infinite scrolling backgrounds.:
+-   **Description:** Displays an image at specified coordinates.
+-   **Parameters:**
 
-```cpp
-void iWrapImage(Image* img, int dx);
-```
+    -   `x`, `y`: Coordinates where the image will be displayed.
+    -   `img`: Pointer to the loaded `Image` structure.
 
--   Resize image:
+-   **Example:**
 
-```cpp
-void iResizeImage(Image* img, int width, int height);
-```
+    ```cpp
+    Image img;
+    iLoadImage(&img, "image.png");
+    iShowImage(100, 200, &img);
+    ```
 
--   Mirror image: (`MirrorState = HORIZONTAL or VERTICAL`)
+#### `void iScaleImage(Image* img, double scale)`
 
-```cpp
-void iMirrorImage(Image* img, MirrorState state);
-```
+-   **Description:** Scales the image by a specified factor.
+-   **Parameters:**
 
--   Free image:
+    -   `img`: Pointer to the loaded `Image` structure.
+    -   `scale`: Scaling factor (e.g., 2.0 for double size).
 
-```cpp
-void iFreeImage(Image* img);
-```
+-   **Example:** `iScaleImage(&img, 2.0);`
+
+#### `void iResizeImage(Image* img, int width, int height)`
+
+-   **Description:** Resizes the image to specified dimensions.
+-   **Parameters:**
+    -   `img`: Pointer to the loaded `Image` structure.
+    -   `width`: New width of the image.
+    -   `height`: New height of the image.
+-   **Example:**
+
+    ```cpp
+    iResizeImage(&img, 200, 100); // Resize to 200x100 pixels
+    ```
+
+#### `void iMirrorImage(Image* img, MirrorState state)`
+
+-   **Description:** Mirrors the image either horizontally or vertically.
+-   **Parameters:**
+
+    -   `img`: Pointer to the loaded `Image` structure.
+    -   `state`: `HORIZONTAL` or `VERTICAL`. Here, MirrorState is an enum.
+
+-   **Example:**
+
+    ```cpp
+    iMirrorImage(&img, HORIZONTAL); // Mirror horizontally
+    ```
+
+#### `void iWrapImage(Image* img, int dx)`
+
+-   **Description:** Wraps the image around the window by `dx` pixels. This function is useful for creating infinite scrolling backgrounds.:
+-   **Parameters:**
+    -   `img`: Pointer to the loaded `Image` structure.
+    -   `dx`: Number of pixels to wrap around.
+        -   A positive value of `dx` shifts the image to the right.
+        -   A negative value of `dx` shifts the image to the left.
+-   **Example:**
+
+    ```cpp
+    iWrapImage(&img, 50); // Wrap the image by 50 pixels to the right
+    iWrapImage(&img, -50); // Wrap the image by 50 pixels to the left
+    ```
+
+#### `void iFreeImage(Image* img)`
+
+-   **Description:** Frees the memory allocated for the image.
 
 ### 🧩 Sprite Functions
 
-```cpp
-void iLoadSprite(Sprite* s, const char* filename, int ignoreColor);
-void iLoadSprite(Sprite *s, const char *folderPath, int frameDuration, int ignoreColor);
-void iLoadSprite(Sprite *s, const char *filename, int rows, int cols, int startFrame, int endFrame, int frameDuration, int ignoreColor);
-void iSetSpritePosition(Sprite* s, int x, int y);
-void iShowSprite(Sprite* s);
-void iResizeSprite(Sprite* s, int width, int height);
-void iMirrorSprite(Sprite* s, MirrorState state);
-void iWrapSprite(Sprite* s, int dx);
-void iFreeSprite(Sprite* s);
-```
+#### `void iLoadSpriteFromImage(Sprite *s, const char *filename, int ignoreColor)`
+
+-   **Description:** Loads a sprite from an image file.
+-   **Parameters:**
+    -   `s`: Pointer to a `Sprite` structure.
+    -   `filename`: Path to the image file.
+    -   `ignoreColor`: Color to be ignored. The ignored part will be transparent.
+        -   `-1` to read the whole image
+        -   `0xRRGGBB` to ignore the color `RRGGBB` while loading the image (e.g., `0xFF0000` for red).
+-   **Example:**
+    ```cpp
+    Sprite s;
+    iLoadSpriteFromImage(&s, "background.png", 0xFFFFFF); // Load a single image and ignore white color
+    ```
+-   **Sprite Structure**
+    ```cpp
+    typedef struct
+    {
+        int x, y;
+        Image *frames; // Array of individual frame images
+        ....
+    } Sprite;
+    ```
+
+#### `void iLoadSpriteFromFolder(Sprite *s, const char *folderPath, int ignoreColor)`
+
+-   **Description:** Loads a sprite from a folder containing multiple images. The sprite can be animated by cycling through (In the ascending order of filenames) the images in the folder.
+-   **Parameters:**
+    -   `s`: Pointer to a `Sprite` structure.
+    -   `folderPath`: Path to the folder containing images.
+    -   `ignoreColor`: Color to be ignored (same as above).
+-   **Example:**
+    ```cpp
+    Sprite s;
+    iLoadSpriteFromFolder(&s, "sprites/", -1); // Load images from a folder and ignore no color
+    ```
+
+#### `void iLoadSpriteFromSheet(Sprite *s, const char *filename, int rows, int cols, int startFrame, int endFrame, int ignoreColor)`
+
+-   **Description:** Loads a sprite from a sprite sheet. The sprite can be animated by cycling through the frames in the sheet.
+-   **Parameters:**
+
+    -   `s`: Pointer to a `Sprite` structure.
+    -   `filename`: Path to the sprite sheet image file.
+    -   `rows`: Number of rows in the sprite sheet.
+    -   `cols`: Number of columns in the sprite sheet.
+    -   `startFrame`: Starting frame index.
+    -   `endFrame`: Ending frame index.
+    -   `ignoreColor`: Color to be ignored (same as above).
+
+-   **Example:**
+    ```cpp
+    Sprite s;
+    iLoadSpriteFromSheet(&s, "spritesheet.png", 4, 4, 0, 15, -1); // Load a sprite sheet with 4 rows and 4 columns
+    ```
+
+#### `void iSetSpritePosition(Sprite* s, int x, int y)`
+
+-   **Description:** Sets the position of the sprite.
+-   **Parameters:**
+    -   `s`: Pointer to a `Sprite` structure.
+    -   `x`, `y`: New coordinates for the sprite.
+-   **Example:**
+    ```cpp
+    iSetSpritePosition(&s, 100, 200); // Set sprite position to (100, 200)
+    ```
+
+#### `void iShowSprite(Sprite* s)`
+
+-   **Description:** Displays the sprite on the screen.
+-   **Parameters:**
+    -   `s`: Pointer to a `Sprite` structure.
+
+#### `void iAnimateSprite(Sprite* s)`
+
+-   **Description:** Animates the sprite by cycling through its frames.
+-   **Parameters:**
+    -   `s`: Pointer to a `Sprite` structure.
+-   **Example:**
+    ```cpp
+    iAnimateSprite(&s); // Animate the sprite
+    ```
+
+#### `void iScaleSprite(Sprite* s, double scale)`
+
+-   **Description:** Scales the sprite by a specified factor.
+-   **Parameters:**
+    -   `s`: Pointer to a `Sprite` structure.
+    -   `scale`: Scaling factor (e.g., 2.0 for double size).
+
+#### `void iResizeSprite(Sprite* s, int width, int height)`
+
+-   **Description:** Resizes the sprite to specified dimensions.
+-   **Parameters:**
+    -   `s`: Pointer to a `Sprite` structure.
+    -   `width`: New width of the sprite.
+    -   `height`: New height of the sprite.
+
+#### `void iMirrorSprite(Sprite* s, MirrorState state)`
+
+-   **Description:** Mirrors the sprite either horizontally or vertically.
+-   **Parameters:**
+    -   `s`: Pointer to a `Sprite` structure.
+    -   `state`: `HORIZONTAL` or `VERTICAL`.
+
+#### `void iWrapSprite(Sprite* s, int dx)`
+
+-   **Description:** Wraps the sprite around the window by `dx` pixels.
+-   **Parameters:**
+    -   `s`: Pointer to a `Sprite` structure.
+    -   `dx`: Number of pixels to wrap around.
+        -   A positive value of `dx` shifts the sprite to the right.
+        -   A negative value of `dx` shifts the sprite to the left.
+
+#### `void iFreeSprite(Sprite* s)`
+
+-   **Description:** Frees the memory allocated for the sprite.
+-   **Parameters:**
+    -   `s`: Pointer to a `Sprite` structure.
+
+#### `int iCheckCollision(Sprite* s1, Sprite* s2)`
+
+-   **Description:** Checks for pixel-level collision between two sprites. If the bounding box of two images do not overlap, this has a time complexity of `O(1)`. Otherwise, it has a time complexity of `O(wh)`, where `w` and `h` are the width and height of the overlapping area of the two images.
+
+-   **Parameters:**
+    -   `s1`: Pointer to the first `Sprite` structure.
+    -   `s2`: Pointer to the second `Sprite` structure.
+-   **Returns:** `1` if collision is detected, `0` otherwise.
+-   **Example:**
+    ```cpp
+    Sprite s1, s2;
+    iLoadSpriteFromImage(&s1, "sprite1.png", -1);
+    iLoadSpriteFromImage(&s2, "sprite2.png", -1);
+    if (iCheckCollision(&s1, &s2)) {
+        // Collision detected
+    }
+    ```
 
 ### 🔉 Sound Functions
 
-#### `void iPlaySound(const char *filename, bool loop)`
+`iGraphics` was originally designed for graphical applications, but it has been extended to support sound playback using the `irrKlang` library. The sound functions are as follows:
 
--   **Description:** Plays a sound from file with optional looping.
+#### `int iPlaySound(const char *filename, bool loop = false, int volume = 100)`
+
+-   **Description:** Plays a sound from file with optional looping and volume control.
 -   **Parameters:**
     -   `filename`: Path to the sound file.
     -   `loop`: `true` for continuous play, `false` for one-time play.
+    -   `volume`: Volume level (0-100).
+-   **Returns:** Index of the sound.
 -   **Example:**
     ```cpp
-    iPlaySound("background.wav", true);
+    int idx = iPlaySound("background.wav", true, 80);
+    ```
+
+#### `void iPauseSound(int index)`
+
+-   **Description:** Pauses the sound specified by `index`.
+-   **Parameters:** `index` of the sound.
+-   **Example:**
+    ```cpp
+    iPauseSound(idx);
+    ```
+
+#### `void iResumeSound(int index)`
+
+-   **Description:** Resumes the sound specified by `index`.
+-   **Parameters:** `index` of the sound.
+-   **Example:**
+    ```cpp
+    iResumeSound(idx);
+    ```
+
+#### `void iStopSound(int index)`
+
+-   **Description:** Stops the sound specified by `index`.
+-   **Parameters:** `index` of the sound.
+-   **Example:**
+    ```cpp
+    iStopSound(idx);
     ```
 
 #### `void iStopAllSounds()`
@@ -672,6 +891,8 @@ Toggles between fullscreen and windowed mode.
 | [![Shahriar Nirjon](https://github.com/nirjon.png?size=100)](https://github.com/nirjon) | [![Mahir Labib Dihan](https://github.com/mahirlabibdihan.png?size=100)](https://github.com/mahirlabibdihan) | [![Anwarul Bashar Shuaib](https://github.com/shuaibw.png?size=100)](https://github.com/shuaibw) | [![Ashrafur Rahman Khan](https://github.com/risenfromashes.png?size=100)](https://github.com/risenfromashes) |
 | :-------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------------: | :----------------------------------------------------------------------------------------------------------: |
 |                                   **Shahriar Nirjon**                                   |                                            **Mahir Labib Dihan**                                            |                                    **Anwarul Bashar Shuaib**                                    |                                         **Md. Ashrafur Rahman Khan**                                         |
+
+---
 
 ## 📄 License
 

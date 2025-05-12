@@ -1,6 +1,7 @@
 #include "iGraphics.h"
 
-Sprite bg, mario1, mario2, rect;
+Image bg;
+Sprite mario1, mario2, rect;
 
 Sprite pinkMonster, golem;
 bool isMirroredX[2] = {false, false};
@@ -9,26 +10,18 @@ bool isMirroredX[2] = {false, false};
 
 void loadResources()
 {
-    iLoadSpriteFile(&pinkMonster, "assets\\images\\sprites\\1 Pink_Monster\\Pink_Monster_Idle_4.png", 1, 4, 0, 3, -2);
-    iSetSpritePosition(&pinkMonster, 100, 100);
-    iScaleSprite(&pinkMonster, 5.0);
+    iLoadSpriteFromSheet(&pinkMonster, "assets\\images\\sprites\\1 Pink_Monster\\Pink_Monster_Idle_4.png", 1, 4, 0, 3, -1);
+    iSetSpritePosition(&pinkMonster, 300, 250);
+    iScaleSprite(&pinkMonster, 3.0);
 
-    iLoadSpriteFolder(&golem, "assets\\images\\sprites\\Golem_2\\Walking", -2);
+    iLoadSpriteFromFolder(&golem, "assets\\images\\sprites\\Golem_2\\Walking", -1);
     iSetSpritePosition(&golem, 300, 200);
     iScaleSprite(&golem, 0.5);
 
-    // iLoadSprite(&bg, "background.jpg", -1); // -1 for ignoring collisionMask. Whole image will be checked for collision
-    // iSetSpritePosition(&bg, 200, 100);
-    // iLoadSprite(&mario1, "mario.png", 0);
-    // iSetSpritePosition(&mario1, 411, 204);
-    // double marioAspectRatio = (double)mario1.img.width / mario1.img.height;
-    // iResizeSprite(&mario1, 48, 48.0 / marioAspectRatio);
+    iLoadImage(&bg, "assets\\images\\background.jpg");
+    iResizeImage(&bg, 1800, 1000);
 
-    // iLoadSprite(&mario2, "mario.png", 0);
-    // iResizeSprite(&mario2, 200, 200.0 / marioAspectRatio);
-    // iSetSpritePosition(&mario2, 211, 204);
-
-    iLoadSprite(&rect, "assets\\images\\rect.png", 0xFFFFFF); // Ignore white color for collision detection
+    iLoadSpriteFromImage(&rect, "assets\\images\\rect.png", 0xFFFFFF); // Ignore white color for collision detection
     iSetSpritePosition(&rect, -100, -50);
     iScaleSprite(&rect, 2);
     // iWrapSprite(&rect, 500);
@@ -37,9 +30,12 @@ void loadResources()
 void iDraw()
 {
     // place your drawing codes here
-    // iShowSprite(&pinkMonster);
-    iShowSprite(&golem);
+
     // iShowSprite(&mario1);
+    iShowImage(0, 0, &bg);
+    iWrapImage(&bg, -10);
+    iShowSprite(&golem);
+    iShowSprite(&pinkMonster);
     // iShowSprite(&mario2);
     if (iCheckCollision(&rect, &golem))
     {
@@ -166,7 +162,7 @@ void iAnim()
 {
     // place your codes here
     iAnimateSprite(&golem);
-    // iAnimateSprite(&pinkMonster, deltaTime);
+    iAnimateSprite(&pinkMonster);
     // iUpdateSprite(&mario1);
     // iUpdateSprite(&mario2);
     // iUpdateSprite(&rect);
@@ -178,6 +174,6 @@ int main(int argc, char *argv[])
     loadResources();
     iPlaySound("assets\\sounds\\background.wav", true);
     iSetTimer(50, iAnim);
-    iInitialize(1920, 1057, "Sprite Demo");
+    iInitialize(1800, 1000, "Sprite Demo");
     return 0;
 }
