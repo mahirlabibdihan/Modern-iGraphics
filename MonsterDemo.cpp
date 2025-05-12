@@ -3,29 +3,49 @@
 	last modified: August 8, 2008
 */
 #include "iGraphics.h"
-
+enum
+{
+	IDLE,
+	WALK,
+	JUMP
+};
 int pic_x, pic_y;
-int idle_idx = 0;
-char monster_idle[4][100];
+int state = IDLE;
+int direction = 1; // 1 for right, -1 for left
 
-Image *frames;
-Sprite sprite;
+Image *idleMonster, *walkMonster, *jumpMonster;
+Sprite monster;
 
 void loadResources()
 {
-	iInitSprite(&sprite, -1);
+	idleMonster = iLoadFramesFromSheet("assets\\images\\sprites\\1 Pink_Monster\\Pink_Monster_Idle_4.png", 1, 4);
+	walkMonster = iLoadFramesFromSheet("assets\\images\\sprites\\1 Pink_Monster\\Pink_Monster_Walk_6.png", 1, 6);
+	jumpMonster = iLoadFramesFromSheet("assets\\images\\sprites\\1 Pink_Monster\\Pink_Monster_Jump_8.png", 1, 8);
 
-	// frames = iLoadFramesFromFolder("assets\\images\\sprites\\Golem_2\\Idle Blinking");
-	// iChangeSpriteFrames(&sprite, frames, 18);
-
-	frames = iLoadFramesFromFolder("assets\\images\\sprites\\Golem_2\\Walking");
-	iChangeSpriteFrames(&sprite, frames, 24);
-	iSetSpritePosition(&sprite, -200, -110);
+	iInitSprite(&monster, -1);
+	iChangeSpriteFrames(&monster, idleMonster, 0, 4);
+	iSetSpritePosition(&monster, 20, 0);
+	iScaleSprite(&monster, 3.0);
 }
 
-void iAnim()
+void updateMonster()
 {
-	iAnimateSprite(&sprite);
+	switch (state)
+	{
+	case IDLE:
+		break;
+	case WALK:
+		break;
+	case JUMP:
+		if (monster.y == 0)
+		{
+			state = IDLE;
+			iChangeSpriteFrames(&monster, idleMonster, 0, 4);
+		}
+		break;
+	}
+	iAnimateSprite(&monster);
+	monster.y = max(0, monster.y - 1);
 }
 /*
 	function iDraw() is called again and again by the system.
@@ -34,19 +54,8 @@ void iDraw()
 {
 	// place your drawing codes here
 	iClear();
-	{
-		iSetColor(55, 55, 55);
-		iFilledRectangle(0, 0, 800, 800);
-	}
-
-	iShowSprite(&sprite);
-
-	{
-		iSetColor(255, 255, 255);
-		iFilledRectangle(0, 0, 800, 32);
-		iSetColor(0, 0, 0);
-		iTextBold(10, 10, "Press arrow keys to move the sprite", GLUT_BITMAP_TIMES_ROMAN_24);
-	}
+	iShowSprite(&monster);
+	// iShowBMP(pic_x, pic_y, "wheel.bmp");
 }
 
 /*
@@ -116,10 +125,9 @@ void iKeyboard(unsigned char key)
 	GLUT_KEY_LEFT, GLUT_KEY_UP, GLUT_KEY_RIGHT, GLUT_KEY_DOWN, GLUT_KEY_PAGE UP,
 	GLUT_KEY_PAGE DOWN, GLUT_KEY_HOME, GLUT_KEY_END, GLUT_KEY_INSERT
 */
-
-int direction = 1;
 void iSpecialKeyboard(unsigned char key)
 {
+
 	if (key == GLUT_KEY_END)
 	{
 		exit(0);
@@ -128,33 +136,48 @@ void iSpecialKeyboard(unsigned char key)
 	{
 		if (direction == 1)
 		{
-			iMirrorSprite(&sprite, HORIZONTAL);
+			iMirrorSprite(&monster, HORIZONTAL);
 			direction = -1;
 		}
 		else
 		{
-			sprite.x--;
+			monster.x--;
+			if (state != WALK)
+			{
+				state = WALK;
+				iChangeSpriteFrames(&monster, walkMonster, 0, 6);
+			}
 		}
 	}
 	if (key == GLUT_KEY_RIGHT)
 	{
 		if (direction == -1)
 		{
-			iMirrorSprite(&sprite, HORIZONTAL);
+			iMirrorSprite(&monster, HORIZONTAL);
 			direction = 1;
 		}
 		else
 		{
-			sprite.x++;
+			monster.x++;
+			if (state != WALK)
+			{
+				state = WALK;
+				iChangeSpriteFrames(&monster, walkMonster, 0, 6);
+			}
 		}
 	}
 	if (key == GLUT_KEY_UP)
 	{
-		sprite.y++;
+		monster.y++;
+		if (state != JUMP)
+		{
+			state = JUMP;
+			iChangeSpriteFrames(&monster, jumpMonster, 0, 8);
+		}
 	}
 	if (key == GLUT_KEY_DOWN)
 	{
-		sprite.y--;
+		monster.y--;
 	}
 	// place your codes for other keys here
 }
@@ -163,10 +186,8 @@ int main(int argc, char *argv[])
 {
 	glutInit(&argc, argv);
 	// place your own initialization codes here.
-	pic_x = 30;
-	pic_y = 20;
 	loadResources();
-	iSetTimer(100, iAnim);
-	iInitialize(800, 800, "SpriteDemo");
+	iSetTimer(100, updateMonster);
+	iInitialize(500, 400, "SpriteDemo");
 	return 0;
 }

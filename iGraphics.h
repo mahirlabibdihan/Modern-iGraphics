@@ -45,11 +45,14 @@ typedef struct
 {
     int x, y;
     Image *frames; // Array of individual frame images
-    int startFrame;
     int currentFrame;
     int totalFrames;
     unsigned char *collisionMask;
     int ignoreColor;
+
+    // Tracking transformation
+    float scale;
+    bool flipHorizontal, flipVertical;
 } Sprite;
 
 enum MirrorState
@@ -178,35 +181,6 @@ GLuint loadTexture(Image *img)
     return texId;
 }
 
-void iShowImageRotated(int x, int y, Image *img, float angleDegrees)
-{
-    GLuint tex = loadTexture(img);
-
-    glEnable(GL_TEXTURE_2D);
-    glBindTexture(GL_TEXTURE_2D, tex);
-
-    glPushMatrix();
-    glTranslatef(x + img->width / 2, y + img->height / 2, 0); // move to center
-    glRotatef(angleDegrees, 0.0f, 0.0f, 1.0f);                // rotate
-    glTranslatef(-img->width / 2, -img->height / 2, 0);       // move back
-
-    glBegin(GL_QUADS);
-    glTexCoord2f(0, 0);
-    glVertex2i(0, 0);
-    glTexCoord2f(1, 0);
-    glVertex2i(img->width, 0);
-    glTexCoord2f(1, 1);
-    glVertex2i(img->width, img->height);
-    glTexCoord2f(0, 1);
-    glVertex2i(0, img->height);
-    glEnd();
-
-    glPopMatrix();
-    glDisable(GL_TEXTURE_2D);
-
-    glDeleteTextures(1, &tex); // cleanup
-}
-
 void iShowImage2(int x, int y, Image *img, int ignoreColor)
 {
     int imgWidth = img->width;
@@ -303,10 +277,106 @@ void iShowImage2(int x, int y, Image *img, int ignoreColor)
     delete[] clippedData;
 }
 
+GLuint createTextureFromImage(Image *img, int ignoreColor, int &outChannels)
+{
+    int imgWidth = img->width;
+    int imgHeight = img->height;
+    int channels = img->channels;
+    unsigned char *data = img->data;
+
+    unsigned char *processedData = data;
+    // bool needAlpha = (channels == 4 || ignoreColor != -1);
+
+    if (ignoreColor != -1)
+    {
+        processedData = new unsigned char[imgWidth * imgHeight * 4];
+        for (int i = 0; i < imgWidth * imgHeight; i++)
+        {
+            int srcIndex = i * channels;
+            int dstIndex = i * 4;
+
+            unsigned char r = data[srcIndex];
+            unsigned char g = data[srcIndex + 1];
+            unsigned char b = data[srcIndex + 2];
+
+            bool ignore = (r == (ignoreColor >> 16 & 0xFF) &&
+                           g == (ignoreColor >> 8 & 0xFF) &&
+                           b == (ignoreColor & 0xFF));
+
+            processedData[dstIndex + 0] = r;
+            processedData[dstIndex + 1] = g;
+            processedData[dstIndex + 2] = b;
+            processedData[dstIndex + 3] = (ignore ? 0 : 255);
+        }
+        outChannels = 4;
+    }
+    else
+    {
+        outChannels = channels;
+    }
+
+    GLuint tex;
+    glGenTextures(1, &tex);
+    glBindTexture(GL_TEXTURE_2D, tex);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR); // smooth scaling
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
+
+    glTexImage2D(GL_TEXTURE_2D, 0,
+                 (outChannels == 4 ? GL_RGBA : GL_RGB),
+                 imgWidth, imgHeight, 0,
+                 (outChannels == 4 ? GL_RGBA : GL_RGB),
+                 GL_UNSIGNED_BYTE, processedData);
+
+    if (processedData != data)
+        delete[] processedData;
+
+    return tex;
+}
+
+void iShowImage3(int x, int y, Image *img, int ignoreColor)
+{
+    if (!img || !img->data)
+        return;
+
+    int imgWidth = img->width;
+    int imgHeight = img->height;
+    int channels = 0;
+
+    GLuint tex = createTextureFromImage(img, ignoreColor, channels);
+
+    float w = imgWidth;
+    float h = imgHeight;
+
+    glEnable(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, tex);
+
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+    glBegin(GL_QUADS);
+    glTexCoord2f(0, 0);
+    glVertex2f(x, y);
+    glTexCoord2f(1, 0);
+    glVertex2f(x + w, y);
+    glTexCoord2f(1, 1);
+    glVertex2f(x + w, y + h);
+    glTexCoord2f(0, 1);
+    glVertex2f(x, y + h);
+    glEnd();
+
+    glDisable(GL_BLEND);
+    glDisable(GL_TEXTURE_2D);
+
+    glDeleteTextures(1, &tex);
+}
+
 void iShowImage(int x, int y, Image *img)
 {
     iShowImage2(x, y, img, -1 /* ignoreColor */);
 }
+
 void iWrapImage(Image *img, int dx)
 {
     // Circular shift the image horizontally by dx pixels (positive = right, negative = left)
@@ -419,6 +489,10 @@ void iMirrorImage(Image *img, MirrorState state)
 // ignorecolor = hex color code 0xRRGGBB
 void iUpdateCollisionMask(Sprite *s)
 {
+    if (!s || !s->frames)
+    {
+        return;
+    }
     int ignorecolor = s->ignoreColor;
     // if (ignorecolor == -1)
     // {
@@ -531,7 +605,7 @@ void iAnimateSprite(Sprite *sprite)
     iUpdateCollisionMask(sprite);
 }
 
-void iLoadSpriteSheet(Sprite *sprite, const char *filename, int rows, int cols)
+void iLoadFrames(Sprite *sprite, const char *filename, int rows, int cols)
 {
     // Load the sprite sheet image
     Image tmp;
@@ -584,7 +658,95 @@ bool compareFilenames(const string &a, const string &b)
     return a < b;
 }
 
-void iLoadSpriteSheet(Sprite *sprite, const char *folderPath)
+Image *iLoadFramesFromSheet(const char *filename, int rows, int cols)
+{
+    // Load the sprite sheet image
+    Image tmp;
+    iLoadImage(&tmp, filename);
+
+    int frameWidth = tmp.width / cols;
+    int frameHeight = tmp.height / rows;
+    int totalFrames = cols * rows;
+
+    // Allocate memory for the individual frames
+    Image *frames = new Image[totalFrames];
+
+    // Loop to extract each frame
+    for (int i = 0; i < totalFrames; ++i)
+    {
+        int col = i % cols;
+        int row = i / cols;
+
+        // Create an Image structure for each frame
+        Image *frame = &frames[i];
+        frame->width = frameWidth;
+        frame->height = frameHeight;
+        frame->channels = tmp.channels;
+        frame->data = new unsigned char[frameWidth * frameHeight * frame->channels];
+
+        for (int y = 0; y < frameHeight; ++y)
+        {
+            for (int x = 0; x < frameWidth; ++x)
+            {
+                int srcX = col * frameWidth + x;
+                int srcY = row * frameHeight + y;
+                int srcIndex = (srcY * tmp.width + srcX) * tmp.channels;
+                int dstIndex = (y * frameWidth + x) * frame->channels;
+
+                for (int c = 0; c < frame->channels; ++c)
+                {
+                    frame->data[dstIndex + c] = tmp.data[srcIndex + c];
+                }
+            }
+        }
+    }
+
+    delete[] tmp.data;
+
+    return frames;
+}
+
+Image *iLoadFramesFromFolder(const char *folderPath)
+{
+    DIR *dir = opendir(folderPath);
+    if (dir == nullptr)
+    {
+        fprintf(stderr, "Failed to open directory: %s\n", folderPath);
+        return nullptr;
+    }
+    vector<string> filenames;
+    struct dirent *entry;
+    while ((entry = readdir(dir)) != nullptr)
+    {
+        // Skip directories
+        if (entry->d_type == DT_DIR)
+            continue;
+
+        // Filter for image files (e.g., *.png, *.jpg)
+        string filename(entry->d_name);
+        // if (filename.find(".png") != std::string::npos || filename.find(".jpg") != std::string::npos || filename.find(".jpeg") != std::string::npos)
+        {
+            filenames.push_back(filename);
+        }
+    }
+    closedir(dir);
+    sort(filenames.begin(), filenames.end(), compareFilenames);
+
+    int totalFrames = filenames.size();
+    Image *frames = new Image[totalFrames];
+
+    // Load each image
+    for (int i = 0; i < totalFrames; ++i)
+    {
+        string fullPath = string(folderPath) + "/" + filenames[i];
+
+        iLoadImage(&frames[i], fullPath.c_str());
+    }
+
+    return frames;
+}
+
+void iLoadFrames(Sprite *sprite, const char *folderPath)
 {
     DIR *dir = opendir(folderPath);
     if (dir == nullptr)
@@ -638,40 +800,102 @@ void iLoadSpriteFromImage(Sprite *s, const char *filename, int ignoreColor)
 {
     s->x = 0;
     s->y = 0;
-    s->startFrame = 0;
     s->totalFrames = 1;
     s->currentFrame = 0;
     s->totalFrames = 1;
     s->collisionMask = nullptr;
     s->ignoreColor = ignoreColor;
     s->frames = new Image[1];
+
     iLoadImage(&s->frames[0], filename);
     iUpdateCollisionMask(s);
 }
 
-void iLoadSpriteFromFolder(Sprite *s, const char *folderPath, int ignoreColor)
+void iInitSprite(Sprite *s, int ignoreColor = -1)
 {
     s->x = 0;
     s->y = 0;
-    s->startFrame = 0;
-    s->currentFrame = 0;
+
     s->collisionMask = nullptr;
     s->ignoreColor = ignoreColor;
 
-    iLoadSpriteSheet(s, folderPath);
+    // Assign the pre-loaded frames to the sprite
+    s->currentFrame = -1;
+    s->frames = nullptr;       // Directly assign frames
+    s->totalFrames = -1;       // Set the number of frames
+    s->scale = 1.0f;           // Initialize scale
+    s->flipHorizontal = false; // Initialize flip state
+    s->flipVertical = false;   // Initialize flip state
+}
+
+void deepCopyImage(Image src, Image *dst)
+{
+    // Copy the scalar members (width, height, channels)
+    dst->width = src.width;
+    dst->height = src.height;
+    dst->channels = src.channels;
+
+    // Allocate memory for the image data in the destination
+    dst->data = (unsigned char *)malloc(src.width * src.height * src.channels);
+    if (dst->data == NULL)
+    {
+        // Handle memory allocation failure
+        printf("Memory allocation failed\n");
+        return;
+    }
+
+    // Copy the image data byte-by-byte
+    memcpy(dst->data, src.data, src.width * src.height * src.channels);
+}
+
+void iScaleSprite(Sprite *s, double scale)
+{
+    if (!s || scale <= 0.0f)
+        return;
+
+    s->scale *= scale;
+    for (int i = 0; i < s->totalFrames; ++i)
+    {
+        Image *frame = &s->frames[i];
+        iScaleImage(frame, scale);
+    }
+
     iUpdateCollisionMask(s);
 }
 
-void iLoadSpriteFromSheet(Sprite *s, const char *filename, int rows, int cols, int startFrame, int endFrame, int ignoreColor)
+void iChangeSpriteFrames(Sprite *s, const Image *frames, int totalFrames)
 {
-    s->x = 0;
-    s->y = 0;
-    s->startFrame = startFrame;
-    s->currentFrame = startFrame;
-    s->totalFrames = endFrame - startFrame + 1;
+    if (s->frames != nullptr)
+    {
+        for (int i = 0; i < s->totalFrames; ++i)
+        {
+            iFreeImage(&s->frames[i]);
+        }
+        delete[] s->frames;
+    }
+
+    s->frames = new Image[totalFrames];
+
+    for (int i = 0; i < totalFrames; ++i)
+    {
+        deepCopyImage(frames[i], &s->frames[i]);
+    }
+
+    s->currentFrame = 0;
+    s->totalFrames = totalFrames;
     s->collisionMask = nullptr;
-    s->ignoreColor = ignoreColor;
-    iLoadSpriteSheet(s, filename, rows, cols);
+
+    // Apply transformations to each frame
+    for (int i = 0; i < s->totalFrames; ++i)
+    {
+        Image *frame = &s->frames[i];
+        iScaleImage(frame, s->scale);
+        if (s->flipHorizontal)
+            iMirrorImage(frame, HORIZONTAL);
+        if (s->flipVertical)
+            iMirrorImage(frame, VERTICAL);
+    }
+
     iUpdateCollisionMask(s);
 }
 
@@ -681,7 +905,7 @@ void iSetSpritePosition(Sprite *s, int x, int y)
     s->y = y;
 }
 
-void iShowSprite(Sprite *s)
+void iShowSprite(const Sprite *s)
 {
     if (!s || !s->frames)
         return;
@@ -699,32 +923,26 @@ void iResizeSprite(Sprite *s, int width, int height)
     iUpdateCollisionMask(s);
 }
 
-void iScaleSprite(Sprite *s, double scale)
-{
-    if (!s || scale <= 0.0f)
-        return;
-
-    for (int i = 0; i < s->totalFrames; ++i)
-    {
-        Image *frame = &s->frames[i];
-        iScaleImage(frame, scale);
-    }
-
-    iUpdateCollisionMask(s);
-}
-
-void iWrapSprite(Sprite *s, int dx)
-{
-    for (int i = 0; i < s->totalFrames; ++i)
-    {
-        Image *frame = &s->frames[i];
-        iWrapImage(frame, dx);
-    }
-    iUpdateCollisionMask(s);
-}
+// void iWrapSprite(Sprite *s, int dx)
+// {
+//     for (int i = 0; i < s->totalFrames; ++i)
+//     {
+//         Image *frame = &s->frames[i];
+//         iWrapImage(frame, dx);
+//     }
+//     iUpdateCollisionMask(s);
+// }
 
 void iMirrorSprite(Sprite *s, MirrorState state)
 {
+    if (state == HORIZONTAL)
+    {
+        s->flipHorizontal = !s->flipHorizontal;
+    }
+    else if (state == VERTICAL)
+    {
+        s->flipVertical = !s->flipVertical;
+    }
     for (int i = 0; i < s->totalFrames; ++i)
     {
         Image *frame = &s->frames[i];
@@ -757,6 +975,34 @@ void iGetPixelColor(int cursorX, int cursorY, int rgb[])
     rgb[2] = pixel[2];
 
     // printf("%d %d %d\n",pixel[0],pixel[1],pixel[2]);
+}
+
+void iStrokeText(double x, double y, const char *str, float scale = 0.1)
+{
+    glPushMatrix();
+    glTranslatef(x, y, 0);
+    glScalef(scale, scale, 1);
+    for (int i = 0; str[i]; i++)
+    {
+        glutStrokeCharacter(GLUT_STROKE_ROMAN, str[i]);
+    }
+    glPopMatrix();
+}
+
+void iTextBold(double x, double y, const char *str, void *font = GLUT_BITMAP_8_BY_13)
+{
+    const double offset = 0.5;
+    for (int dx = -1; dx <= 1; dx++)
+    {
+        for (int dy = -1; dy <= 1; dy++)
+        {
+            glRasterPos3d(x + dx * offset, y + dy * offset, 0);
+            for (int i = 0; str[i]; i++)
+            {
+                glutBitmapCharacter(font, str[i]);
+            }
+        }
+    }
 }
 
 void iText(double x, double y, const char *str, void *font = GLUT_BITMAP_8_BY_13)
@@ -1072,7 +1318,8 @@ int iPlaySound(const char *filename, bool loop = false, int volume = 100) // If 
     {
         sound->setVolume(volume / 100.0); // Set initial volume
         sound->setIsPaused(false);        // Unpause the sound
-        for (int i = 0; i < sounds.size(); i++)
+        int n = sounds.size();
+        for (int i = 0; i < n; i++)
         {
             if (sounds[i] == nullptr)
             {
@@ -1080,15 +1327,16 @@ int iPlaySound(const char *filename, bool loop = false, int volume = 100) // If 
                 return i;          // Return the index of the sound
             }
         }
-        sounds.push_back(sound);  // Store the pointer
-        return sounds.size() - 1; // Return the index of the sound
+        sounds.push_back(sound); // Store the pointer
+        return n;                // Return the index of the sound
     }
     return -1; // Return -1 if sound failed to play
 }
 
 void iPauseSound(int index)
 {
-    if (index >= 0 && index < sounds.size() && sounds[index])
+    int n = sounds.size();
+    if (index >= 0 && index < n && sounds[index])
     {
         sounds[index]->setIsPaused(true); // Pause the sound
     }
@@ -1096,7 +1344,8 @@ void iPauseSound(int index)
 
 void iResumeSound(int index)
 {
-    if (index >= 0 && index < sounds.size() && sounds[index])
+    int n = sounds.size();
+    if (index >= 0 && index < n && sounds[index])
     {
         sounds[index]->setIsPaused(false); // Resume the sound
     }
@@ -1104,7 +1353,8 @@ void iResumeSound(int index)
 
 void iStopSound(int index)
 {
-    if (index >= 0 && index < sounds.size() && sounds[index])
+    int n = sounds.size();
+    if (index >= 0 && index < n && sounds[index])
     {
         sounds[index]->stop();   // Stop the sound
         sounds[index]->drop();   // Drop the sound
