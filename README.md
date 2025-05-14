@@ -621,7 +621,7 @@ int main(int argc, char *argv[])
     -   `folderPath`: Path to the folder containing images.
 -   **Example:**
     ```cpp
-    Image *frames;
+    Image frames[10];
     iLoadFramesFromFolder(frames, "sprites/"); // Load images from a folder and ignore no color
     ```
 
@@ -637,7 +637,7 @@ int main(int argc, char *argv[])
 
 -   **Example:**
     ```cpp
-    Image *frames;
+    Image frames[16];
     iLoadFramesFromSheet(frames, "spritesheet.png", 4, 4); // Load images frames a sprite sheet with 4 rows and 4 columns
     ```
 
@@ -652,7 +652,7 @@ int main(int argc, char *argv[])
 
 -   **Example:**
     ```cpp
-    Image *frames;
+    Image frames[10];
     iLoadFramesFromFolder(frames,"sprites/"); // Load images from a folder
     Sprite s;
     iInitSprite(&s, -1); // Initialize sprite
@@ -725,8 +725,7 @@ int main(int argc, char *argv[])
 -   **Example:**
     ```cpp
     Sprite s1, s2;
-    iLoadSpriteFromImage(&s1, "sprite1.png", -1);
-    iLoadSpriteFromImage(&s2, "sprite2.png", -1);
+    ....
     if (iCheckCollision(&s1, &s2)) {
         // Collision detected
     }
