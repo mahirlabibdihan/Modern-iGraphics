@@ -12,13 +12,13 @@ bool isMirroredX[2] = {false, false};
 
 void loadResources()
 {
-    pinkMonsterFrames = iLoadFramesFromSheet("assets\\images\\sprites\\1 Pink_Monster\\Pink_Monster_Idle_4.png", 1, 4);
+    iLoadFramesFromSheet(pinkMonsterFrames, "assets\\images\\sprites\\1 Pink_Monster\\Pink_Monster_Idle_4.png", 1, 4);
     iInitSprite(&pinkMonster, -1);
     iChangeSpriteFrames(&pinkMonster, pinkMonsterFrames, 4);
     iSetSpritePosition(&pinkMonster, 300, 250);
     iScaleSprite(&pinkMonster, 3.0);
 
-    golemFrames = iLoadFramesFromFolder("assets\\images\\sprites\\Golem_2\\Walking");
+    iLoadFramesFromFolder(golemFrames, "assets\\images\\sprites\\Golem_2\\Walking");
     iInitSprite(&golem, -1);
     iChangeSpriteFrames(&golem, golemFrames, 24);
     iSetSpritePosition(&golem, 300, 200);
@@ -40,7 +40,7 @@ void iDraw()
     // place your drawing codes here
 
     // iShowSprite(&mario1);
-    iShowImage(0, 0, &bg);
+    iShowLoadedImage(0, 0, &bg);
     iWrapImage(&bg, -10);
     iShowSprite(&golem);
     iShowSprite(&pinkMonster);

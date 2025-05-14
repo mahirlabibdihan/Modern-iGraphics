@@ -259,7 +259,7 @@ void iShowImage2(int x, int y, Image *img, int ignoreColor)
     delete[] clippedData;
 }
 
-void iShowImage(int x, int y, Image *img)
+void iShowLoadedImage(int x, int y, Image *img)
 {
     iShowImage2(x, y, img, -1 /* ignoreColor */);
 }
@@ -510,7 +510,7 @@ bool compareFilenames(const string &a, const string &b)
     return a < b;
 }
 
-Image *iLoadFramesFromSheet(const char *filename, int rows, int cols)
+void iLoadFramesFromSheet(Image *frames, const char *filename, int rows, int cols)
 {
     // Load the sprite sheet image
     Image tmp;
@@ -521,7 +521,7 @@ Image *iLoadFramesFromSheet(const char *filename, int rows, int cols)
     int totalFrames = cols * rows;
 
     // Allocate memory for the individual frames
-    Image *frames = new Image[totalFrames];
+    frames = new Image[totalFrames];
 
     // Loop to extract each frame
     for (int i = 0; i < totalFrames; ++i)
@@ -554,17 +554,15 @@ Image *iLoadFramesFromSheet(const char *filename, int rows, int cols)
     }
 
     delete[] tmp.data;
-
-    return frames;
 }
 
-Image *iLoadFramesFromFolder(const char *folderPath)
+void iLoadFramesFromFolder(Image *frames, const char *folderPath)
 {
     DIR *dir = opendir(folderPath);
     if (dir == nullptr)
     {
         fprintf(stderr, "Failed to open directory: %s\n", folderPath);
-        return nullptr;
+        return;
     }
     vector<string> filenames;
     struct dirent *entry;
@@ -585,7 +583,7 @@ Image *iLoadFramesFromFolder(const char *folderPath)
     sort(filenames.begin(), filenames.end(), compareFilenames);
 
     int totalFrames = filenames.size();
-    Image *frames = new Image[totalFrames];
+    frames = new Image[totalFrames];
 
     // Load each image
     for (int i = 0; i < totalFrames; ++i)
@@ -595,7 +593,7 @@ Image *iLoadFramesFromFolder(const char *folderPath)
         iLoadImage(&frames[i], fullPath.c_str());
     }
 
-    return frames;
+    return;
 }
 
 void iInitSprite(Sprite *s, int ignoreColor = -1)

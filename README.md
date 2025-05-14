@@ -21,6 +21,14 @@ It was originally created by [Shahriar Nirjon](https://www.cs.unc.edu/~nirjon/) 
 
 ---
 
+## 🧱 Setup in Code::Blocks
+
+Download the ZIP file from [here](https://github.com/mahirlabibdihan/Modern-iGraphics/archive/refs/heads/main.zip) and extract it.
+
+Open `iGraphics.cbp` in Code::Blocks. The project is already configured with all the necessary settings. You can directly run the project. By default, the main file is `iMain.cpp`. You can remove it and add a different file if you want.
+
+---
+
 ## ⚙️ Setup in Terminal
 
 **Download the Library**:
@@ -47,14 +55,6 @@ Ensure that `g++` is installed on your system and available in your PATH. Then, 
 ```bash
 ./runner.sh examples/BallDemo.cpp
 ```
-
----
-
-## 🧱 Setup in Code::Blocks
-
-Download the ZIP file from [here](https://github.com/mahirlabibdihan/Modern-iGraphics/archive/refs/heads/main.zip) and extract it.
-
-Open `iGraphics.cbp` in Code::Blocks. The project is already configured with all the necessary settings. You can directly run the project. By default, the main file is `iMain.cpp`. You can remove it and add a different file if you want.
 
 <!-- ### Step 1: Create a New Project
 
@@ -503,9 +503,22 @@ int main(int argc, char *argv[])
     } Image;
     ```
 
-#### `void iShowImage(int x, int y, Image* img)`
+#### `void iShowImage(int x, int y, const char *filename)`
 
 -   **Description:** Displays an image at specified coordinates.
+-   **Parameters:**
+
+    -   `x`, `y`: Coordinates where the image will be displayed.
+    -   `filename`: Path to the image file.
+
+-   **Example:**
+    ```cpp
+    iShowImage(100, 200, "image.png");
+    ```
+
+#### `void iShowLoadedImage(int x, int y, Image* img)`
+
+-   **Description:** Displays an already loaded image at specified coordinates.
 -   **Parameters:**
 
     -   `x`, `y`: Coordinates where the image will be displayed.
@@ -577,19 +590,18 @@ int main(int argc, char *argv[])
 
 ### 🧩 Sprite Functions
 
-#### `void iLoadSpriteFromImage(Sprite *s, const char *filename, int ignoreColor)`
+#### `void iInitSprite(Sprite *s, int ignoreColor = -1)`
 
--   **Description:** Loads a sprite from an image file.
+-   **Description:** Initializes a sprite structure.
 -   **Parameters:**
     -   `s`: Pointer to a `Sprite` structure.
-    -   `filename`: Path to the image file.
     -   `ignoreColor`: Color to be ignored. The ignored part will be transparent.
         -   `-1` to read the whole image
         -   `0xRRGGBB` to ignore the color `RRGGBB` while loading the image (e.g., `0xFF0000` for red).
 -   **Example:**
     ```cpp
     Sprite s;
-    iLoadSpriteFromImage(&s, "background.png", 0xFFFFFF); // Load a single image and ignore white color
+    iInitSprite(&s, 0xFFFFFF); // Initialize sprite and ignore white color
     ```
 -   **Sprite Structure**
     ```cpp
@@ -601,36 +613,50 @@ int main(int argc, char *argv[])
     } Sprite;
     ```
 
-#### `void iLoadSpriteFromFolder(Sprite *s, const char *folderPath, int ignoreColor)`
+#### `void iLoadFramesFromFolder(Image *frames, const char *folderPath)`
 
--   **Description:** Loads a sprite from a folder containing multiple images. The sprite can be animated by cycling through (In the ascending order of filenames) the images in the folder.
+-   **Description:** Loads frames from a folder containing multiple images.
 -   **Parameters:**
-    -   `s`: Pointer to a `Sprite` structure.
+    -   `frames`: Pointer to an array of `Image` structures.
     -   `folderPath`: Path to the folder containing images.
-    -   `ignoreColor`: Color to be ignored (same as above).
 -   **Example:**
     ```cpp
-    Sprite s;
-    iLoadSpriteFromFolder(&s, "sprites/", -1); // Load images from a folder and ignore no color
+    Image *frames;
+    iLoadFramesFromFolder(frames, "sprites/"); // Load images from a folder and ignore no color
     ```
 
-#### `void iLoadSpriteFromSheet(Sprite *s, const char *filename, int rows, int cols, int startFrame, int endFrame, int ignoreColor)`
+#### `void iLoadFramesFromSheet(Image *frames, const char *filename, int rows, int cols)`
 
--   **Description:** Loads a sprite from a sprite sheet. The sprite can be animated by cycling through the frames in the sheet.
+-   **Description:** Loads frames from a sprite sheet.
 -   **Parameters:**
 
-    -   `s`: Pointer to a `Sprite` structure.
-    -   `filename`: Path to the sprite sheet image file.
+    -   `frames`: Pointer to an array of `Image` structures.
+    -   `filename`: Path to the sprite sheet image.
     -   `rows`: Number of rows in the sprite sheet.
     -   `cols`: Number of columns in the sprite sheet.
-    -   `startFrame`: Starting frame index.
-    -   `endFrame`: Ending frame index.
-    -   `ignoreColor`: Color to be ignored (same as above).
 
 -   **Example:**
     ```cpp
+    Image *frames;
+    iLoadFramesFromSheet(frames, "spritesheet.png", 4, 4); // Load images frames a sprite sheet with 4 rows and 4 columns
+    ```
+
+#### `void iChangeSpriteFrames(Sprite *s, const Image *frames, int totalFrames)`
+
+-   **Description:** Changes the frames of a sprite.
+-   **Parameters:**
+
+    -   `s`: Pointer to a `Sprite` structure.
+    -   `frames`: Array of `Image` structures representing the new frames.
+    -   `totalFrames`: Number of frames in the array.
+
+-   **Example:**
+    ```cpp
+    Image *frames;
+    iLoadFramesFromFolder(frames,"sprites/"); // Load images from a folder
     Sprite s;
-    iLoadSpriteFromSheet(&s, "spritesheet.png", 4, 4, 0, 15, -1); // Load a sprite sheet with 4 rows and 4 columns
+    iInitSprite(&s, -1); // Initialize sprite
+    iChangeSpriteFrames(&s, frames, 4); // Change the frames of the sprite
     ```
 
 #### `void iSetSpritePosition(Sprite* s, int x, int y)`
@@ -681,15 +707,6 @@ int main(int argc, char *argv[])
 -   **Parameters:**
     -   `s`: Pointer to a `Sprite` structure.
     -   `state`: `HORIZONTAL` or `VERTICAL`.
-
-#### `void iWrapSprite(Sprite* s, int dx)`
-
--   **Description:** Wraps the sprite around the window by `dx` pixels.
--   **Parameters:**
-    -   `s`: Pointer to a `Sprite` structure.
-    -   `dx`: Number of pixels to wrap around.
-        -   A positive value of `dx` shifts the sprite to the right.
-        -   A negative value of `dx` shifts the sprite to the left.
 
 #### `void iFreeSprite(Sprite* s)`
 

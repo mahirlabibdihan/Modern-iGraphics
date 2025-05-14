@@ -18,14 +18,13 @@ Sprite monster;
 
 void loadResources()
 {
-	idleMonster = iLoadFramesFromFolder("assets\\images\\sprites\\Golem_2\\Idle Blinking");
-	walkMonster = iLoadFramesFromSheet("assets\\images\\sprites\\1 Pink_Monster\\Pink_Monster_Walk_6.png", 1, 6);
-	jumpMonster = iLoadFramesFromSheet("assets\\images\\sprites\\1 Pink_Monster\\Pink_Monster_Jump_8.png", 1, 8);
+	iLoadFramesFromFolder(idleMonster, "assets\\images\\sprites\\Golem_2\\Idle Blinking");
+	iLoadFramesFromSheet(walkMonster, "assets\\images\\sprites\\1 Pink_Monster\\Pink_Monster_Walk_6.png", 1, 6);
+	iLoadFramesFromSheet(jumpMonster, "assets\\images\\sprites\\1 Pink_Monster\\Pink_Monster_Jump_8.png", 1, 8);
 
 	iInitSprite(&monster, -1);
 	iChangeSpriteFrames(&monster, idleMonster, 4);
 	iSetSpritePosition(&monster, 20, 0);
-	double marioAspectRatio = (double)mario.width / mario.height;
 	iScaleSprite(&monster, 3.0);
 }
 

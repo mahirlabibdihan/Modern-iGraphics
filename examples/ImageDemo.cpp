@@ -16,7 +16,7 @@ void iDraw()
 	//  load background.jpg using stb_image
 	iClear();
 	iShowImage(200, 200, "assets\\images\\background.jpg");
-	iShowImage(211, 304, &mario);
+	iShowLoadedImage(211, 304, &mario);
 }
 
 /*

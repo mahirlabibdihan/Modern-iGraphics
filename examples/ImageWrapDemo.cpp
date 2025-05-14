@@ -14,7 +14,7 @@ void iDraw()
 	// place your drawing codes here
 	//  load background.jpg using stb_image
 	iClear();
-	iShowImage(0, 0, &bg);
+	iShowLoadedImage(0, 0, &bg);
 	iWrapImage(&bg, speed);
 	iText(70, 50, "Press LEFT to decrease speed, RIGHT to increase speed", GLUT_BITMAP_TIMES_ROMAN_24);
 }

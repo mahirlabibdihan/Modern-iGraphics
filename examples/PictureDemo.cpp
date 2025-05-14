@@ -18,7 +18,7 @@ void iDraw()
 {
     // place your drawing codes here
     iClear();
-    iShowImage(pic_x, pic_y, &smurf);
+    iShowLoadedImage(pic_x, pic_y, &smurf);
     iText(10, 10, "Use cursors to move the picture.");
 }
 
