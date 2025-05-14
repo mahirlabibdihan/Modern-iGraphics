@@ -581,7 +581,7 @@ int main(int argc, char *argv[])
     typedef struct
     {
         int x, y;
-        Image *frames; // Array of individual frame images
+        int currentFrame;
         ....
     } Sprite;
     ```
