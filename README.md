@@ -545,6 +545,75 @@ int main(int argc, char *argv[])
     }
     ```
 
+### 🔉 Sound Functions
+
+`iGraphics` was originally designed for graphical applications, but it has been extended to support sound playback using the `irrKlang` library. The sound functions are as follows:
+
+#### `int iPlaySound(const char *filename, bool loop = false, int volume = 100)`
+
+-   **Description:** Plays a sound from file with optional looping and volume control.
+-   **Parameters:**
+    -   `filename`: Path to the sound file.
+    -   `loop`: `true` for continuous play, `false` for one-time play.
+    -   `volume`: Volume level (0-100).
+-   **Returns:** Index of the sound.
+-   **Example:**
+    ```cpp
+    int idx = iPlaySound("background.wav", true, 80);
+    ```
+
+#### `void iPauseSound(int index)`
+
+-   **Description:** Pauses the sound specified by `index`.
+-   **Parameters:** `index` of the sound.
+-   **Example:**
+    ```cpp
+    iPauseSound(idx);
+    ```
+
+#### `void iResumeSound(int index)`
+
+-   **Description:** Resumes the sound specified by `index`.
+-   **Parameters:** `index` of the sound.
+-   **Example:**
+    ```cpp
+    iResumeSound(idx);
+    ```
+
+#### `void iStopSound(int index)`
+
+-   **Description:** Stops the sound specified by `index`.
+-   **Parameters:** `index` of the sound.
+-   **Example:**
+    ```cpp
+    iStopSound(idx);
+    ```
+
+#### `void iStopAllSounds()`
+
+-   **Description:** Stops all currently playing sounds.
+
+#### `void iSetVolume(int index, int volume)`
+
+-   **Description:** Sets the volume for a specific sound.
+-   **Parameters:**
+    -   `index`: Index of the sound.
+    -   `volume`: Volume level (0-100).
+
+#### `void iIncreaseVolume(int index, int amount)`
+
+-   **Description:** Increases the volume of a specific sound by a specified amount.
+-   **Parameters:**
+    -   `index`: Index of the sound.
+    -   `amount`: Amount to increase the volume by (0-100).
+
+#### `void iDecreaseVolume(int index, int amount)`
+
+-   **Description:** Decreases the volume of a specific sound by a specified amount.
+-   **Parameters:**
+    -   `index`: Index of the sound.
+    -   `amount`: Amount to decrease the volume by (0-100).
+
 ### 🖼️ Image Functions
 
 #### `void iShowImage(int x, int y, const char *filename)`
@@ -657,75 +726,6 @@ int main(int argc, char *argv[])
 #### `void iFreeImage(Image* img)`
 
 -   **Description:** Frees the memory allocated for the image.
-
-### 🔉 Sound Functions
-
-`iGraphics` was originally designed for graphical applications, but it has been extended to support sound playback using the `irrKlang` library. The sound functions are as follows:
-
-#### `int iPlaySound(const char *filename, bool loop = false, int volume = 100)`
-
--   **Description:** Plays a sound from file with optional looping and volume control.
--   **Parameters:**
-    -   `filename`: Path to the sound file.
-    -   `loop`: `true` for continuous play, `false` for one-time play.
-    -   `volume`: Volume level (0-100).
--   **Returns:** Index of the sound.
--   **Example:**
-    ```cpp
-    int idx = iPlaySound("background.wav", true, 80);
-    ```
-
-#### `void iPauseSound(int index)`
-
--   **Description:** Pauses the sound specified by `index`.
--   **Parameters:** `index` of the sound.
--   **Example:**
-    ```cpp
-    iPauseSound(idx);
-    ```
-
-#### `void iResumeSound(int index)`
-
--   **Description:** Resumes the sound specified by `index`.
--   **Parameters:** `index` of the sound.
--   **Example:**
-    ```cpp
-    iResumeSound(idx);
-    ```
-
-#### `void iStopSound(int index)`
-
--   **Description:** Stops the sound specified by `index`.
--   **Parameters:** `index` of the sound.
--   **Example:**
-    ```cpp
-    iStopSound(idx);
-    ```
-
-#### `void iStopAllSounds()`
-
--   **Description:** Stops all currently playing sounds.
-
-#### `void iSetVolume(int index, int volume)`
-
--   **Description:** Sets the volume for a specific sound.
--   **Parameters:**
-    -   `index`: Index of the sound.
-    -   `volume`: Volume level (0-100).
-
-#### `void iIncreaseVolume(int index, int amount)`
-
--   **Description:** Increases the volume of a specific sound by a specified amount.
--   **Parameters:**
-    -   `index`: Index of the sound.
-    -   `amount`: Amount to increase the volume by (0-100).
-
-#### `void iDecreaseVolume(int index, int amount)`
-
--   **Description:** Decreases the volume of a specific sound by a specified amount.
--   **Parameters:**
-    -   `index`: Index of the sound.
-    -   `amount`: Amount to decrease the volume by (0-100).
 
 ### 🧩 Sprite Functions
 
