@@ -25,6 +25,7 @@ void loadResources()
 	iInitSprite(&monster, -1);
 	iChangeSpriteFrames(&monster, idleMonster, 4);
 	iSetSpritePosition(&monster, 20, 0);
+	double marioAspectRatio = (double)mario.width / mario.height;
 	iScaleSprite(&monster, 3.0);
 }
 

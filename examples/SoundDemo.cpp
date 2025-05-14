@@ -69,10 +69,10 @@ void iKeyboard(unsigned char key)
 	case 'x':
 		iStopSound(bgSoundIdx);
 		break;
+		// place your codes for other keys here
 	default:
 		break;
 	}
-	// place your codes for other keys here
 }
 
 /*
@@ -94,10 +94,10 @@ void iSpecialKeyboard(unsigned char key)
 	case GLUT_KEY_DOWN:
 		iDecreaseVolume(bgSoundIdx, 5);
 		break;
+		// place your codes for other keys here
 	default:
 		break;
 	}
-	// place your codes for other keys here
 }
 
 int main(int argc, char *argv[])

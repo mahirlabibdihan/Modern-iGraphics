@@ -163,24 +163,6 @@ void iFreeImage(Image *img)
     stbi_image_free(img->data);
 }
 
-GLuint loadTexture(Image *img)
-{
-    GLuint texId;
-    glGenTextures(1, &texId);
-    glBindTexture(GL_TEXTURE_2D, texId);
-
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-    GLenum format = (img->channels == 4) ? GL_RGBA : GL_RGB;
-
-    glTexImage2D(GL_TEXTURE_2D, 0, format,
-                 img->width, img->height, 0,
-                 format, GL_UNSIGNED_BYTE, img->data);
-
-    return texId;
-}
-
 void iShowImage2(int x, int y, Image *img, int ignoreColor)
 {
     int imgWidth = img->width;
@@ -277,104 +259,21 @@ void iShowImage2(int x, int y, Image *img, int ignoreColor)
     delete[] clippedData;
 }
 
-GLuint createTextureFromImage(Image *img, int ignoreColor, int &outChannels)
-{
-    int imgWidth = img->width;
-    int imgHeight = img->height;
-    int channels = img->channels;
-    unsigned char *data = img->data;
-
-    unsigned char *processedData = data;
-    // bool needAlpha = (channels == 4 || ignoreColor != -1);
-
-    if (ignoreColor != -1)
-    {
-        processedData = new unsigned char[imgWidth * imgHeight * 4];
-        for (int i = 0; i < imgWidth * imgHeight; i++)
-        {
-            int srcIndex = i * channels;
-            int dstIndex = i * 4;
-
-            unsigned char r = data[srcIndex];
-            unsigned char g = data[srcIndex + 1];
-            unsigned char b = data[srcIndex + 2];
-
-            bool ignore = (r == (ignoreColor >> 16 & 0xFF) &&
-                           g == (ignoreColor >> 8 & 0xFF) &&
-                           b == (ignoreColor & 0xFF));
-
-            processedData[dstIndex + 0] = r;
-            processedData[dstIndex + 1] = g;
-            processedData[dstIndex + 2] = b;
-            processedData[dstIndex + 3] = (ignore ? 0 : 255);
-        }
-        outChannels = 4;
-    }
-    else
-    {
-        outChannels = channels;
-    }
-
-    GLuint tex;
-    glGenTextures(1, &tex);
-    glBindTexture(GL_TEXTURE_2D, tex);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR); // smooth scaling
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
-
-    glTexImage2D(GL_TEXTURE_2D, 0,
-                 (outChannels == 4 ? GL_RGBA : GL_RGB),
-                 imgWidth, imgHeight, 0,
-                 (outChannels == 4 ? GL_RGBA : GL_RGB),
-                 GL_UNSIGNED_BYTE, processedData);
-
-    if (processedData != data)
-        delete[] processedData;
-
-    return tex;
-}
-
-void iShowImage3(int x, int y, Image *img, int ignoreColor)
-{
-    if (!img || !img->data)
-        return;
-
-    int imgWidth = img->width;
-    int imgHeight = img->height;
-    int channels = 0;
-
-    GLuint tex = createTextureFromImage(img, ignoreColor, channels);
-
-    float w = imgWidth;
-    float h = imgHeight;
-
-    glEnable(GL_TEXTURE_2D);
-    glBindTexture(GL_TEXTURE_2D, tex);
-
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-    glBegin(GL_QUADS);
-    glTexCoord2f(0, 0);
-    glVertex2f(x, y);
-    glTexCoord2f(1, 0);
-    glVertex2f(x + w, y);
-    glTexCoord2f(1, 1);
-    glVertex2f(x + w, y + h);
-    glTexCoord2f(0, 1);
-    glVertex2f(x, y + h);
-    glEnd();
-
-    glDisable(GL_BLEND);
-    glDisable(GL_TEXTURE_2D);
-
-    glDeleteTextures(1, &tex);
-}
-
 void iShowImage(int x, int y, Image *img)
 {
     iShowImage2(x, y, img, -1 /* ignoreColor */);
+}
+
+void iShowImage(int x, int y, const char *filename)
+{
+    Image img;
+    if (!iLoadImage(&img, filename))
+    {
+        printf("Failed to load image: %s\n", filename);
+        return;
+    }
+    iShowImage2(x, y, &img, -1 /* ignoreColor */);
+    iFreeImage(&img);
 }
 
 void iWrapImage(Image *img, int dx)
@@ -605,53 +504,6 @@ void iAnimateSprite(Sprite *sprite)
     iUpdateCollisionMask(sprite);
 }
 
-void iLoadFrames(Sprite *sprite, const char *filename, int rows, int cols)
-{
-    // Load the sprite sheet image
-    Image tmp;
-    iLoadImage(&tmp, filename);
-
-    int frameWidth = tmp.width / cols;
-    int frameHeight = tmp.height / rows;
-    int totalFrames = cols * rows;
-
-    printf("Width: %d, Height: %d, Frame Width: %d, Frame Height: %d\n", tmp.width, tmp.height, frameWidth, frameHeight);
-
-    // Allocate memory for the individual frames
-    sprite->frames = new Image[totalFrames];
-
-    // Loop to extract each frame
-    for (int i = 0; i < totalFrames; ++i)
-    {
-        int col = i % cols;
-        int row = i / cols;
-
-        // Create an Image structure for each frame
-        Image *frame = &sprite->frames[i];
-        frame->width = frameWidth;
-        frame->height = frameHeight;
-        frame->channels = tmp.channels;
-        frame->data = new unsigned char[frameWidth * frameHeight * frame->channels];
-
-        for (int y = 0; y < frameHeight; ++y)
-        {
-            for (int x = 0; x < frameWidth; ++x)
-            {
-                int srcX = col * frameWidth + x;
-                int srcY = row * frameHeight + y;
-                int srcIndex = (srcY * tmp.width + srcX) * tmp.channels;
-                int dstIndex = (y * frameWidth + x) * frame->channels;
-
-                for (int c = 0; c < frame->channels; ++c)
-                {
-                    frame->data[dstIndex + c] = tmp.data[srcIndex + c];
-                }
-            }
-        }
-    }
-
-    delete[] tmp.data;
-}
 // Comparison function for sorting filenames
 bool compareFilenames(const string &a, const string &b)
 {
@@ -744,71 +596,6 @@ Image *iLoadFramesFromFolder(const char *folderPath)
     }
 
     return frames;
-}
-
-void iLoadFrames(Sprite *sprite, const char *folderPath)
-{
-    DIR *dir = opendir(folderPath);
-    if (dir == nullptr)
-    {
-        fprintf(stderr, "Failed to open directory: %s\n", folderPath);
-        return;
-    }
-    vector<string> filenames;
-    struct dirent *entry;
-    while ((entry = readdir(dir)) != nullptr)
-    {
-        // Skip directories
-        if (entry->d_type == DT_DIR)
-            continue;
-
-        // Filter for image files (e.g., *.png, *.jpg)
-        string filename(entry->d_name);
-        // if (filename.find(".png") != std::string::npos || filename.find(".jpg") != std::string::npos || filename.find(".jpeg") != std::string::npos)
-        {
-            filenames.push_back(filename);
-        }
-    }
-    closedir(dir);
-    sort(filenames.begin(), filenames.end(), compareFilenames);
-
-    sprite->totalFrames = filenames.size();
-    sprite->frames = (Image *)malloc(sizeof(Image) * sprite->totalFrames);
-
-    // Load each image
-    for (int i = 0; i < sprite->totalFrames; ++i)
-    {
-        std::string fullPath = std::string(folderPath) + "/" + filenames[i];
-
-        int w, h, ch;
-        unsigned char *data = stbi_load(fullPath.c_str(), &w, &h, &ch, 0);
-        if (!data)
-        {
-            fprintf(stderr, "Failed to load frame: %s\n", fullPath.c_str());
-            exit(1);
-        }
-
-        sprite->frames[i].data = data;
-        sprite->frames[i].width = w;
-        sprite->frames[i].height = h;
-        sprite->frames[i].channels = ch;
-    }
-}
-
-// Need to delete the sprite sheet after using it
-void iLoadSpriteFromImage(Sprite *s, const char *filename, int ignoreColor)
-{
-    s->x = 0;
-    s->y = 0;
-    s->totalFrames = 1;
-    s->currentFrame = 0;
-    s->totalFrames = 1;
-    s->collisionMask = nullptr;
-    s->ignoreColor = ignoreColor;
-    s->frames = new Image[1];
-
-    iLoadImage(&s->frames[0], filename);
-    iUpdateCollisionMask(s);
 }
 
 void iInitSprite(Sprite *s, int ignoreColor = -1)

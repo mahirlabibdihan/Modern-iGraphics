@@ -14,10 +14,6 @@ Sprite sprite;
 void loadResources()
 {
 	iInitSprite(&sprite, -1);
-
-	// frames = iLoadFramesFromFolder("assets\\images\\sprites\\Golem_2\\Idle Blinking");
-	// iChangeSpriteFrames(&sprite, frames, 18);
-
 	frames = iLoadFramesFromFolder("assets\\images\\sprites\\Golem_2\\Walking");
 	iChangeSpriteFrames(&sprite, frames, 24);
 	iSetSpritePosition(&sprite, -200, -110);

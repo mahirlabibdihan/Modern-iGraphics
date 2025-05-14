@@ -15,7 +15,7 @@ void iDraw()
 	// place your drawing codes here
 	//  load background.jpg using stb_image
 	iClear();
-	iShowImage(200, 200, &bg);
+	iShowImage(200, 200, "assets\\images\\background.jpg");
 	iShowImage(211, 304, &mario);
 }
 
@@ -63,7 +63,6 @@ void iMouseWheel(int button, int dir, int mx, int my)
 */
 void iKeyboard(unsigned char key)
 {
-
 	// place your codes for other keys here
 }
 

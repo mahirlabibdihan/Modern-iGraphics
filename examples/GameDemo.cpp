@@ -1,8 +1,10 @@
 #include "iGraphics.h"
 
 Image bg;
-Sprite mario1, mario2, rect;
 
+Sprite mario1, mario2, rect;
+Image *pinkMonsterFrames, *golemFrames;
+Image rectFrame;
 Sprite pinkMonster, golem;
 bool isMirroredX[2] = {false, false};
 #define PINK_MONSTER 0
@@ -10,18 +12,24 @@ bool isMirroredX[2] = {false, false};
 
 void loadResources()
 {
-    iLoadSpriteFromSheet(&pinkMonster, "assets\\images\\sprites\\1 Pink_Monster\\Pink_Monster_Idle_4.png", 1, 4, 0, 3, -1);
+    pinkMonsterFrames = iLoadFramesFromSheet("assets\\images\\sprites\\1 Pink_Monster\\Pink_Monster_Idle_4.png", 1, 4);
+    iInitSprite(&pinkMonster, -1);
+    iChangeSpriteFrames(&pinkMonster, pinkMonsterFrames, 4);
     iSetSpritePosition(&pinkMonster, 300, 250);
     iScaleSprite(&pinkMonster, 3.0);
 
-    iLoadSpriteFromFolder(&golem, "assets\\images\\sprites\\Golem_2\\Walking", -1);
+    golemFrames = iLoadFramesFromFolder("assets\\images\\sprites\\Golem_2\\Walking");
+    iInitSprite(&golem, -1);
+    iChangeSpriteFrames(&golem, golemFrames, 24);
     iSetSpritePosition(&golem, 300, 200);
     iScaleSprite(&golem, 0.5);
 
     iLoadImage(&bg, "assets\\images\\background.jpg");
     iResizeImage(&bg, 1800, 1000);
 
-    iLoadSpriteFromImage(&rect, "assets\\images\\rect.png", 0xFFFFFF); // Ignore white color for collision detection
+    iLoadImage(&rectFrame, "assets\\images\\rect.png"); // Ignore white color for collision detection
+    iInitSprite(&rect, 0xFFFFFF);
+    iChangeSpriteFrames(&rect, &rectFrame, 1);
     iSetSpritePosition(&rect, -100, -50);
     iScaleSprite(&rect, 2);
     // iWrapSprite(&rect, 500);
