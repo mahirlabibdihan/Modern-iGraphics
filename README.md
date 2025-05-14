@@ -204,7 +204,7 @@ void iSpecialKeyboard(unsigned char key)
     switch (key)
     {
     case GLUT_KEY_END:
-        // do something with 'q'
+        // do something
         break;
     // place your codes for other keys here
     default:
