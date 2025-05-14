@@ -8,17 +8,11 @@ int pic_x, pic_y;
 
 Image smurf;
 
-void loadResources()
-{
-    iLoadImage(&smurf, "assets\\images\\smurf.bmp");
-    double smurfAspectRatio = (double)smurf.width / smurf.height;
-    iResizeImage(&smurf, 48, 48.0 / smurfAspectRatio);
-}
 void iDraw()
 {
     // place your drawing codes here
     iClear();
-    iShowLoadedImage(pic_x, pic_y, &smurf);
+    iShowImage(pic_x, pic_y, "assets\\images\\sprites\\Golem_2\\Idle\\0_Golem_Idle_000.png");
     iText(10, 10, "Use cursors to move the picture.");
 }
 
@@ -109,11 +103,10 @@ void iMouseWheel(int button, int dir, int mx, int my)
 int main(int argc, char *argv[])
 {
     glutInit(&argc, argv);
-    loadResources();
     // place your own initialization codes here.
-    pic_x = 30;
-    pic_y = 20;
+    pic_x = 0;
+    pic_y = 0;
 
-    iInitialize(500, 400, "PictureDemo");
+    iInitialize(900, 900, "PictureDemo");
     return 0;
 }
