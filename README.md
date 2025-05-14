@@ -115,7 +115,7 @@ Ensure that `g++` is installed on your system and available in your PATH. Then, 
 
 ## 👨‍💻 Description of `iMain.cpp`
 
-Users of `iGraphics` only have to edit, compile and run `iMain.cpp`. See the listing of `iMain.cpp` below:
+Users of `iGraphics` only have to edit, compile and run [iMain.cpp](https://github.com/mahirlabibdihan/Modern-iGraphics/blob/main/iMain.cpp). See the listing of `iMain.cpp` below:
 
 ```cpp
 #include "iGraphics.h"
