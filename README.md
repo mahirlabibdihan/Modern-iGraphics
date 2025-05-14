@@ -477,6 +477,19 @@ int main(int argc, char *argv[])
 
 ### 🖼️ Image Functions
 
+#### `void iShowImage(int x, int y, const char *filename)`
+
+-   **Description:** Displays an image at specified coordinates.
+-   **Parameters:**
+
+    -   `x`, `y`: Coordinates where the image will be displayed.
+    -   `filename`: Path to the image file.
+
+-   **Example:**
+    ```cpp
+    iShowImage(100, 200, "image.png");
+    ```
+
 #### `bool iLoadImage(Image* img, const char filename[])`
 
 -   **Description:** Loads an image from file. Supports multiple image formats (BMP, PNG, JPG, GIF) with the help of the stb_image library.
@@ -501,19 +514,6 @@ int main(int argc, char *argv[])
         unsigned char *data;
         int width, height, channels;
     } Image;
-    ```
-
-#### `void iShowImage(int x, int y, const char *filename)`
-
--   **Description:** Displays an image at specified coordinates.
--   **Parameters:**
-
-    -   `x`, `y`: Coordinates where the image will be displayed.
-    -   `filename`: Path to the image file.
-
--   **Example:**
-    ```cpp
-    iShowImage(100, 200, "image.png");
     ```
 
 #### `void iShowLoadedImage(int x, int y, Image* img)`
