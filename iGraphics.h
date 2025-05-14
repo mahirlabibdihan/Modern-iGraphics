@@ -23,6 +23,7 @@
 #include <string>
 #include <vector>
 #include <algorithm>
+#include <set>
 #include <dirent.h>
 // #include "glaux.h"
 #define STB_IMAGE_IMPLEMENTATION
@@ -521,7 +522,7 @@ void iLoadFramesFromSheet(Image *frames, const char *filename, int rows, int col
     int totalFrames = cols * rows;
 
     // Allocate memory for the individual frames
-    frames = new Image[totalFrames];
+    // frames = new Image[totalFrames];
 
     // Loop to extract each frame
     for (int i = 0; i < totalFrames; ++i)
@@ -583,7 +584,7 @@ void iLoadFramesFromFolder(Image *frames, const char *folderPath)
     sort(filenames.begin(), filenames.end(), compareFilenames);
 
     int totalFrames = filenames.size();
-    frames = new Image[totalFrames];
+    // frames = new Image[totalFrames];
 
     // Load each image
     for (int i = 0; i < totalFrames; ++i)
@@ -663,6 +664,7 @@ void iChangeSpriteFrames(Sprite *s, const Image *frames, int totalFrames)
 
     for (int i = 0; i < totalFrames; ++i)
     {
+        // printf("PASSED %d\n", i);
         deepCopyImage(frames[i], &s->frames[i]);
     }
 
@@ -1075,15 +1077,44 @@ void animFF(void)
     glutPostRedisplay();
 }
 
+bool keys[256] = {false};
+
 void keyboardHandler1FF(unsigned char key, int x, int y)
 {
     iKeyboard(key);
+    keys[key] = true;
     glutPostRedisplay();
 }
+
+void keyboardHandlerUp1FF(unsigned char key, int x, int y)
+{
+    keys[key] = false;
+    glutPostRedisplay();
+}
+
+bool isKeyPressed(unsigned char key)
+{
+    return keys[key];
+}
+
+set<int> specialKeys; // Use int because GLUT special keys are ints
+
 void keyboardHandler2FF(int key, int x, int y)
 {
     iSpecialKeyboard(key);
+    specialKeys.insert(key);
     glutPostRedisplay();
+}
+
+void keyboardHandlerUp2FF(int key, int x, int y)
+{
+    specialKeys.erase(key); // Mark special key as released
+    glutPostRedisplay();
+}
+
+bool isSpecialKeyPressed(int key)
+{
+    return specialKeys.count(key) > 0;
 }
 
 void mouseMoveHandlerFF(int mx, int my)
@@ -1275,9 +1306,10 @@ void iInitialize(int width = 500, int height = 500, const char *title = "iGraphi
 
     glutDisplayFunc(displayFF);
     glutReshapeFunc(reshapeFF);
-    glutKeyboardFunc(keyboardHandler1FF); // normal
-    // glutKeyboardUpFunc(keyboardHandler1FF); // normal up
-    glutSpecialFunc(keyboardHandler2FF); // special keys
+    glutKeyboardFunc(keyboardHandler1FF);     // normal
+    glutKeyboardUpFunc(keyboardHandlerUp1FF); // normal up
+    glutSpecialFunc(keyboardHandler2FF);      // special keys
+    glutSpecialUpFunc(keyboardHandlerUp2FF);  // special keys up
     glutMouseFunc(mouseHandlerFF);
     glutMotionFunc(mouseMoveHandlerFF);
     glutPassiveMotionFunc(mousePassiveMoveHandlerFF);

@@ -13,12 +13,12 @@ int pic_x, pic_y;
 int state = IDLE;
 int direction = 1; // 1 for right, -1 for left
 
-Image *idleMonster, *walkMonster, *jumpMonster;
+Image idleMonster[4], walkMonster[6], jumpMonster[8];
 Sprite monster;
 
 void loadResources()
 {
-	iLoadFramesFromFolder(idleMonster, "assets\\images\\sprites\\Golem_2\\Idle Blinking");
+	iLoadFramesFromSheet(idleMonster, "assets\\images\\sprites\\1 Pink_Monster\\Pink_Monster_Idle_4.png", 1, 4);
 	iLoadFramesFromSheet(walkMonster, "assets\\images\\sprites\\1 Pink_Monster\\Pink_Monster_Walk_6.png", 1, 6);
 	iLoadFramesFromSheet(jumpMonster, "assets\\images\\sprites\\1 Pink_Monster\\Pink_Monster_Jump_8.png", 1, 8);
 

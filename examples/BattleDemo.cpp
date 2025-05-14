@@ -13,7 +13,7 @@ typedef enum
 
 typedef struct
 {
-    Image *idle, *walk, *jump;
+    Image idle[4], walk[6], jump[8];
     Sprite sprite;
     State state;
     int direction; // 1 for right, -1 for left
@@ -23,7 +23,7 @@ Monster pinkMonster;
 
 typedef struct
 {
-    Image *idle, *walk, *jump;
+    Image idle[18], walk[25], jump[25];
     Sprite sprite;
     State state;
     int direction; // 1 for right, -1 for left
@@ -39,7 +39,7 @@ void loadPinkMonster()
 
     iInitSprite(&pinkMonster.sprite, -1);
     iChangeSpriteFrames(&pinkMonster.sprite, pinkMonster.idle, 4);
-    iSetSpritePosition(&pinkMonster.sprite, 20, 0);
+    iSetSpritePosition(&pinkMonster.sprite, 200, 0);
     iScaleSprite(&pinkMonster.sprite, 3.0);
     pinkMonster.state = IDLE;
     pinkMonster.direction = 1; // 1 for right, -1 for left
@@ -67,9 +67,15 @@ void iAnim()
     case IDLE:
         break;
     case WALK:
+        if (!isSpecialKeyPressed(GLUT_KEY_LEFT) &&
+            !isSpecialKeyPressed(GLUT_KEY_RIGHT))
+        {
+            pinkMonster.state = IDLE;
+            iChangeSpriteFrames(&pinkMonster.sprite, pinkMonster.idle, 4);
+        }
         break;
     case JUMP:
-        if (pinkMonster.sprite.y == 0)
+        if (!isSpecialKeyPressed(GLUT_KEY_UP))
         {
             pinkMonster.state = IDLE;
             iChangeSpriteFrames(&pinkMonster.sprite, pinkMonster.idle, 4);
@@ -78,7 +84,6 @@ void iAnim()
     }
     iAnimateSprite(&pinkMonster.sprite);
     iAnimateSprite(&golem.sprite);
-    pinkMonster.sprite.y = max(0, pinkMonster.sprite.y - 1);
 }
 /*
     function iDraw() is called again and again by the system.

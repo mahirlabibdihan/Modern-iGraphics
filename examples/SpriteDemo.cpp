@@ -4,11 +4,7 @@
 */
 #include "iGraphics.h"
 
-int pic_x, pic_y;
-int idle_idx = 0;
-char monster_idle[4][100];
-
-Image *frames;
+Image frames[24];
 Sprite sprite;
 
 void loadResources()
@@ -129,7 +125,7 @@ void iSpecialKeyboard(unsigned char key)
 		}
 		else
 		{
-			sprite.x--;
+			sprite.x -= 2;
 		}
 	}
 	if (key == GLUT_KEY_RIGHT)
@@ -141,7 +137,7 @@ void iSpecialKeyboard(unsigned char key)
 		}
 		else
 		{
-			sprite.x++;
+			sprite.x += 2;
 		}
 	}
 	if (key == GLUT_KEY_UP)
@@ -158,9 +154,6 @@ void iSpecialKeyboard(unsigned char key)
 int main(int argc, char *argv[])
 {
 	glutInit(&argc, argv);
-	// place your own initialization codes here.
-	pic_x = 30;
-	pic_y = 20;
 	loadResources();
 	iSetTimer(100, iAnim);
 	iInitialize(800, 800, "SpriteDemo");

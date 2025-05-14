@@ -3,7 +3,7 @@
 Image bg;
 
 Sprite mario1, mario2, rect;
-Image *pinkMonsterFrames, *golemFrames;
+Image pinkMonsterFrames[4], golemFrames[24];
 Image rectFrame;
 Sprite pinkMonster, golem;
 bool isMirroredX[2] = {false, false};
