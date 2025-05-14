@@ -95,7 +95,7 @@ void iSpecialKeyboard(unsigned char key)
     // place your codes for other keys here
 }
 
-void iMouseWheel(int button, int dir, int mx, int my)
+void iMouseWheel(int dir, int mx, int my)
 {
     // place your code here
 }

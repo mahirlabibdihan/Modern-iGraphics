@@ -108,7 +108,7 @@ void iMouseDrag(int mx, int my)
 function iMouseWheel() is called when the user scrolls the mouse wheel.
 dir = 1 for up, -1 for down.
 */
-void iMouseWheel(int button, int dir, int mx, int my)
+void iMouseWheel(int dir, int mx, int my)
 {
     // place your code here
 }

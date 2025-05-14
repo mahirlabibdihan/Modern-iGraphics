@@ -83,7 +83,7 @@ void iSpecialKeyboard(unsigned char);
 void iMouseDrag(int, int); // Renamed from iMouseMove to iMouseDrag
 void iMouseMove(int, int); // New function
 void iMouse(int button, int state, int x, int y);
-void iMouseWheel(int button, int dir, int x, int y);
+void iMouseWheel(int dir, int x, int y);
 // void iResize(int width, int height);
 
 vector<ISound *> sounds; // Array of ISound*
@@ -1151,7 +1151,7 @@ void mouseWheelHandlerFF(int button, int dir, int x, int y)
 {
     iMouseX = x;
     iMouseY = iScreenHeight - y;
-    iMouseWheel(button, dir, iMouseX, iMouseY);
+    iMouseWheel(dir, iMouseX, iMouseY);
 
     glFlush();
 }

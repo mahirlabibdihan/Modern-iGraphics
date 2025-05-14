@@ -168,7 +168,7 @@ void iMouse(int button, int state, int mx, int my)
 function iMouseWheel() is called when the user scrolls the mouse wheel.
 dir = 1 for up, -1 for down.
 */
-void iMouseWheel(int button, int dir, int mx, int my)
+void iMouseWheel( int dir, int mx, int my)
 {
     // place your code here
 }
@@ -475,6 +475,76 @@ int main(int argc, char *argv[])
     iDelay(5); // Pauses for 5 seconds
     ```
 
+### 🖱️ Mouse Functions
+
+#### `void iMouse(int button, int state, int mx, int my)`
+
+-   **Description:** Called when a mouse button is pressed or released.
+-   **Parameters:**
+    -   `button`: Button pressed (GLUT_LEFT_BUTTON, GLUT_RIGHT_BUTTON, GLUT_MIDDLE_BUTTON).
+    -   `state`: State of the button (GLUT_DOWN or GLUT_UP).
+    -   `mx`, `my`: Coordinates of the mouse pointer.
+-   **Note:** _This function should be defined in the main file._
+
+#### `void iMouseMove(int mx, int my)`
+
+-   **Description:** Called when the mouse moves.
+-   **Parameters:** `mx`, `my`: Coordinates of the mouse pointer.
+-   **Note:** _This function should be defined in the main file._
+
+#### `void iMouseDrag(int mx, int my)`
+
+-   **Description:** Called when the mouse is dragged.
+-   **Parameters:** `mx`, `my`: Coordinates of the mouse pointer.
+-   **Note:** _This function should be defined in the main file._
+
+#### `void iMouseWheel(int dir, int mx, int my)`
+
+-   **Description:** Called when the mouse wheel is scrolled.
+-   **Parameters:**
+    -   `dir`: Direction of scroll (1 for up, -1 for down).
+    -   `mx`, `my`: Coordinates of the mouse pointer.
+-   **Note:** _This function should be defined in the main file._
+
+### ⌨️ Keyboard Functions
+
+#### `void iKeyboard(unsigned char)`
+
+-   **Description:** Called when a key is pressed down.
+-   **Parameters:** `key` pressed.
+-   **Note:** _This function should be defined in the main file._
+
+#### `void iSpecialKeyboard(int)`
+
+-   **Description:** Called when a special key is pressed down.
+-   **Parameters:** `key` pressed.
+-   **Note:** _This function should be defined in the main file._
+
+#### `bool isKeyPressed(unsigned char key)`
+
+-   **Description:** Checks if a key is being pressed (Not yet released).
+-   **Parameters:** `key` to check.
+-   **Returns:** `true` if pressed, `false` otherwise.
+
+-   **Example:**
+    ```cpp
+    if (isKeyPressed('a')) {
+        // 'a' key is pressed
+    }
+    ```
+
+#### `bool isSpecialKeyPressed(int key)`
+
+-   **Description:** Checks if a special key is being pressed (Not yet released).
+-   **Parameters:** `key` to check.
+-   **Returns:** `true` if pressed, `false` otherwise.
+-   **Example:**
+    ```cpp
+    if (isSpecialKeyPressed(GLUT_KEY_LEFT)) {
+        // Left arrow key is pressed
+    }
+    ```
+
 ### 🖼️ Image Functions
 
 #### `void iShowImage(int x, int y, const char *filename)`
@@ -587,6 +657,75 @@ int main(int argc, char *argv[])
 #### `void iFreeImage(Image* img)`
 
 -   **Description:** Frees the memory allocated for the image.
+
+### 🔉 Sound Functions
+
+`iGraphics` was originally designed for graphical applications, but it has been extended to support sound playback using the `irrKlang` library. The sound functions are as follows:
+
+#### `int iPlaySound(const char *filename, bool loop = false, int volume = 100)`
+
+-   **Description:** Plays a sound from file with optional looping and volume control.
+-   **Parameters:**
+    -   `filename`: Path to the sound file.
+    -   `loop`: `true` for continuous play, `false` for one-time play.
+    -   `volume`: Volume level (0-100).
+-   **Returns:** Index of the sound.
+-   **Example:**
+    ```cpp
+    int idx = iPlaySound("background.wav", true, 80);
+    ```
+
+#### `void iPauseSound(int index)`
+
+-   **Description:** Pauses the sound specified by `index`.
+-   **Parameters:** `index` of the sound.
+-   **Example:**
+    ```cpp
+    iPauseSound(idx);
+    ```
+
+#### `void iResumeSound(int index)`
+
+-   **Description:** Resumes the sound specified by `index`.
+-   **Parameters:** `index` of the sound.
+-   **Example:**
+    ```cpp
+    iResumeSound(idx);
+    ```
+
+#### `void iStopSound(int index)`
+
+-   **Description:** Stops the sound specified by `index`.
+-   **Parameters:** `index` of the sound.
+-   **Example:**
+    ```cpp
+    iStopSound(idx);
+    ```
+
+#### `void iStopAllSounds()`
+
+-   **Description:** Stops all currently playing sounds.
+
+#### `void iSetVolume(int index, int volume)`
+
+-   **Description:** Sets the volume for a specific sound.
+-   **Parameters:**
+    -   `index`: Index of the sound.
+    -   `volume`: Volume level (0-100).
+
+#### `void iIncreaseVolume(int index, int amount)`
+
+-   **Description:** Increases the volume of a specific sound by a specified amount.
+-   **Parameters:**
+    -   `index`: Index of the sound.
+    -   `amount`: Amount to increase the volume by (0-100).
+
+#### `void iDecreaseVolume(int index, int amount)`
+
+-   **Description:** Decreases the volume of a specific sound by a specified amount.
+-   **Parameters:**
+    -   `index`: Index of the sound.
+    -   `amount`: Amount to decrease the volume by (0-100).
 
 ### 🧩 Sprite Functions
 
@@ -731,75 +870,6 @@ int main(int argc, char *argv[])
     }
     ```
 
-### 🔉 Sound Functions
-
-`iGraphics` was originally designed for graphical applications, but it has been extended to support sound playback using the `irrKlang` library. The sound functions are as follows:
-
-#### `int iPlaySound(const char *filename, bool loop = false, int volume = 100)`
-
--   **Description:** Plays a sound from file with optional looping and volume control.
--   **Parameters:**
-    -   `filename`: Path to the sound file.
-    -   `loop`: `true` for continuous play, `false` for one-time play.
-    -   `volume`: Volume level (0-100).
--   **Returns:** Index of the sound.
--   **Example:**
-    ```cpp
-    int idx = iPlaySound("background.wav", true, 80);
-    ```
-
-#### `void iPauseSound(int index)`
-
--   **Description:** Pauses the sound specified by `index`.
--   **Parameters:** `index` of the sound.
--   **Example:**
-    ```cpp
-    iPauseSound(idx);
-    ```
-
-#### `void iResumeSound(int index)`
-
--   **Description:** Resumes the sound specified by `index`.
--   **Parameters:** `index` of the sound.
--   **Example:**
-    ```cpp
-    iResumeSound(idx);
-    ```
-
-#### `void iStopSound(int index)`
-
--   **Description:** Stops the sound specified by `index`.
--   **Parameters:** `index` of the sound.
--   **Example:**
-    ```cpp
-    iStopSound(idx);
-    ```
-
-#### `void iStopAllSounds()`
-
--   **Description:** Stops all currently playing sounds.
-
-#### `void iSetVolume(int index, int volume)`
-
--   **Description:** Sets the volume for a specific sound.
--   **Parameters:**
-    -   `index`: Index of the sound.
-    -   `volume`: Volume level (0-100).
-
-#### `void iIncreaseVolume(int index, int amount)`
-
--   **Description:** Increases the volume of a specific sound by a specified amount.
--   **Parameters:**
-    -   `index`: Index of the sound.
-    -   `amount`: Amount to increase the volume by (0-100).
-
-#### `void iDecreaseVolume(int index, int amount)`
-
--   **Description:** Decreases the volume of a specific sound by a specified amount.
--   **Parameters:**
-    -   `index`: Index of the sound.
-    -   `amount`: Amount to decrease the volume by (0-100).
-
 ### 🧰 Miscellaneous
 
 #### `void iToggleFullscreen()`
@@ -900,7 +970,7 @@ Must be defined by the user. Called when the mouse moves.
 
 Must be defined by the user. Called when the mouse drags.
 
-### `void iMouseWheel(int button, int dir, int mx, int my)`
+### `void iMouseWheel( int dir, int mx, int my)`
 
 Must be defined by the user. Called when the mouse wheel is scrolled.
 

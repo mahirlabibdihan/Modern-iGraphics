@@ -39,7 +39,7 @@ void iMouse(int button, int state, int mx, int my)
 	}
 }
 
-void iMouseWheel(int button, int dir, int mx, int my)
+void iMouseWheel(int dir, int mx, int my)
 {
 	if (dir == 1)
 	{
