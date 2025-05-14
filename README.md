@@ -130,6 +130,22 @@ void iDraw()
 }
 
 /*
+function iMouse() is called when the user presses/releases the mouse.
+(mx, my) is the position where the mouse pointer is.
+*/
+void iMouse(int button, int state, int mx, int my)
+{
+    if(button == GLUT_LEFT_BUTTON && state == GLUT_DOWN)
+    {
+        //place your codes here
+    }
+    if(button == GLUT_RIGHT_BUTTON && state == GLUT_DOWN)
+    {
+        //place your codes here
+    }
+}
+
+/*
 function iMouseMove() is called when the user moves the mouse.
 (mx, my) is the position where the mouse pointer is.
 */
@@ -149,26 +165,10 @@ void iMouseDrag(int mx, int my)
 }
 
 /*
-function iMouse() is called when the user presses/releases the mouse.
-(mx, my) is the position where the mouse pointer is.
-*/
-void iMouse(int button, int state, int mx, int my)
-{
-    if(button == GLUT_LEFT_BUTTON && state == GLUT_DOWN)
-    {
-        //place your codes here
-    }
-    if(button == GLUT_RIGHT_BUTTON && state == GLUT_DOWN)
-    {
-        //place your codes here
-    }
-}
-
-/*
 function iMouseWheel() is called when the user scrolls the mouse wheel.
 dir = 1 for up, -1 for down.
 */
-void iMouseWheel( int dir, int mx, int my)
+void iMouseWheel(int dir, int mx, int my)
 {
     // place your code here
 }
