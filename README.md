@@ -8,6 +8,14 @@ It was originally created by [Shahriar Nirjon](https://www.cs.unc.edu/~nirjon/) 
 
 ---
 
+<!-- Banner Image -->
+
+<div align="center">
+    <img src="banner.svg" alt="iGraphics Banner" width="600">
+</div>
+
+---
+
 <!-- Youtube Demo -->
 
 ## 🎥 Example Games
