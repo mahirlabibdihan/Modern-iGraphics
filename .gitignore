@@ -2,6 +2,5 @@ obj/*.o
 *.layout
 *.depend
 .vscode
-*.dat
 *.bin
 bin/*.exe
