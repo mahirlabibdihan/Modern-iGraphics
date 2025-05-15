@@ -1,7 +1,7 @@
-*.o
+obj/*.o
 *.layout
 *.depend
 .vscode
-*.exe
 *.dat
 *.bin
+bin/*.exe
