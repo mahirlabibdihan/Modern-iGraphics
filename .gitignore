@@ -3,3 +3,4 @@
 *.depend
 .vscode
 *.exe
+*.dat

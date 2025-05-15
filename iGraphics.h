@@ -25,6 +25,7 @@
 #include <algorithm>
 #include <set>
 #include <dirent.h>
+#include <sys/stat.h>
 // #include "glaux.h"
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
@@ -565,36 +566,38 @@ void iLoadFramesFromFolder(Image *frames, const char *folderPath)
         fprintf(stderr, "Failed to open directory: %s\n", folderPath);
         return;
     }
+
     vector<string> filenames;
     struct dirent *entry;
     while ((entry = readdir(dir)) != nullptr)
     {
-        // Skip directories
-        if (entry->d_type == DT_DIR)
+        string filename(entry->d_name);
+
+        // Skip "." and ".."
+        if (filename == "." || filename == "..")
             continue;
 
-        // Filter for image files (e.g., *.png, *.jpg)
-        string filename(entry->d_name);
-        // if (filename.find(".png") != std::string::npos || filename.find(".jpg") != std::string::npos || filename.find(".jpeg") != std::string::npos)
-        {
-            filenames.push_back(filename);
-        }
+        // Build full path to check if it's a directory
+        string fullPath = string(folderPath) + "/" + filename;
+        struct stat st;
+        if (stat(fullPath.c_str(), &st) == 0 && S_ISDIR(st.st_mode))
+            continue; // Skip directories
+
+        // Optionally filter image files (uncomment if needed)
+        // if (filename.find(".png") != string::npos || filename.find(".jpg") != string::npos || filename.find(".jpeg") != string::npos)
+        filenames.push_back(filename);
     }
     closedir(dir);
+
     sort(filenames.begin(), filenames.end(), compareFilenames);
 
     int totalFrames = filenames.size();
-    // frames = new Image[totalFrames];
 
-    // Load each image
     for (int i = 0; i < totalFrames; ++i)
     {
         string fullPath = string(folderPath) + "/" + filenames[i];
-
         iLoadImage(&frames[i], fullPath.c_str());
     }
-
-    return;
 }
 
 void iInitSprite(Sprite *s, int ignoreColor = -1)
