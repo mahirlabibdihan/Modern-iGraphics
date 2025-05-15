@@ -10,8 +10,10 @@ if "%~1"=="" (
 )
 
 :: Set the base directory for g++ (optional if g++ is in your PATH)
-set BASE_DIR=C:\MINGW
-set PATH=%BASE_DIR%;%BASE_DIR%\bin;%PATH%
+set "BASE_DIR=%~dp0MINGW"
+set "PATH=%BASE_DIR%;%BASE_DIR%\bin;%PATH%"
+
+echo Using g++ from: %BASE_DIR%
 
 :: Compile the source file to an object file (with irrKlang include path)
 g++.exe -Wall -fexceptions -g -I. -IOpenGL\include -IOpenGL\include\irrKlang -c "%SOURCE_FILE%" -o obj\object.o
