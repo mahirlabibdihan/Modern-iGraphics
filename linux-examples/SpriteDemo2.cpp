@@ -3,28 +3,60 @@
     last modified: August 8, 2008
 */
 #include "iGraphics.h"
-
+enum
+{
+    IDLE,
+    WALK,
+    JUMP
+};
 int pic_x, pic_y;
 int idle_idx = 0;
+int jump_idx = 0;
+int walk_idx = 0;
+int state = IDLE;
 char monster_idle[18][100];
+char monster_jump[6][100];
+char monster_walk[24][100];
+char *monster_image;
 
 void populate_monster_images()
 {
-    // for (int i = 0; i < 4; i++)
-    // {
-    //     sprintf(monster_idle[i], "assets\\images\\sprites\\pink-monster-split\\idle\\tile%03d.png", i);
-    //     printf("%s\n", monster_idle[i]);
-    // }
     for (int i = 0; i < 18; i++)
     {
-        sprintf(monster_idle[i], "assets\\images\\sprites\\Golem_2\\Idle Blinking\\0_Golem_Idle Blinking_%03d.png", i);
+        sprintf(monster_idle[i], "assets/images/sprites/Golem_2/Idle Blinking/0_Golem_Idle Blinking_%03d.png", i);
     }
+    for (int i = 0; i < 6; i++)
+    {
+        sprintf(monster_jump[i], "assets/images/sprites/Golem_2/Jump Start/0_Golem_Jump Start_%03d.png", i);
+    }
+    for (int i = 0; i < 24; i++)
+    {
+        sprintf(monster_walk[i], "assets/images/sprites/Golem_2/Walking/0_Golem_Walking_%03d.png", i);
+    }
+    monster_image = monster_idle[0];
 }
 
 void update_monster()
 {
-    idle_idx = (idle_idx + 1) % 18;
-    // 0 1 2 3 0 1 2 3
+    switch (state)
+    {
+    case IDLE:
+        monster_image = monster_idle[idle_idx];
+        idle_idx = (idle_idx + 1) % 18;
+        break;
+    case WALK:
+        monster_image = monster_walk[walk_idx];
+        walk_idx = (walk_idx + 1) % 24;
+        break;
+    case JUMP:
+        monster_image = monster_jump[jump_idx];
+        jump_idx = (jump_idx + 1) % 6;
+        if (jump_idx == 0)
+        {
+            state = IDLE;
+        }
+        break;
+    }
 }
 /*
     function iDraw() is called again and again by the system.
@@ -34,7 +66,7 @@ void iDraw()
     // place your drawing codes here
 
     iClear();
-    iShowImage(pic_x, pic_y, monster_idle[idle_idx]);
+    iShowImage(pic_x, pic_y, monster_image);
     // iShowBMP(pic_x, pic_y, "wheel.bmp");
 }
 
@@ -118,10 +150,12 @@ void iSpecialKeyboard(unsigned char key)
     if (key == GLUT_KEY_RIGHT)
     {
         pic_x++;
+        state = WALK;
     }
     if (key == GLUT_KEY_UP)
     {
         pic_y++;
+        state = JUMP;
     }
     if (key == GLUT_KEY_DOWN)
     {

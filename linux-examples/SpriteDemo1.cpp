@@ -17,7 +17,7 @@ void populate_monster_images()
     // }
     for (int i = 0; i < 18; i++)
     {
-        sprintf(monster_idle[i], "assets\\images\\sprites\\Golem_2\\Idle Blinking\\0_Golem_Idle Blinking_%03d.png", i);
+        sprintf(monster_idle[i], "assets/images/sprites/Golem_2/Idle Blinking/0_Golem_Idle Blinking_%03d.png", i);
     }
 }
 

@@ -1,18 +1,10 @@
 #include "iGraphics.h"
-#include <iostream>
-using namespace std;
-
-int bgSoundIdx = -1;
 
 void iDraw()
 {
 	// place your drawing codes here
 	iClear();
-	iText(15, 200, "Left click to hear a chime", GLUT_BITMAP_TIMES_ROMAN_24);
-	iText(15, 160, "Press 'p' to pause background music", GLUT_BITMAP_TIMES_ROMAN_24);
-	iText(15, 120, "Press 'r' to resume background music", GLUT_BITMAP_TIMES_ROMAN_24);
-	iText(15, 80, "Press 'x' to stop background music", GLUT_BITMAP_TIMES_ROMAN_24);
-	iText(15, 40, "Press UP/DOWN arrow keys to increase/decrease volume", GLUT_BITMAP_TIMES_ROMAN_24);
+	iText(10, 10, "Move the mouse cursor to see real-time coordinates", GLUT_BITMAP_HELVETICA_12);
 }
 
 /*
@@ -30,7 +22,7 @@ void iMouseDrag(int mx, int my)
 void iMouseMove(int mx, int my)
 {
 	// place your code here
-	//  printf("x = %d, y = %d\n", mx, my);
+	printf("x = %d, y = %d\n", mx, my);
 }
 
 /*
@@ -41,8 +33,6 @@ void iMouse(int button, int state, int mx, int my)
 {
 	if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN)
 	{
-		iPlaySound("assets\\sounds\\chime.wav", false);
-		// PlaySound("chime.wav", NULL, SND_FILENAME | SND_ASYNC);
 	}
 	if (button == GLUT_RIGHT_BUTTON && state == GLUT_DOWN)
 	{
@@ -51,28 +41,26 @@ void iMouse(int button, int state, int mx, int my)
 
 void iMouseWheel(int dir, int mx, int my)
 {
+	if (dir == 1)
+	{
+		printf("Mouse wheel moved up\n");
+	}
+	else
+	{
+		printf("Mouse wheel moved down\n");
+	}
+
+	return;
 }
+
 /*
 	function iKeyboard() is called whenever the user hits a key in keyboard.
 	key- holds the ASCII value of the key pressed.
 */
 void iKeyboard(unsigned char key)
 {
-	switch (key)
-	{
-	case 'r':
-		iResumeSound(bgSoundIdx);
-		break;
-	case 'p':
-		iPauseSound(bgSoundIdx);
-		break;
-	case 'x':
-		iStopSound(bgSoundIdx);
-		break;
-		// place your codes for other keys here
-	default:
-		break;
-	}
+
+	// place your codes for other keys here
 }
 
 /*
@@ -86,24 +74,18 @@ void iKeyboard(unsigned char key)
 */
 void iSpecialKeyboard(unsigned char key)
 {
-	switch (key)
+
+	if (key == GLUT_KEY_END)
 	{
-	case GLUT_KEY_UP:
-		iIncreaseVolume(bgSoundIdx, 5);
-		break;
-	case GLUT_KEY_DOWN:
-		iDecreaseVolume(bgSoundIdx, 5);
-		break;
-		// place your codes for other keys here
-	default:
-		break;
+		exit(0);
 	}
+
+	// place your codes for other keys here
 }
 
 int main(int argc, char *argv[])
 {
 	glutInit(&argc, argv);
-	bgSoundIdx = iPlaySound("assets\\sounds\\background.wav", true, 50);
-	iInitialize(600, 250, "Sound Demo");
+	iInitialize(600, 400, "Mousedemo");
 	return 0;
 }

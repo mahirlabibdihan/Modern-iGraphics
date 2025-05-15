@@ -1,41 +1,19 @@
-/*
-    author: S. M. Shahriar Nirjon
-    last modified: August 8, 2008
-*/
 #include "iGraphics.h"
 
 int pic_x, pic_y;
-int idle_idx = 0;
-char monster_idle[18][100];
 
-void populate_monster_images()
-{
-    // for (int i = 0; i < 4; i++)
-    // {
-    //     sprintf(monster_idle[i], "assets\\images\\sprites\\pink-monster-split\\idle\\tile%03d.png", i);
-    //     printf("%s\n", monster_idle[i]);
-    // }
-    for (int i = 0; i < 18; i++)
-    {
-        sprintf(monster_idle[i], "assets\\images\\sprites\\Golem_2\\Idle Blinking\\0_Golem_Idle Blinking_%03d.png", i);
-    }
-}
-
-void update_monster()
-{
-    idle_idx = (idle_idx + 1) % 18;
-    // 0 1 2 3 0 1 2 3
-}
 /*
     function iDraw() is called again and again by the system.
 */
+
+Image smurf;
+
 void iDraw()
 {
     // place your drawing codes here
-
     iClear();
-    iShowImage(pic_x, pic_y, monster_idle[idle_idx]);
-    // iShowBMP(pic_x, pic_y, "wheel.bmp");
+    iShowImage(pic_x, pic_y, "assets/images/sprites/Golem_2/Idle/0_Golem_Idle_000.png");
+    iText(10, 10, "Use cursors to move the picture.");
 }
 
 /*
@@ -43,6 +21,11 @@ void iDraw()
     (mx, my) is the position where the mouse pointer is.
 */
 void iMouseMove(int mx, int my)
+{
+    // place your codes here
+}
+
+void iMouseDrag(int mx, int my)
 {
     // place your codes here
 }
@@ -61,24 +44,6 @@ void iMouse(int button, int state, int mx, int my)
     {
         // place your codes here
     }
-}
-
-/*
-function iMouseDrag() is called when the user presses and drags the mouse.
-(mx, my) is the position where the mouse pointer is.
-*/
-void iMouseDrag(int mx, int my)
-{
-    // place your codes here
-}
-
-/*
-function iMouseWheel() is called when the user scrolls the mouse wheel.
-dir = 1 for up, -1 for down.
-*/
-void iMouseWheel(int dir, int mx, int my)
-{
-    // place your code here
 }
 
 /*
@@ -130,14 +95,18 @@ void iSpecialKeyboard(unsigned char key)
     // place your codes for other keys here
 }
 
+void iMouseWheel(int dir, int mx, int my)
+{
+    // place your code here
+}
+
 int main(int argc, char *argv[])
 {
     glutInit(&argc, argv);
     // place your own initialization codes here.
     pic_x = 0;
     pic_y = 0;
-    populate_monster_images();
-    iSetTimer(100, update_monster);
-    iInitialize(900, 900, "SpriteDemo");
+
+    iInitialize(900, 900, "PictureDemo");
     return 0;
 }

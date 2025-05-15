@@ -41,7 +41,7 @@ void iMouse(int button, int state, int mx, int my)
 {
 	if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN)
 	{
-		iPlaySound("assets\\sounds\\chime.wav", false);
+		iPlaySound("assets/sounds/chime.wav", false);
 		// PlaySound("chime.wav", NULL, SND_FILENAME | SND_ASYNC);
 	}
 	if (button == GLUT_RIGHT_BUTTON && state == GLUT_DOWN)
@@ -103,7 +103,7 @@ void iSpecialKeyboard(unsigned char key)
 int main(int argc, char *argv[])
 {
 	glutInit(&argc, argv);
-	bgSoundIdx = iPlaySound("assets\\sounds\\background.wav", true, 50);
+	bgSoundIdx = iPlaySound("assets/sounds/background.wav", true, 50);
 	iInitialize(600, 250, "Sound Demo");
 	return 0;
 }
