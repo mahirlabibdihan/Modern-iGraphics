@@ -31,8 +31,10 @@
 #include "stb_image.h"
 #define STB_IMAGE_RESIZE_IMPLEMENTATION
 #include "stb_image_resize.h"
-#include "irrKlang.h"
-using namespace irrklang;
+#include <SDL.h>
+#include <SDL_mixer.h>
+#include <iostream>
+#include <unordered_map>
 using namespace std;
 
 static int transparent = 1;
@@ -86,9 +88,6 @@ void iMouseMove(int, int); // New function
 void iMouse(int button, int state, int x, int y);
 void iMouseWheel(int dir, int x, int y);
 // void iResize(int width, int height);
-
-vector<ISound *> sounds; // Array of ISound*
-ISoundEngine *soundEngine = createIrrKlangDevice();
 
 #ifdef WIN32
 
@@ -1159,106 +1158,6 @@ void mouseWheelHandlerFF(int button, int dir, int x, int y)
     glFlush();
 }
 
-int iPlaySound(const char *filename, bool loop = false, int volume = 100) // If loop==true , then the audio will play again and again
-{
-    ISound *sound = soundEngine->play2D(filename, loop, true, true); // Play an audio
-    if (sound)
-    {
-        sound->setVolume(volume / 100.0); // Set initial volume
-        sound->setIsPaused(false);        // Unpause the sound
-        int n = sounds.size();
-        for (int i = 0; i < n; i++)
-        {
-            if (sounds[i] == nullptr)
-            {
-                sounds[i] = sound; // Store the pointer
-                return i;          // Return the index of the sound
-            }
-        }
-        sounds.push_back(sound); // Store the pointer
-        return n;                // Return the index of the sound
-    }
-    return -1; // Return -1 if sound failed to play
-}
-
-void iSetVolume(int index, int volume)
-{
-    int n = sounds.size();
-    if (index >= 0 && index < n && sounds[index])
-    {
-        sounds[index]->setVolume(volume / 100.0); // Set the volume
-    }
-}
-
-void iIncreaseVolume(int index, int amount)
-{
-    int n = sounds.size();
-    if (index >= 0 && index < n && sounds[index])
-    {
-        float currentVolume = sounds[index]->getVolume() * 100.0;
-        float newVolume = currentVolume + amount;
-        if (newVolume > 100)
-            newVolume = 100;                         // Limit the increase to 100
-        sounds[index]->setVolume(newVolume / 100.0); // Increase the volume
-    }
-}
-
-void iDecreaseVolume(int index, int amount)
-{
-    int n = sounds.size();
-    if (index >= 0 && index < n && sounds[index])
-    {
-        float currentVolume = sounds[index]->getVolume() * 100.0;
-        float newVolume = currentVolume - amount;
-        if (newVolume < 0)
-            newVolume = 0;                           // Limit the decrease to 0
-        sounds[index]->setVolume(newVolume / 100.0); // Decrease the volume
-    }
-}
-
-void iPauseSound(int index)
-{
-    int n = sounds.size();
-    if (index >= 0 && index < n && sounds[index])
-    {
-        sounds[index]->setIsPaused(true); // Pause the sound
-    }
-}
-
-void iResumeSound(int index)
-{
-    int n = sounds.size();
-    if (index >= 0 && index < n && sounds[index])
-    {
-        sounds[index]->setIsPaused(false); // Resume the sound
-    }
-}
-
-void iStopSound(int index)
-{
-    int n = sounds.size();
-    if (index >= 0 && index < n && sounds[index])
-    {
-        sounds[index]->stop();   // Stop the sound
-        sounds[index]->drop();   // Drop the sound
-        sounds[index] = nullptr; // Set the pointer to null
-    }
-}
-
-void iStopAllSounds()
-{
-    printf("Stopping all sounds\n");
-    for (ISound *sound : sounds)
-    {
-        if (sound)
-        {
-            sound->stop(); // stop each sound instance
-            sound->drop(); // release each sound instance
-        }
-    }
-    sounds.clear();
-}
-
 void iSetTransparency(int state)
 {
     transparent = (state == 0) ? 0 : 1;
@@ -1289,11 +1188,128 @@ void reshapeFF(int width, int height)
     glViewport(0.0, 0.0, iScreenWidth, iScreenHeight);
     glutPostRedisplay();
 }
+
+#define SDL_VOL_MAX MIX_MAX_VOLUME // 128
+Mix_Chunk *channelChunks[8];
+void iSetVolume(int channel, int volumePercent)
+{
+    if (channel >= 0)
+    {
+        int vol = volumePercent * SDL_VOL_MAX / 100;
+        Mix_Volume(channel, vol);
+    }
+}
+
+void iIncreaseVolume(int channel, int amountPercent)
+{
+    if (channel >= 0)
+    {
+        int current = Mix_Volume(channel, -1);
+        int newVol = current + (amountPercent * SDL_VOL_MAX / 100);
+        if (newVol > SDL_VOL_MAX)
+            newVol = SDL_VOL_MAX;
+
+        Mix_Volume(channel, newVol);
+    }
+}
+
+void iDecreaseVolume(int channel, int amountPercent)
+{
+    if (channel >= 0)
+    {
+        int current = Mix_Volume(channel, -1);
+        int newVol = current - (amountPercent * SDL_VOL_MAX / 100);
+        if (newVol < 0)
+            newVol = 0;
+
+        Mix_Volume(channel, newVol);
+    }
+}
+
+void iPauseSound(int channel)
+{
+    Mix_Pause(channel);
+}
+
+void iResumeSound(int channel)
+{
+    Mix_Resume(channel);
+}
+
+void channelFinishedCallback(int channel)
+{
+    Mix_Chunk *it = channelChunks[channel];
+    if (it != nullptr)
+        Mix_FreeChunk(it);
+    channelChunks[channel] = nullptr;
+}
+
+void iStopSound(int channel)
+{
+    Mix_HaltChannel(channel);         // stops sound playing on that channel
+    channelFinishedCallback(channel); // Free the sound chunk
+}
+
+void iStopAllSounds()
+{
+    Mix_HaltChannel(-1); // -1 means halt ALL channels
+    for (int i = 0; i < 8; ++i)
+    {
+        channelFinishedCallback(i);
+    }
+}
+
+int iPlaySound(const char *filename, bool loop = false, int volume = 100) // If loop==true , then the audio will play again and again
+{
+    Mix_Chunk *sound = Mix_LoadWAV(filename);
+    if (!sound)
+    {
+        cerr << "Failed to load sound: " << Mix_GetError() << "\n";
+        return -1;
+    }
+    int channel = Mix_PlayChannel(-1, sound, loop ? -1 : 0); // Play the sound
+    if (channel == -1)
+    {
+        std::cerr << "Error playing sounds: " << Mix_GetError() << "\n";
+        Mix_FreeChunk(sound);
+        return -1;
+    }
+
+    iSetVolume(channel, volume);    // Set the volume
+    channelChunks[channel] = sound; //
+    return channel;
+}
+
+void iInitializeSound()
+{
+    if (SDL_Init(SDL_INIT_AUDIO) < 0)
+    {
+        std::cerr << "SDL_Init failed: " << SDL_GetError() << "\n";
+        return;
+    }
+    if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0)
+    {
+        std::cerr << "SDL_mixer could not initialize! Mix_Error: " << Mix_GetError() << "\n";
+        return;
+    }
+    Mix_ChannelFinished(channelFinishedCallback);
+}
+
 void iInitialize(int width = 500, int height = 500, const char *title = "iGraphics")
 {
     iSmallScreenHeight = iScreenHeight = height;
     iSmallScreenWidth = iScreenWidth = width;
 
+    if (SDL_Init(SDL_INIT_AUDIO) < 0)
+    {
+        std::cerr << "SDL_Init failed: " << SDL_GetError() << "\n";
+        return;
+    }
+    if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0)
+    {
+        std::cerr << "SDL_mixer could not initialize! Mix_Error: " << Mix_GetError() << "\n";
+        return;
+    }
     glutSetOption(GLUT_MULTISAMPLE, 8);
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_ALPHA | GLUT_MULTISAMPLE);
     glEnable(GLUT_MULTISAMPLE);
@@ -1342,5 +1358,6 @@ void iInitialize(int width = 500, int height = 500, const char *title = "iGraphi
     }
 
     glutMainLoop();
-    soundEngine->drop();
+    Mix_CloseAudio();
+    SDL_Quit();
 }

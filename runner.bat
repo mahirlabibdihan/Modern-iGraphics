@@ -16,19 +16,24 @@ set "PATH=%BASE_DIR%;%BASE_DIR%\bin;%PATH%"
 echo Using g++ from: %BASE_DIR%
 
 :: Compile the source file to an object file (with irrKlang include path)
-g++.exe -Wall -fexceptions -g -I. -IOpenGL\include -IOpenGL\include\irrKlang -c "%SOURCE_FILE%" -o obj\object.o
+
+g++.exe -Wall -fexceptions -g -I. -IOpenGL\include -IOpenGL\include\SDL2 -c "%SOURCE_FILE%" -o obj\opengl.o
+
 if %ERRORLEVEL% neq 0 (
-    echo Compilation failed.
-    exit /b 1
+   echo Compilation failed.
+   exit /b 1
 )
 
-:: Link the object file to create the executable (with irrKlang lib)
-:: Removed -lgdi32, -lwinmm and -lglu32 as they are not needed
-g++.exe -static -static-libgcc -static-libstdc++ -L.\OpenGL\lib -o bin\opengl.exe obj\object.o -lOPENGL32 -lfreeglut -lirrKlang
+echo Compiling %SOURCE_FILE% to object file...
+
+g++.exe -static-libgcc -static-libstdc++ -L.\OpenGL\lib -o bin\opengl.exe obj\opengl.o -lmingw32 -lSDL2main -lSDL2 -lSDL2_mixer -lOPENGL32 -lfreeglut
+
 if %ERRORLEVEL% neq 0 (
     echo Linking failed.
     exit /b 1
 )
+
+echo Linking %SOURCE_FILE% to executable...
 
 
 echo Finished building.
