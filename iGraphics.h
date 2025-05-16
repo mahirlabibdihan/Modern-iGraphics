@@ -20,10 +20,6 @@
 #include "freeglut_ext.h"
 #include <time.h>
 #include <math.h>
-#include <string>
-#include <vector>
-#include <algorithm>
-#include <set>
 #include <dirent.h>
 #include <sys/stat.h>
 // #include "glaux.h"
@@ -73,8 +69,6 @@ void (*iAnimFunction[MAX_TIMERS])(void) = {0};
 int iAnimCount = 0;
 int iAnimDelays[MAX_TIMERS];
 int iAnimPause[MAX_TIMERS];
-// int iAnimLastCallTime[MAX_TIMERS];
-int iSoundCount = 0;
 
 void iDraw();
 void iKeyboard(unsigned char);
@@ -502,9 +496,11 @@ void iAnimateSprite(Sprite *sprite)
 }
 
 // Comparison function for sorting filenames
-bool compareFilenames(const string &a, const string &b)
+int compareFilenames(const void *a, const void *b)
 {
-    return a < b;
+    const char *strA = *(const char **)a;
+    const char *strB = *(const char **)b;
+    return strcmp(strA, strB);
 }
 
 void iLoadFramesFromSheet(Image *frames, const char *filename, int rows, int cols)
@@ -553,6 +549,9 @@ void iLoadFramesFromSheet(Image *frames, const char *filename, int rows, int col
     delete[] tmp.data;
 }
 
+#define MAX_FILES 1024
+#define MAX_FILENAME_LEN 512
+
 void iLoadFramesFromFolder(Image *frames, const char *folderPath)
 {
     DIR *dir = opendir(folderPath);
@@ -562,36 +561,42 @@ void iLoadFramesFromFolder(Image *frames, const char *folderPath)
         return;
     }
 
-    vector<string> filenames;
+    char *filenames[MAX_FILES];
+    int count = 0;
+
     struct dirent *entry;
-    while ((entry = readdir(dir)) != nullptr)
+    while ((entry = readdir(dir)) != NULL && count < MAX_FILES)
     {
-        string filename(entry->d_name);
+        const char *name = entry->d_name;
 
         // Skip "." and ".."
-        if (filename == "." || filename == "..")
+        if (strcmp(name, ".") == 0 || strcmp(name, "..") == 0)
             continue;
 
         // Build full path to check if it's a directory
-        string fullPath = string(folderPath) + "/" + filename;
+        char fullPath[MAX_FILENAME_LEN];
+        snprintf(fullPath, sizeof(fullPath), "%s/%s", folderPath, name);
+
         struct stat st;
-        if (stat(fullPath.c_str(), &st) == 0 && S_ISDIR(st.st_mode))
-            continue; // Skip directories
+        if (stat(fullPath, &st) == 0 && S_ISDIR(st.st_mode))
+            continue;
 
         // Optionally filter image files (uncomment if needed)
-        // if (filename.find(".png") != string::npos || filename.find(".jpg") != string::npos || filename.find(".jpeg") != string::npos)
-        filenames.push_back(filename);
+        filenames[count] = strdup(name);
+        if (filenames[count] != NULL)
+            count++;
     }
     closedir(dir);
 
-    sort(filenames.begin(), filenames.end(), compareFilenames);
+    qsort(filenames, count, sizeof(char *), compareFilenames);
 
-    int totalFrames = filenames.size();
-
-    for (int i = 0; i < totalFrames; ++i)
+    // Load images in sorted order
+    for (int i = 0; i < count; ++i)
     {
-        string fullPath = string(folderPath) + "/" + filenames[i];
-        iLoadImage(&frames[i], fullPath.c_str());
+        char fullPath[MAX_FILENAME_LEN];
+        snprintf(fullPath, sizeof(fullPath), "%s/%s", folderPath, filenames[i]);
+        iLoadImage(&frames[i], fullPath);
+        free(filenames[i]); // free allocated memory
     }
 }
 
@@ -1095,24 +1100,24 @@ bool isKeyPressed(unsigned char key)
     return keys[key];
 }
 
-set<int> specialKeys; // Use int because GLUT special keys are ints
+bool specialKeys[109] = {false};
 
 void keyboardHandler2FF(int key, int x, int y)
 {
     iSpecialKeyboard(key);
-    specialKeys.insert(key);
+    specialKeys[key] = true; // Mark special key as pressed
     glutPostRedisplay();
 }
 
 void keyboardHandlerUp2FF(int key, int x, int y)
 {
-    specialKeys.erase(key); // Mark special key as released
+    specialKeys[key] = false; // Mark special key as released
     glutPostRedisplay();
 }
 
 bool isSpecialKeyPressed(int key)
 {
-    return specialKeys.count(key) > 0;
+    return specialKeys[key];
 }
 
 void mouseMoveHandlerFF(int mx, int my)

@@ -67,8 +67,6 @@ void iMouseMove(int mx, int my)
 	// place your codes here
 }
 /*
-
-/*
 function iMouseDrag() is called when the user presses and drags the mouse.
 (mx, my) is the position where the mouse pointer is.
 */

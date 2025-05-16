@@ -71,6 +71,7 @@ Ensure that `g++` is installed on your system and available in your PATH. Then, 
 -   **Linux**
 
 ```bash
+sudo apt install libsdl2-dev libsdl2-mixer-dev # Install SDL2 and SDL2_mixer if not already installed
 ./runner.sh examples/BallDemo.cpp
 ```
 
@@ -171,8 +172,6 @@ void iMouseMove(int mx, int my)
 {
     //place your codes here
 }
-/*
-
 /*
 function iMouseDrag() is called when the user presses and drags the mouse.
 (mx, my) is the position where the mouse pointer is.
