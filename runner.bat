@@ -23,11 +23,13 @@ if %ERRORLEVEL% neq 0 (
 )
 
 :: Link the object file to create the executable (with irrKlang lib)
-g++.exe -static -static-libgcc -static-libstdc++ -L.\OpenGL\lib -o bin\opengl.exe obj\object.o OpenGL\lib\GLU32.LIB OpenGL\lib\OPENGL32.LIB -lGLU32 -lfreeglut -lOPENGL32 -lgdi32 -lwinmm -lirrKlang
+:: Removed -lgdi32, -lwinmm and -lglu32 as they are not needed
+g++.exe -static -static-libgcc -static-libstdc++ -L.\OpenGL\lib -o bin\opengl.exe obj\object.o -lOPENGL32 -lfreeglut -lirrKlang
 if %ERRORLEVEL% neq 0 (
     echo Linking failed.
     exit /b 1
 )
+
 
 echo Finished building.
 
