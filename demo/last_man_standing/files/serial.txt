@@ -1,0 +1,54 @@
+i i1 i2 i3 l k j b c p q 
+callb1 callb2 v z bcnt1 bcnt2 xp1 xp2 yp1 yp2
+xl1 xl2 yl1 yl2 jj1 jj2 xnh1 xnh2 ynh1 ynh2 
+lb1 ylb2 xlb2 r1 r2 g1 g2 b1 b2 page 
+prev_page opt_1 opt_2 pic_change sound pos_p1 pos_p2
+g point pnt bm1 point_p2 pnt_p2 bm2 num_bomb_p1 num_bomb_p2
+num_lg_p1 num_lg_p2 lg_p1_cnt lg_p2_cnt weapon_p1 weapon_p2
+prev_pos_p1 prev_pos_p2 gun_bomb gun bomb x_box y_box 
+sheild_p1 sheild_p2 sld_p1 sld_p2 num_sheild_p1 num_sheild_p1
+xb1[30]
+yb1[30] 
+xb2[30]
+yb2[30]
+t1[20]
+v1[20]
+range_p1[20]
+bomb1[20]
+xbm1[20]
+ybm1[20]
+x_in_pos_bomb_p1[20]
+y_in_pos_bomb_p1[20]
+explo[20]
+t2[20]
+v2[20]
+range_p2[20]
+bomb2[20]
+xbm2[20]
+ybm2[20]
+x_in_pos_bomb_p2[20]
+y_in_pos_bomb_p2[20]
+explo_p2[20]
+xlg_p1[15]
+xlg_p2[15]
+xlg_p1[15]
+ylg_p2[15]
+double g=9.8,t1[20],t2[20],range_1[20],v1[20],range_2[20],v2[20];
+double bomb1[20],bomb2[20],xbm1[20],ybm1[20],xbm2[20],ybm2[20];
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

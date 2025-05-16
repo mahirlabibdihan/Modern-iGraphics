@@ -19,6 +19,7 @@ void iAnim()
 {
 	iAnimateSprite(&sprite);
 }
+
 /*
 	function iDraw() is called again and again by the system.
 */
@@ -49,7 +50,6 @@ void iMouseMove(int mx, int my)
 {
 	// place your codes here
 }
-/*
 
 /*
 function iMouseDrag() is called when the user presses and drags the mouse.
