@@ -2,7 +2,7 @@
 
 char name[100];
 char prev_names[5][100];
-char *filename = "saves\\names.txt";
+char *filename = "saves/names.txt";
 
 void saveName()
 {

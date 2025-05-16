@@ -5,7 +5,7 @@ int speed = 2;
 
 void loadResources()
 {
-	iLoadImage(&bg, "assets\\images\\background.jpg");
+	iLoadImage(&bg, "assets/images/background.jpg");
 	iResizeImage(&bg, 900, 450);
 }
 

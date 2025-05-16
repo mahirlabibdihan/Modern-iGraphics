@@ -18,9 +18,9 @@ Sprite monster;
 
 void loadResources()
 {
-	iLoadFramesFromSheet(idleMonster, "assets\\images\\sprites\\1 Pink_Monster\\Pink_Monster_Idle_4.png", 1, 4);
-	iLoadFramesFromSheet(walkMonster, "assets\\images\\sprites\\1 Pink_Monster\\Pink_Monster_Walk_6.png", 1, 6);
-	iLoadFramesFromSheet(jumpMonster, "assets\\images\\sprites\\1 Pink_Monster\\Pink_Monster_Jump_8.png", 1, 8);
+	iLoadFramesFromSheet(idleMonster, "assets/images/sprites/1 Pink_Monster/Pink_Monster_Idle_4.png", 1, 4);
+	iLoadFramesFromSheet(walkMonster, "assets/images/sprites/1 Pink_Monster/Pink_Monster_Walk_6.png", 1, 6);
+	iLoadFramesFromSheet(jumpMonster, "assets/images/sprites/1 Pink_Monster/Pink_Monster_Jump_8.png", 1, 8);
 
 	iInitSprite(&monster, -1);
 	iChangeSpriteFrames(&monster, idleMonster, 4);

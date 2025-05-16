@@ -12,22 +12,22 @@ bool isMirroredX[2] = {false, false};
 
 void loadResources()
 {
-    iLoadFramesFromSheet(pinkMonsterFrames, "assets\\images\\sprites\\1 Pink_Monster\\Pink_Monster_Idle_4.png", 1, 4);
+    iLoadFramesFromSheet(pinkMonsterFrames, "assets/images/sprites/1 Pink_Monster/Pink_Monster_Idle_4.png", 1, 4);
     iInitSprite(&pinkMonster, -1);
     iChangeSpriteFrames(&pinkMonster, pinkMonsterFrames, 4);
     iSetSpritePosition(&pinkMonster, 300, 250);
     iScaleSprite(&pinkMonster, 3.0);
 
-    iLoadFramesFromFolder(golemFrames, "assets\\images\\sprites\\Golem_2\\Walking");
+    iLoadFramesFromFolder(golemFrames, "assets/images/sprites/Golem_2/Walking");
     iInitSprite(&golem, -1);
     iChangeSpriteFrames(&golem, golemFrames, 24);
     iSetSpritePosition(&golem, 300, 200);
     iScaleSprite(&golem, 0.5);
 
-    iLoadImage(&bg, "assets\\images\\background.jpg");
+    iLoadImage(&bg, "assets/images/background.jpg");
     iResizeImage(&bg, 1800, 1000);
 
-    iLoadImage(&rectFrame, "assets\\images\\rect.png"); // Ignore white color for collision detection
+    iLoadImage(&rectFrame, "assets/images/rect.png"); // Ignore white color for collision detection
     iInitSprite(&rect, 0xFFFFFF);
     iChangeSpriteFrames(&rect, &rectFrame, 1);
     iSetSpritePosition(&rect, -100, -50);
@@ -180,7 +180,7 @@ int main(int argc, char *argv[])
 {
     glutInit(&argc, argv);
     loadResources();
-    iPlaySound("assets\\sounds\\background.wav", true);
+    iPlaySound("assets/sounds/background.wav", true);
     iSetTimer(50, iAnim);
     iInitialize(1800, 1000, "Sprite Demo");
     return 0;

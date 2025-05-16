@@ -1,9 +1,31 @@
+/*
+    author: S. M. Shahriar Nirjon
+    last modified: August 8, 2008
+*/
 #include "iGraphics.h"
 
-int ball_x, ball_y;
-int dx = 5, dy = 7;
-int ball_radius = 7;
+int pic_x, pic_y;
+int idle_idx = 0;
+char monster_idle[18][100];
 
+void populate_monster_images()
+{
+    // for (int i = 0; i < 4; i++)
+    // {
+    //     sprintf(monster_idle[i], "assets/images/sprites/pink-monster-split/idle/tile%03d.png", i);
+    //     printf("%s\n", monster_idle[i]);
+    // }
+    for (int i = 0; i < 18; i++)
+    {
+        sprintf(monster_idle[i], "assets/images/sprites/Golem_2/Idle Blinking/0_Golem_Idle Blinking_%03d.png", i);
+    }
+}
+
+void update_monster()
+{
+    idle_idx = (idle_idx + 1) % 18;
+    // 0 1 2 3 0 1 2 3
+}
 /*
     function iDraw() is called again and again by the system.
 */
@@ -12,32 +34,17 @@ void iDraw()
     // place your drawing codes here
 
     iClear();
-
-    iSetColor(255, 100, 10);
-    iFilledCircle(ball_x, ball_y, ball_radius);
-
-    iSetColor(255, 255, 255);
-    iText(10, 10, "Press p for pause, r for resume, END for exit.");
+    iShowImage(pic_x, pic_y, monster_idle[idle_idx]);
+    // iShowBMP(pic_x, pic_y, "wheel.bmp");
 }
 
 /*
     function iMouseMove() is called when the user presses and drags the mouse.
     (mx, my) is the position where the mouse pointer is.
 */
-void iMouseDrag(int mx, int my)
-{
-    // place your codes here
-}
-
-/*
-    function iMouseMove() is called automatically when the mouse pointer is in motion
-*/
 void iMouseMove(int mx, int my)
 {
-    // place your code here
-}
-void iMouseWheel(int dir, int mx, int my)
-{
+    // place your codes here
 }
 
 /*
@@ -57,19 +64,33 @@ void iMouse(int button, int state, int mx, int my)
 }
 
 /*
+function iMouseDrag() is called when the user presses and drags the mouse.
+(mx, my) is the position where the mouse pointer is.
+*/
+void iMouseDrag(int mx, int my)
+{
+    // place your codes here
+}
+
+/*
+function iMouseWheel() is called when the user scrolls the mouse wheel.
+dir = 1 for up, -1 for down.
+*/
+void iMouseWheel(int dir, int mx, int my)
+{
+    // place your code here
+}
+
+/*
     function iKeyboard() is called whenever the user hits a key in keyboard.
     key- holds the ASCII value of the key pressed.
 */
 void iKeyboard(unsigned char key)
 {
-    if (key == 'p')
+    if (key == 'x')
     {
-        // do something with 'q'
-        iPauseTimer(0);
-    }
-    if (key == 'r')
-    {
-        iResumeTimer(0);
+        // do something with 'x'
+        exit(0);
     }
     // place your codes for other keys here
 }
@@ -90,47 +111,33 @@ void iSpecialKeyboard(unsigned char key)
     {
         exit(0);
     }
+    if (key == GLUT_KEY_LEFT)
+    {
+        pic_x--;
+    }
+    if (key == GLUT_KEY_RIGHT)
+    {
+        pic_x++;
+    }
+    if (key == GLUT_KEY_UP)
+    {
+        pic_y++;
+    }
+    if (key == GLUT_KEY_DOWN)
+    {
+        pic_y--;
+    }
     // place your codes for other keys here
-}
-
-void ballChange()
-{
-    ball_x += dx;
-    ball_y += dy;
-
-    if (ball_x + ball_radius > iScreenWidth || ball_x - ball_radius < 0)
-    {
-        if (ball_x + ball_radius > iScreenWidth)
-            ball_x = iScreenWidth - ball_radius;
-        else
-            ball_x = ball_radius;
-        dx = -dx;
-    }
-
-    if (ball_y + ball_radius > iScreenHeight || ball_y - ball_radius < 0)
-    {
-        if (ball_y + ball_radius > iScreenHeight)
-            ball_y = iScreenHeight - ball_radius;
-        else
-            ball_y = ball_radius;
-        dy = -dy;
-    }
-}
-
-void randomizeBallPosition()
-{
-    ball_x = rand() % (iScreenWidth - 2 * ball_radius) + ball_radius;
-    ball_y = rand() % (iScreenHeight - 2 * ball_radius) + ball_radius;
 }
 
 int main(int argc, char *argv[])
 {
     glutInit(&argc, argv);
     // place your own initialization codes here.
-    iSetTimer(20, ballChange);
-    // iSetTimer(2000, randomizeBallPosition);
-
-    iInitialize(400, 400, "Ball Demo");
-
+    pic_x = 0;
+    pic_y = 0;
+    populate_monster_images();
+    iSetTimer(100, update_monster);
+    iInitialize(900, 900, "SpriteDemo");
     return 0;
 }

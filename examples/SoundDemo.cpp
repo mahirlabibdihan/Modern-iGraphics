@@ -1,6 +1,6 @@
 #include "iGraphics.h"
-#include "iSound.h"
 #include <iostream>
+#include "iSound.h"
 using namespace std;
 
 int bgSoundIdx = -1;
@@ -104,6 +104,7 @@ void iSpecialKeyboard(unsigned char key)
 int main(int argc, char *argv[])
 {
 	glutInit(&argc, argv);
+	iInitializeSound();
 	bgSoundIdx = iPlaySound("assets/sounds/background.wav", true, 50);
 	iInitialize(600, 250, "Sound Demo");
 	return 0;

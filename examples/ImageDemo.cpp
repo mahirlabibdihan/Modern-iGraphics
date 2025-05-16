@@ -1,19 +1,22 @@
 #include "iGraphics.h"
-#include <iostream>
-#include "iSound.h"
-using namespace std;
 
-int bgSoundIdx = -1;
+Image bg, mario;
+
+void loadResources()
+{
+	iLoadImage(&bg, "assets/images/background.jpg");
+	iLoadImage(&mario, "assets/images/mario.png");
+	double marioAspectRatio = (double)mario.width / mario.height;
+	iResizeImage(&mario, 48, 48.0 / marioAspectRatio);
+}
 
 void iDraw()
 {
 	// place your drawing codes here
+	//  load background.jpg using stb_image
 	iClear();
-	iText(15, 200, "Left click to hear a chime", GLUT_BITMAP_TIMES_ROMAN_24);
-	iText(15, 160, "Press 'p' to pause background music", GLUT_BITMAP_TIMES_ROMAN_24);
-	iText(15, 120, "Press 'r' to resume background music", GLUT_BITMAP_TIMES_ROMAN_24);
-	iText(15, 80, "Press 'x' to stop background music", GLUT_BITMAP_TIMES_ROMAN_24);
-	iText(15, 40, "Press UP/DOWN arrow keys to increase/decrease volume", GLUT_BITMAP_TIMES_ROMAN_24);
+	iShowImage(200, 200, "assets/images/background.jpg");
+	iShowLoadedImage(211, 304, &mario);
 }
 
 /*
@@ -31,7 +34,6 @@ void iMouseDrag(int mx, int my)
 void iMouseMove(int mx, int my)
 {
 	// place your code here
-	//  printf("x = %d, y = %d\n", mx, my);
 }
 
 /*
@@ -42,38 +44,26 @@ void iMouse(int button, int state, int mx, int my)
 {
 	if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN)
 	{
-		iPlaySound("assets\\sounds\\chime.wav", false);
-		// PlaySound("chime.wav", NULL, SND_FILENAME | SND_ASYNC);
+		iMirrorImage(&mario, HORIZONTAL);
 	}
 	if (button == GLUT_RIGHT_BUTTON && state == GLUT_DOWN)
 	{
+		iMirrorImage(&mario, VERTICAL);
 	}
 }
 
 void iMouseWheel(int dir, int mx, int my)
 {
+	// place your code here
 }
+
 /*
 	function iKeyboard() is called whenever the user hits a key in keyboard.
 	key- holds the ASCII value of the key pressed.
 */
 void iKeyboard(unsigned char key)
 {
-	switch (key)
-	{
-	case 'r':
-		iResumeSound(bgSoundIdx);
-		break;
-	case 'p':
-		iPauseSound(bgSoundIdx);
-		break;
-	case 'x':
-		iStopSound(bgSoundIdx);
-		break;
-		// place your codes for other keys here
-	default:
-		break;
-	}
+	// place your codes for other keys here
 }
 
 /*
@@ -87,25 +77,19 @@ void iKeyboard(unsigned char key)
 */
 void iSpecialKeyboard(unsigned char key)
 {
-	switch (key)
+
+	if (key == GLUT_KEY_END)
 	{
-	case GLUT_KEY_UP:
-		iIncreaseVolume(bgSoundIdx, 5);
-		break;
-	case GLUT_KEY_DOWN:
-		iDecreaseVolume(bgSoundIdx, 5);
-		break;
-		// place your codes for other keys here
-	default:
-		break;
+		exit(0);
 	}
+
+	// place your codes for other keys here
 }
 
 int main(int argc, char *argv[])
 {
 	glutInit(&argc, argv);
-	iInitializeSound();
-	bgSoundIdx = iPlaySound("assets\\sounds\\background.wav", true, 50);
-	iInitialize(600, 250, "Sound Demo");
+	loadResources();
+	iInitialize(900, 900, "ImageDemp");
 	return 0;
 }

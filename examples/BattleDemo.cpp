@@ -33,9 +33,9 @@ Golem golem;
 
 void loadPinkMonster()
 {
-    iLoadFramesFromSheet(pinkMonster.idle, "assets\\images\\sprites\\1 Pink_Monster\\Pink_Monster_Idle_4.png", 1, 4);
-    iLoadFramesFromSheet(pinkMonster.walk, "assets\\images\\sprites\\1 Pink_Monster\\Pink_Monster_Walk_6.png", 1, 6);
-    iLoadFramesFromSheet(pinkMonster.jump, "assets\\images\\sprites\\1 Pink_Monster\\Pink_Monster_Jump_8.png", 1, 8);
+    iLoadFramesFromSheet(pinkMonster.idle, "assets/images/sprites/1 Pink_Monster/Pink_Monster_Idle_4.png", 1, 4);
+    iLoadFramesFromSheet(pinkMonster.walk, "assets/images/sprites/1 Pink_Monster/Pink_Monster_Walk_6.png", 1, 6);
+    iLoadFramesFromSheet(pinkMonster.jump, "assets/images/sprites/1 Pink_Monster/Pink_Monster_Jump_8.png", 1, 8);
 
     iInitSprite(&pinkMonster.sprite, -1);
     iChangeSpriteFrames(&pinkMonster.sprite, pinkMonster.idle, 4);
@@ -47,9 +47,9 @@ void loadPinkMonster()
 
 void loadGolem()
 {
-    iLoadFramesFromFolder(golem.idle, "assets\\images\\sprites\\Golem_2\\Idle Blinking");
-    iLoadFramesFromFolder(golem.walk, "assets\\images\\sprites\\Golem_2\\Walking");
-    iLoadFramesFromFolder(golem.jump, "assets\\images\\sprites\\Golem_2\\Jump Start");
+    iLoadFramesFromFolder(golem.idle, "assets/images/sprites/Golem_2/Idle Blinking");
+    iLoadFramesFromFolder(golem.walk, "assets/images/sprites/Golem_2/Walking");
+    iLoadFramesFromFolder(golem.jump, "assets/images/sprites/Golem_2/Jump Start");
 
     iInitSprite(&golem.sprite, -1);
     iChangeSpriteFrames(&golem.sprite, golem.idle, 18);
