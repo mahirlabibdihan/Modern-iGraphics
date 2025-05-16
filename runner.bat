@@ -33,5 +33,6 @@ if %ERRORLEVEL% neq 0 (
 
 echo Finished building.
 
+:: Needs freeglut.dll and irrKlang.dll in the same directory as the executable
 bin\opengl.exe
 endlocal
