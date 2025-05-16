@@ -31,8 +31,6 @@
 #include "stb_image.h"
 #define STB_IMAGE_RESIZE_IMPLEMENTATION
 #include "stb_image_resize.h"
-#include <SDL.h>
-#include <SDL_mixer.h>
 #include <iostream>
 #include <unordered_map>
 using namespace std;
@@ -1189,127 +1187,11 @@ void reshapeFF(int width, int height)
     glutPostRedisplay();
 }
 
-#define SDL_VOL_MAX MIX_MAX_VOLUME // 128
-Mix_Chunk *channelChunks[8];
-void iSetVolume(int channel, int volumePercent)
-{
-    if (channel >= 0)
-    {
-        int vol = volumePercent * SDL_VOL_MAX / 100;
-        Mix_Volume(channel, vol);
-    }
-}
-
-void iIncreaseVolume(int channel, int amountPercent)
-{
-    if (channel >= 0)
-    {
-        int current = Mix_Volume(channel, -1);
-        int newVol = current + (amountPercent * SDL_VOL_MAX / 100);
-        if (newVol > SDL_VOL_MAX)
-            newVol = SDL_VOL_MAX;
-
-        Mix_Volume(channel, newVol);
-    }
-}
-
-void iDecreaseVolume(int channel, int amountPercent)
-{
-    if (channel >= 0)
-    {
-        int current = Mix_Volume(channel, -1);
-        int newVol = current - (amountPercent * SDL_VOL_MAX / 100);
-        if (newVol < 0)
-            newVol = 0;
-
-        Mix_Volume(channel, newVol);
-    }
-}
-
-void iPauseSound(int channel)
-{
-    Mix_Pause(channel);
-}
-
-void iResumeSound(int channel)
-{
-    Mix_Resume(channel);
-}
-
-void channelFinishedCallback(int channel)
-{
-    Mix_Chunk *it = channelChunks[channel];
-    if (it != nullptr)
-        Mix_FreeChunk(it);
-    channelChunks[channel] = nullptr;
-}
-
-void iStopSound(int channel)
-{
-    Mix_HaltChannel(channel);         // stops sound playing on that channel
-    channelFinishedCallback(channel); // Free the sound chunk
-}
-
-void iStopAllSounds()
-{
-    Mix_HaltChannel(-1); // -1 means halt ALL channels
-    for (int i = 0; i < 8; ++i)
-    {
-        channelFinishedCallback(i);
-    }
-}
-
-int iPlaySound(const char *filename, bool loop = false, int volume = 100) // If loop==true , then the audio will play again and again
-{
-    Mix_Chunk *sound = Mix_LoadWAV(filename);
-    if (!sound)
-    {
-        cerr << "Failed to load sound: " << Mix_GetError() << "\n";
-        return -1;
-    }
-    int channel = Mix_PlayChannel(-1, sound, loop ? -1 : 0); // Play the sound
-    if (channel == -1)
-    {
-        std::cerr << "Error playing sounds: " << Mix_GetError() << "\n";
-        Mix_FreeChunk(sound);
-        return -1;
-    }
-
-    iSetVolume(channel, volume);    // Set the volume
-    channelChunks[channel] = sound; //
-    return channel;
-}
-
-void iInitializeSound()
-{
-    if (SDL_Init(SDL_INIT_AUDIO) < 0)
-    {
-        std::cerr << "SDL_Init failed: " << SDL_GetError() << "\n";
-        return;
-    }
-    if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0)
-    {
-        std::cerr << "SDL_mixer could not initialize! Mix_Error: " << Mix_GetError() << "\n";
-        return;
-    }
-    Mix_ChannelFinished(channelFinishedCallback);
-}
-
 void iInitialize(int width = 500, int height = 500, const char *title = "iGraphics")
 {
     iSmallScreenHeight = iScreenHeight = height;
     iSmallScreenWidth = iScreenWidth = width;
 
-    if (SDL_Init(SDL_INIT_AUDIO) < 0)
-    {
-        std::cerr << "SDL_Init failed: " << SDL_GetError() << "\n";
-        return;
-    }
-    if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0)
-    {
-        std::cerr << "SDL_mixer could not initialize! Mix_Error: " << Mix_GetError() << "\n";
-        return;
-    }
     glutSetOption(GLUT_MULTISAMPLE, 8);
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_ALPHA | GLUT_MULTISAMPLE);
     glEnable(GLUT_MULTISAMPLE);
@@ -1358,6 +1240,4 @@ void iInitialize(int width = 500, int height = 500, const char *title = "iGraphi
     }
 
     glutMainLoop();
-    Mix_CloseAudio();
-    SDL_Quit();
 }
