@@ -1,5 +1,6 @@
 #include "iGraphics.h"
 #include <iostream>
+#include "iSound.h"
 using namespace std;
 
 int bgSoundIdx = -1;

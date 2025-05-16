@@ -1,4 +1,5 @@
 #include "iGraphics.h"
+#include "iSound.h"
 #include <iostream>
 using namespace std;
 
