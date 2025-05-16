@@ -28,8 +28,6 @@ echo Compiling %SOURCE_FILE% to object file...
 
 g++.exe -static-libgcc -static-libstdc++ -L.\OpenGL\lib -o bin\opengl.exe obj\opengl.o -lmingw32 -lSDL2main -lSDL2 -lSDL2_mixer -lOPENGL32 -lfreeglut -lwinmm
 
-:: g++.exe -static-libgcc -static-libstdc++ -L./OpenGL/lib -o bin/opengl.exe obj/opengl.o -lmingw32 -lSDL2main -lSDL2 -lSDL2_mixer -lOPENGL32 -lfreeglut
-
 if %ERRORLEVEL% neq 0 (
     echo Linking failed.
     exit /b 1
@@ -40,6 +38,5 @@ echo Linking %SOURCE_FILE% to executable...
 
 echo Finished building.
 
-:: Needs freeglut.dll and irrKlang.dll in the same directory as the executable
 bin\opengl.exe
 endlocal

@@ -565,7 +565,7 @@ int main(int argc, char *argv[])
 
 ### 🔉 Sound Functions
 
-`iGraphics` was originally designed for graphical applications, but it has been extended to support sound playback using the `irrKlang` library. The sound functions are as follows:
+`iGraphics` was originally designed for graphical applications, but it has been extended to support sound playback using the `SDL2` library. The sound functions are available in `iSound.h` and are shown below:
 
 #### `int iPlaySound(const char *filename, bool loop = false, int volume = 100)`
 
@@ -574,58 +574,70 @@ int main(int argc, char *argv[])
     -   `filename`: Path to the sound file.
     -   `loop`: `true` for continuous play, `false` for one-time play.
     -   `volume`: Volume level (0-100).
--   **Returns:** Index of the sound.
+-   **Returns:** Channel where the sound is played.
+-   **Note:** You cann't play more than 8 sounds at a time.
 -   **Example:**
+
     ```cpp
-    int idx = iPlaySound("background.wav", true, 80);
+    #include "iSound.h" // Include the sound header
+    ...
+    int main(int argc, char *argv[])
+    {
+        glutInit(&argc, argv);
+        iInitializeSound(); // Need to initialize sound engine
+        iInitialize(600, 250, "Sound Demo");
+        return 0;
+    }
+    ...
+    int channel = iPlaySound("background.wav", true, 80);
     ```
 
-#### `void iPauseSound(int index)`
+#### `void iPauseSound(int channel)`
 
--   **Description:** Pauses the sound specified by `index`.
--   **Parameters:** `index` of the sound.
+-   **Description:** Pauses the sound specified by `channel`.
+-   **Parameters:** `channel` of the sound.
 -   **Example:**
     ```cpp
-    iPauseSound(idx);
+    iPauseSound(channel);
     ```
 
-#### `void iResumeSound(int index)`
+#### `void iResumeSound(int channel)`
 
--   **Description:** Resumes the sound specified by `index`.
--   **Parameters:** `index` of the sound.
+-   **Description:** Resumes the sound specified by `channel`.
+-   **Parameters:** `channel` of the sound.
 -   **Example:**
     ```cpp
-    iResumeSound(idx);
+    iResumeSound(channel);
     ```
 
-#### `void iStopSound(int index)`
+#### `void iStopSound(int channel)`
 
--   **Description:** Stops the sound specified by `index`.
--   **Parameters:** `index` of the sound.
+-   **Description:** Stops the sound specified by `channel`.
+-   **Parameters:** `channel` of the sound.
 -   **Example:**
     ```cpp
-    iStopSound(idx);
+    iStopSound(channel);
     ```
 
 #### `void iStopAllSounds()`
 
 -   **Description:** Stops all currently playing sounds.
 
-#### `void iSetVolume(int index, int volume)`
+#### `void iSetVolume(int channel, int volume)`
 
 -   **Description:** Sets the volume for a specific sound.
 -   **Parameters:**
     -   `index`: Index of the sound.
     -   `volume`: Volume level (0-100).
 
-#### `void iIncreaseVolume(int index, int amount)`
+#### `void iIncreaseVolume(int channel, int amount)`
 
 -   **Description:** Increases the volume of a specific sound by a specified amount.
 -   **Parameters:**
     -   `index`: Index of the sound.
     -   `amount`: Amount to increase the volume by (0-100).
 
-#### `void iDecreaseVolume(int index, int amount)`
+#### `void iDecreaseVolume(int channel, int amount)`
 
 -   **Description:** Decreases the volume of a specific sound by a specified amount.
 -   **Parameters:**
