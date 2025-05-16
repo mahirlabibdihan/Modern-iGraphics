@@ -1,16 +1,14 @@
 #include <SDL.h>
 #include <SDL_mixer.h>
-#include <iostream>
-#include <unordered_map>
+#include <stdio.h>
 using namespace std;
 
-#define SDL_VOL_MAX MIX_MAX_VOLUME // 128
 Mix_Chunk *channelChunks[8];
 void iSetVolume(int channel, int volumePercent)
 {
     if (channel >= 0)
     {
-        int vol = volumePercent * SDL_VOL_MAX / 100;
+        int vol = volumePercent * MIX_MAX_VOLUME / 100;
         Mix_Volume(channel, vol);
     }
 }
@@ -20,9 +18,9 @@ void iIncreaseVolume(int channel, int amountPercent)
     if (channel >= 0)
     {
         int current = Mix_Volume(channel, -1);
-        int newVol = current + (amountPercent * SDL_VOL_MAX / 100);
-        if (newVol > SDL_VOL_MAX)
-            newVol = SDL_VOL_MAX;
+        int newVol = current + (amountPercent * MIX_MAX_VOLUME / 100);
+        if (newVol > MIX_MAX_VOLUME)
+            newVol = MIX_MAX_VOLUME;
 
         Mix_Volume(channel, newVol);
     }
@@ -33,7 +31,7 @@ void iDecreaseVolume(int channel, int amountPercent)
     if (channel >= 0)
     {
         int current = Mix_Volume(channel, -1);
-        int newVol = current - (amountPercent * SDL_VOL_MAX / 100);
+        int newVol = current - (amountPercent * MIX_MAX_VOLUME / 100);
         if (newVol < 0)
             newVol = 0;
 
@@ -79,13 +77,13 @@ int iPlaySound(const char *filename, bool loop = false, int volume = 100) // If 
     Mix_Chunk *sound = Mix_LoadWAV(filename);
     if (!sound)
     {
-        cerr << "Failed to load sound: " << Mix_GetError() << "\n";
+        printf("Failed to load sound: %s\n", Mix_GetError());
         return -1;
     }
     int channel = Mix_PlayChannel(-1, sound, loop ? -1 : 0); // Play the sound
     if (channel == -1)
     {
-        std::cerr << "Error playing sounds: " << Mix_GetError() << "\n";
+        printf("Error playing sound: %s\n", Mix_GetError());
         Mix_FreeChunk(sound);
         return -1;
     }
@@ -99,12 +97,12 @@ void iInitializeSound()
 {
     if (SDL_Init(SDL_INIT_AUDIO) < 0)
     {
-        std::cerr << "SDL_Init failed: " << SDL_GetError() << "\n";
+        printf("SDL_Init failed: %s\n", SDL_GetError());
         return;
     }
     if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0)
     {
-        std::cerr << "SDL_mixer could not initialize! Mix_Error: " << Mix_GetError() << "\n";
+        printf("SDL_mixer could not initialize! Mix_Error: %s\n", Mix_GetError());
         return;
     }
     Mix_ChannelFinished(channelFinishedCallback);
