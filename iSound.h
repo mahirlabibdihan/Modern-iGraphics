@@ -1,3 +1,10 @@
+//
+//  Original Author: Mahir Labib Dihan
+//  last modified: May 19, 2025
+//
+//  Version: 1.0.0
+//
+
 #include <SDL.h>
 #include <SDL_mixer.h>
 #include <stdio.h>
