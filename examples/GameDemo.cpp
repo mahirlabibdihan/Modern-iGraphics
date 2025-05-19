@@ -1,5 +1,5 @@
 #include "iGraphics.h"
-
+#include "iSound.h"
 Image bg;
 
 Sprite mario1, mario2, rect;
@@ -180,6 +180,7 @@ int main(int argc, char *argv[])
 {
     glutInit(&argc, argv);
     loadResources();
+    iInitializeSound();
     iPlaySound("assets/sounds/background.wav", true);
     iSetTimer(50, iAnim);
     iInitialize(1800, 1000, "Sprite Demo");
