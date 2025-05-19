@@ -35,7 +35,7 @@
 		<Compiler>
 			<Add option="-Wall" />
 		</Compiler>
-		<Unit filename="win-examples/SoundDemo.cpp" />
+		<Unit filename="iMain.cpp" />
 		<Extensions />
 	</Project>
 </CodeBlocks_project_file>
