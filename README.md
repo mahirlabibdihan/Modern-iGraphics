@@ -525,13 +525,13 @@ int main(int argc, char *argv[])
 
 ### ⌨️ Keyboard Functions
 
-#### `void iKeyboard(unsigned char)`
+#### `void iKeyboard(unsigned char key)`
 
 -   **Description:** Called when a key is pressed down.
 -   **Parameters:** `key` pressed.
 -   **Note:** _This function should be defined in the main file._
 
-#### `void iSpecialKeyboard(int)`
+#### `void iSpecialKeyboard(unsigned char key)`
 
 -   **Description:** Called when a special key is pressed down.
 -   **Parameters:** `key` pressed.
@@ -550,7 +550,7 @@ int main(int argc, char *argv[])
     }
     ```
 
-#### `bool isSpecialKeyPressed(int key)`
+#### `bool isSpecialKeyPressed(unsigned char key)`
 
 -   **Description:** Checks if a special key is being pressed (Not yet released).
 -   **Parameters:** `key` to check.
