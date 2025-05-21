@@ -758,6 +758,9 @@ int main(int argc, char *argv[])
 
 ### 🧩 Sprite Functions
 
+Free sprite resources: https://craftpix.net/freebies/
+Online sprite cutter: https://ezgif.com/sprite-cutter
+
 #### `void iInitSprite(Sprite *s, int ignoreColor = -1)`
 
 -   **Description:** Initializes a sprite structure.
