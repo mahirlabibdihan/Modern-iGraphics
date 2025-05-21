@@ -1065,7 +1065,7 @@ void iClear()
 // }
 void displayFF(void)
 {
-    iClear();
+    // iClear();
     iDraw();
     glutSwapBuffers();
 }
