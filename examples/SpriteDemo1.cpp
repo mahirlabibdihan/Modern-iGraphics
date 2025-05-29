@@ -10,21 +10,16 @@ char monster_idle[18][100];
 
 void populate_monster_images()
 {
-    // for (int i = 0; i < 4; i++)
-    // {
-    //     sprintf(monster_idle[i], "assets/images/sprites/pink-monster-split/idle/tile%03d.png", i);
-    //     printf("%s\n", monster_idle[i]);
-    // }
     for (int i = 0; i < 18; i++)
     {
         sprintf(monster_idle[i], "assets/images/sprites/Golem_2/Idle Blinking/0_Golem_Idle Blinking_%03d.png", i);
+        // printf("assets/images/sprites/Golem_2/Idle Blinking/0_Golem_Idle Blinking_%03d.png", i);
     }
 }
 
 void update_monster()
 {
     idle_idx = (idle_idx + 1) % 18;
-    // 0 1 2 3 0 1 2 3
 }
 /*
     function iDraw() is called again and again by the system.
@@ -32,10 +27,8 @@ void update_monster()
 void iDraw()
 {
     // place your drawing codes here
-
     iClear();
     iShowImage(pic_x, pic_y, monster_idle[idle_idx]);
-    // iShowBMP(pic_x, pic_y, "wheel.bmp");
 }
 
 /*
