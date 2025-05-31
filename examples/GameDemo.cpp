@@ -38,6 +38,7 @@ void loadResources()
 void iDraw()
 {
     // place your drawing codes here
+    iClear();
 
     // iShowSprite(&mario1);
     iShowLoadedImage(0, 0, &bg);
@@ -54,6 +55,7 @@ void iDraw()
     // {
     //     iText(100, 500, "Collision Detected", GLUT_BITMAP_TIMES_ROMAN_24);
     // }
+    iShowSpeed(10, 10);
 }
 
 /*

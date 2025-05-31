@@ -834,6 +834,27 @@ void iTextAdvanced(double x, double y, const char *str, float scale = 0.3, float
     glPopMatrix();      // Restore transformation matrix
 }
 
+int frameCount = 0;
+int previousTime = 0;
+int fps = 0;
+
+void iShowSpeed(double x, double y)
+{
+    frameCount++;
+    int currentTime = glutGet(GLUT_ELAPSED_TIME);
+    int timeInterval = currentTime - previousTime;
+    if (timeInterval > 1000)
+    {
+        fps = (frameCount * 1000.0) / timeInterval;
+        previousTime = currentTime;
+        frameCount = 0;
+    }
+
+    char fpsText[20];
+    sprintf(fpsText, "FPS: %d", fps);
+    iText(x, y, fpsText);
+}
+
 void iPoint(double x, double y, int size = 0)
 {
     int i, j;
