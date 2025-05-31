@@ -50,6 +50,8 @@ In some versions of Code::Blocks, you may need to change the compiler path as fo
 
 After you change the compiler, clear the `.o` files inside `obj` folder.
 
+_You can find the slides with step-by-step screenshots_ [here](https://docs.google.com/presentation/d/1VTaBzzTKQhPsGCA9_CBIUZvDUh3l6v3_gnTCPSLk_XM/edit?usp=sharing).
+
 ---
 
 ## ⚙️ Setup in Terminal
