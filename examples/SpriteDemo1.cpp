@@ -132,5 +132,6 @@ int main(int argc, char *argv[])
     populate_monster_images();
     iSetTimer(100, update_monster);
     iInitialize(900, 900, "SpriteDemo");
+    glutMainLoop(); // infinite loop
     return 0;
 }

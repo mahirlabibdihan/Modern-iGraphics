@@ -3,11 +3,14 @@
 /*
 function iDraw() is called again and again by the system.
 */
+float degree = 0;
 void iDraw()
 {
     // place your drawing codes here
     iClear();
-    iText(140, 180, "Hello World");
+    iRotate(200, 200, degree);
+    iShowTexture(200, 200, "assets/images/mario.png", 0.2);
+    iUnRotate();
 }
 
 /*
@@ -92,10 +95,20 @@ void iSpecialKeyboard(unsigned char key)
     }
 }
 
+void iAnim()
+{
+    degree += 1;
+    if (degree >= 360)
+    {
+        degree = 0;
+    }
+}
+
 int main(int argc, char *argv[])
 {
     glutInit(&argc, argv);
     // place your own initialization codes here.
+    iSetTimer(10, iAnim); // Set a timer to call iAnim every 100 milliseconds
     iInitialize(400, 400, "demooo");
     glutMainLoop(); // infinite loop
     return 0;

@@ -186,5 +186,6 @@ int main(int argc, char *argv[])
     iPlaySound("assets/sounds/background.wav", true);
     iSetTimer(50, iAnim);
     iInitialize(1800, 1000, "Sprite Demo");
+    glutMainLoop(); // infinite loop
     return 0;
 }

@@ -108,5 +108,6 @@ int main(int argc, char *argv[])
     pic_y = 0;
 
     iInitialize(900, 900, "PictureDemo");
+    glutMainLoop(); // infinite loop
     return 0;
 }

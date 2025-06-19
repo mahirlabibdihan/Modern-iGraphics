@@ -147,5 +147,6 @@ int main(int argc, char *argv[])
     glutInit(&argc, argv);
     loadNames();
     iInitialize(600, 400, "Mousedemo");
+    glutMainLoop(); // infinite loop
     return 0;
 }

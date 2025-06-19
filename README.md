@@ -240,8 +240,9 @@ void iSpecialKeyboard(unsigned char key)
 int main(int argc, char *argv[])
 {
     glutInit(&argc, argv);
-    //place your own initialization codes here.
     iInitialize(400, 400, "demooo");
+    // place your own initialization codes here.
+    glutMainLoop(); // infinite loop
     return 0;
 }
 ```
@@ -666,6 +667,18 @@ int main(int argc, char *argv[])
   iShowImage(100, 200, "image.png");
   ```
 
+#### `void iShowTexture(int x, int y, const char *filename, double scale = 1.0)`
+
+- **Description:** Displays an image as a texture at specified coordinates.
+- **Parameters:**
+  - `x`, `y`: Coordinates where the image will be displayed.
+  - `filename`: Path to the image file.
+  - **Note:** This function is similar to `iShowImage`, but it uses OpenGL textures for rendering, which can be more efficient for larger images or repeated use. Also, it supports rotation using `iRotate` function and faster scaling using `scale` parameter.
+  - **Example:**
+  ```cpp
+  iShowTexture(100, 200, "texture.png");
+  ```
+
 #### `bool iLoadImage(Image* img, const char filename[])`
 
 - **Description:** Loads an image from file. Supports multiple image formats (BMP, PNG, JPG, GIF) with the help of the stb_image library.
@@ -689,12 +702,30 @@ int main(int argc, char *argv[])
   {
       unsigned char *data;
       int width, height, channels;
+      GLuint textureID; // OpenGL texture ID
   } Image;
+  ```
+
+#### `void iLoadTexture(Image* img, const char filename[])`
+
+- **Description:** Loads an image from file as a texture.
+- **Parameters:**
+  - `img`: Pointer to an `Image` structure.
+  - `filename`: Path to the image file.
+  - **Note:** This function is similar to `iLoadImage`, but it uses OpenGL textures for rendering.
+- **Example:**
+  ```cpp
+  Image img;
+  if (iLoadTexture(&img, "texture.png")) {
+      // Texture loaded successfully
+  } else {
+      // Failed to load texture
+  }
   ```
 
 #### `void iShowLoadedImage(int x, int y, Image* img)`
 
-- **Description:** Displays an already loaded image at specified coordinates.
+- **Description:** Displays an already loaded image at specified coordinates. Image should be loaded using `iLoadImage`.
 - **Parameters:**
 
   - `x`, `y`: Coordinates where the image will be displayed.
@@ -705,7 +736,21 @@ int main(int argc, char *argv[])
   ```cpp
   Image img;
   iLoadImage(&img, "image.png");
-  iShowImage(100, 200, &img);
+  iShowLoadedImage(100, 200, &img);
+  ```
+
+#### `void iShowLoadedTexture(int x, int y, Image* img, double scale = 1.0)`
+
+- **Description:** Displays an already loaded image as a texture at specified coordinates. Image should be loaded using `iLoadTexture`.
+- **Parameters:**
+  - `x`, `y`: Coordinates where the image will be displayed.
+  - `img`: Pointer to the loaded `Image` structure.
+  - **Note:** This function is similar to `iShowLoadedImage`, but it uses OpenGL textures for rendering.
+  - **Example:**
+  ```cpp
+  Image img;
+  iLoadTexture(&img, "texture.png");
+  iShowLoadedTexture(100, 200, &img);
   ```
 
 #### `void iScaleImage(Image* img, double scale)`

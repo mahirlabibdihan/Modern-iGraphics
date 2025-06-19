@@ -280,5 +280,6 @@ int main(int argc, char *argv[])
     iSetTimer(20, movePlanets);
     iInitialize(CX_MAX, CY_MAX, "Solar system!");
 
+    glutMainLoop(); // infinite loop
     return 0;
 }

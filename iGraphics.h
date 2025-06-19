@@ -35,6 +35,7 @@ typedef struct
 {
     unsigned char *data;
     int width, height, channels;
+    GLuint textureId; // OpenGL texture ID
 } Image;
 
 typedef struct
@@ -78,6 +79,9 @@ void iMouseMove(int, int); // New function
 void iMouse(int button, int state, int x, int y);
 void iMouseWheel(int dir, int x, int y);
 // void iResize(int width, int height);
+
+#define max(a, b) ((a) > (b) ? (a) : (b))
+#define min(a, b) ((a) < (b) ? (a) : (b))
 
 #ifdef WIN32
 
@@ -136,7 +140,6 @@ void iResumeTimer(int index)
 }
 
 // Additional functions for displaying images
-
 bool iLoadImage(Image *img, const char filename[])
 {
     stbi_set_flip_vertically_on_load(true);
@@ -154,6 +157,110 @@ void iFreeImage(Image *img)
     stbi_image_free(img->data);
 }
 
+void iLoadTexture(Image *img, const char filename[])
+{
+    stbi_set_flip_vertically_on_load(true);
+    img->data = stbi_load(filename, &img->width, &img->height, &img->channels, 0);
+    if (img->data == nullptr)
+    {
+        printf("Failed to load image: %s\n", stbi_failure_reason());
+    }
+
+    GLuint texId;
+    glGenTextures(1, &texId);
+    glBindTexture(GL_TEXTURE_2D, texId);
+
+    // Set texture parameters ONCE
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
+
+    // Determine format
+    GLenum format = (img->channels == 4) ? GL_RGBA : GL_RGB;
+
+    // Upload texture data
+    glTexImage2D(GL_TEXTURE_2D, 0, format, img->width, img->height,
+                 0, format, GL_UNSIGNED_BYTE, img->data);
+
+    img->textureId = texId;
+}
+
+void iShowLoadedTexture(int x, int y, Image *img, double scale = 1.0)
+{
+    int imgWidth = img->width * scale;
+    int imgHeight = img->height * scale;
+    // Check if texture is completely outside viewport, then skip drawing
+    if (x + imgWidth <= 0 || y + imgHeight <= 0 || x >= iScreenWidth || y >= iScreenHeight)
+        return;
+
+    glBindTexture(GL_TEXTURE_2D, img->textureId);
+
+    glEnable(GL_TEXTURE_2D);
+    glBegin(GL_QUADS);
+    glTexCoord2f(0.0f, 0.0f);
+    glVertex2i(x, y);
+    glTexCoord2f(1.0f, 0.0f);
+    glVertex2i(x + imgWidth, y);
+    glTexCoord2f(1.0f, 1.0f);
+    glVertex2i(x + imgWidth, y + imgHeight);
+    glTexCoord2f(0.0f, 1.0f);
+    glVertex2i(x, y + imgHeight);
+    glEnd();
+    glDisable(GL_TEXTURE_2D);
+}
+
+void iShowTexture2(int x, int y, Image *img, double scale)
+{
+    int imgWidth = img->width;
+    int imgHeight = img->height;
+    int scaledWidth = imgWidth * scale;
+    int scaledHeight = imgHeight * scale;
+    int channels = img->channels;
+    unsigned char *data = img->data;
+
+    if (x + scaledWidth <= 0 || y + scaledHeight <= 0 || x >= iScreenWidth || y >= iScreenHeight)
+        return;
+
+    // Generate texture
+    GLuint texId;
+    glGenTextures(1, &texId);
+    glBindTexture(GL_TEXTURE_2D, texId);
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE); // Ensure texture colors are used
+
+    GLenum format = (channels == 4) ? GL_RGBA : GL_RGB;
+    glTexImage2D(GL_TEXTURE_2D, 0, format, imgWidth, imgHeight, 0, format, GL_UNSIGNED_BYTE, data);
+
+    glEnable(GL_TEXTURE_2D);
+    glBegin(GL_QUADS);
+    glTexCoord2f(0.0f, 0.0f);
+    glVertex2i(x, y);
+    glTexCoord2f(1.0f, 0.0f);
+    glVertex2i(x + scaledWidth, y);
+    glTexCoord2f(1.0f, 1.0f);
+    glVertex2i(x + scaledWidth, y + scaledHeight);
+    glTexCoord2f(0.0f, 1.0f);
+    glVertex2i(x, y + scaledHeight);
+    glEnd();
+    glDisable(GL_TEXTURE_2D);
+
+    glDeleteTextures(1, &texId);
+}
+
+void iShowTexture(int x, int y, const char *filename, double scale = 1.0)
+{
+    Image img;
+    if (!iLoadImage(&img, filename))
+    {
+        printf("Failed to load image: %s\n", filename);
+        return;
+    }
+    iShowTexture2(x, y, &img, scale);
+    iFreeImage(&img);
+}
+
 void iShowImage2(int x, int y, Image *img, int ignoreColor)
 {
     int imgWidth = img->width;
@@ -167,39 +274,24 @@ void iShowImage2(int x, int y, Image *img, int ignoreColor)
     int screenWidth = viewport[2];
     int screenHeight = viewport[3];
 
-    // Determine visible region
-    int startX = 0, startY = 0;
-    int drawX = x, drawY = y;
-    int drawWidth = imgWidth;
-    int drawHeight = imgHeight;
-
-    // Clip left
-    if (x < 0)
+    // Fast path: no clipping needed
+    if (x >= 0 && y >= 0)
     {
-        startX = -x;
-        drawX = 0;
-        drawWidth -= startX;
+        glRasterPos2i(x, y);
+        glDrawPixels(imgWidth, imgHeight,
+                     (channels == 4) ? GL_RGBA : GL_RGB,
+                     GL_UNSIGNED_BYTE, data);
+        return;
     }
 
-    // Clip bottom
-    if (y < 0)
-    {
-        startY = -y;
-        drawY = 0;
-        drawHeight -= startY;
-    }
+    // Improved visible region calculation with clamping
+    int startX = max(0, -x);
+    int startY = max(0, -y);
+    int drawX = max(0, x);
+    int drawY = max(0, y);
 
-    // Clip right
-    if (drawX + drawWidth > screenWidth)
-    {
-        drawWidth = screenWidth - drawX;
-    }
-
-    // Clip top
-    if (drawY + drawHeight > screenHeight)
-    {
-        drawHeight = screenHeight - drawY;
-    }
+    int drawWidth = min(imgWidth - startX, screenWidth - drawX);
+    int drawHeight = min(imgHeight - startY, screenHeight - drawY);
 
     // Don't draw if completely out of bounds
     if (drawWidth <= 0 || drawHeight <= 0)
@@ -208,24 +300,33 @@ void iShowImage2(int x, int y, Image *img, int ignoreColor)
     // Create a buffer for the clipped image
     unsigned char *clippedData = new unsigned char[drawWidth * drawHeight * channels];
 
-    for (int y = 0; y < drawHeight; y++)
+    unsigned char ignoreR = (ignoreColor >> 16) & 0xFF;
+    unsigned char ignoreG = (ignoreColor >> 8) & 0xFF;
+    unsigned char ignoreB = ignoreColor & 0xFF;
+
+    bool applyIgnore = (ignoreColor != -1);
+    for (int dy = 0; dy < drawHeight; dy++)
     {
-        for (int x = 0; x < drawWidth; x++)
+        int srcRowOffset = (startY + dy) * imgWidth * channels + startX * channels;
+        int dstRowOffset = dy * drawWidth * channels;
+        if (!applyIgnore)
         {
-            int srcX = startX + x;
-            int srcY = startY + y;
-            int srcIndex = (srcY * imgWidth + srcX) * channels;
-            int dstIndex = (y * drawWidth + x) * channels;
+            // Fast copy whole row
+            memcpy(&clippedData[dy * drawWidth * channels],
+                   &data[(startY + dy) * imgWidth * channels + startX * channels],
+                   drawWidth * channels);
+            continue;
+        }
+        for (int dx = 0; dx < drawWidth; dx++)
+        {
+            int srcIndex = srcRowOffset + dx * channels;
+            int dstIndex = dstRowOffset + dx * channels;
 
             // Copy and optionally ignore color
             unsigned char r = data[srcIndex];
             unsigned char g = data[srcIndex + 1];
             unsigned char b = data[srcIndex + 2];
-            bool ignore = (ignoreColor != -1 &&
-                           r == (ignoreColor >> 16 & 0xFF) &&
-                           g == ((ignoreColor >> 8) & 0xFF) &&
-                           b == ((ignoreColor) & 0xFF));
-
+            bool ignore = (r == ignoreR && g == ignoreG && b == ignoreB);
             if (ignore)
             {
                 clippedData[dstIndex + 0] = 0;
@@ -236,17 +337,17 @@ void iShowImage2(int x, int y, Image *img, int ignoreColor)
             }
             else
             {
-                for (int c = 0; c < channels; c++)
-                {
-                    clippedData[dstIndex + c] = data[srcIndex + c];
-                }
+                clippedData[dstIndex + 0] = r;
+                clippedData[dstIndex + 1] = g;
+                clippedData[dstIndex + 2] = b;
+                if (channels == 4)
+                    clippedData[dstIndex + 3] = data[srcIndex + 3];
             }
         }
     }
 
     glRasterPos2i(drawX, drawY);
     glDrawPixels(drawWidth, drawHeight, (channels == 4) ? GL_RGBA : GL_RGB, GL_UNSIGNED_BYTE, clippedData);
-
     delete[] clippedData;
 }
 
@@ -1262,6 +1363,5 @@ void iInitialize(int width = 500, int height = 500, const char *title = "iGraphi
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     }
-
-    glutMainLoop();
+    // glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
 }

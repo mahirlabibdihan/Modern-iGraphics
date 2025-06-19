@@ -67,6 +67,7 @@ void iDraw()
 
     iClear();
     iShowImage(pic_x, pic_y, monster_image);
+    iShowSpeed(0, 0);
     // iShowBMP(pic_x, pic_y, "wheel.bmp");
 }
 
@@ -145,21 +146,21 @@ void iSpecialKeyboard(unsigned char key)
     }
     if (key == GLUT_KEY_LEFT)
     {
-        pic_x--;
+        pic_x -= 2;
     }
     if (key == GLUT_KEY_RIGHT)
     {
-        pic_x++;
+        pic_x += 2;
         state = WALK;
     }
     if (key == GLUT_KEY_UP)
     {
-        pic_y++;
+        pic_y += 2;
         state = JUMP;
     }
     if (key == GLUT_KEY_DOWN)
     {
-        pic_y--;
+        pic_y -= 2;
     }
     // place your codes for other keys here
 }
@@ -173,5 +174,6 @@ int main(int argc, char *argv[])
     populate_monster_images();
     iSetTimer(100, update_monster);
     iInitialize(900, 900, "SpriteDemo");
+    glutMainLoop(); // infinite loop
     return 0;
 }

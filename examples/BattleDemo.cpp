@@ -235,5 +235,6 @@ int main(int argc, char *argv[])
     loadGolem();
     iSetTimer(100, iAnim);
     iInitialize(800, 400, "SpriteDemo");
+    glutMainLoop(); // infinite loop
     return 0;
 }
