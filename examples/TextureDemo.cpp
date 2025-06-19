@@ -6,9 +6,6 @@ void loadResources()
 {
     iLoadTexture(&bg, "assets/images/background.jpg");
     iLoadTexture(&mario, "assets/images/mario.png");
-    // double marioAspectRatio = (double)mario.width / mario.height;
-    // iResizeImage(&mario, 48, 48.0 / marioAspectRatio);
-    iScaleImage(&mario, 0.1);
 }
 
 void iDraw()
@@ -16,12 +13,12 @@ void iDraw()
     // place your drawing codes here
     iClear();
     iShowTexture(200, 200, "assets/images/background.jpg");
-    iShowLoadedTexture(211, 304, &mario);
-    iShowLoadedTexture(311, 304, &mario);
-    iShowLoadedTexture(411, 304, &mario);
-    iShowLoadedTexture(511, 304, &mario);
-    iShowLoadedTexture(611, 304, &mario);
-    iShowLoadedTexture(711, 304, &mario);
+    iShowLoadedTexture(211, 304, &mario, 0.1);
+    iShowLoadedTexture(311, 304, &mario, 0.12);
+    iShowLoadedTexture(411, 304, &mario, 0.13);
+    iShowLoadedTexture(511, 304, &mario, 0.14);
+    iShowLoadedTexture(611, 304, &mario, 0.15);
+    iShowLoadedTexture(711, 304, &mario, 0.16);
 }
 
 /*
