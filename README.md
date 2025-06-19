@@ -713,6 +713,7 @@ int main(int argc, char *argv[])
   - `img`: Pointer to an `Image` structure.
   - `filename`: Path to the image file.
   - **Note:** This function is similar to `iLoadImage`, but it uses OpenGL textures for rendering.
+  - **Important:** `iLoadTexture` can't be called before `iInitialize` function. It should be called after `iInitialize` to ensure OpenGL context is created.
 - **Example:**
   ```cpp
   Image img;
