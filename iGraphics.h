@@ -385,28 +385,31 @@ void iShowImage(int x, int y, const char *filename, double scaleX = 1.0, double 
     iFreeImage(&img);
 }
 
-void iWrapImage(Image *img, int dx)
+void iWrapImage(Image *img, int dx = 0, int dy = 0)
 {
-    // Circular shift the image horizontally by dx pixels (positive = right, negative = left)
+    // Circular shift the image horizontally by dx and vertically by dy pixels
     int width = img->width;
     int height = img->height;
     int channels = img->channels;
     unsigned char *data = img->data;
     unsigned char *wrappedData = new unsigned char[width * height * channels];
 
-    // Normalize dx to be within [0, width)
+    // Normalize dx to [0, width), dy to [0, height)
     dx = ((dx % width) + width) % width;
+    dy = ((dy % height) + height) % height;
 
     for (int y = 0; y < height; y++)
     {
         for (int x = 0; x < width; x++)
         {
-            int index = (y * width + x) * channels;
+            int srcIndex = (y * width + x) * channels;
             int wrappedX = (x + dx) % width;
-            int wrappedIndex = (y * width + wrappedX) * channels;
+            int wrappedY = (y + dy) % height;
+            int dstIndex = (wrappedY * width + wrappedX) * channels;
+
             for (int c = 0; c < channels; c++)
             {
-                wrappedData[wrappedIndex + c] = data[index + c];
+                wrappedData[dstIndex + c] = data[srcIndex + c];
             }
         }
     }
