@@ -761,19 +761,24 @@ int main(int argc, char *argv[])
   iMirrorImage(&img, HORIZONTAL); // Mirror horizontally
   ```
 
-#### `void iWrapImage(Image* img, int dx)`
+#### `void iWrapImage(Image* img, int dx = 0, int dy = 0)`
 
-- **Description:** Wraps the image around the window by `dx` pixels. This function is useful for creating infinite scrolling backgrounds.:
+- **Description:** Wraps the image around the screen by `dx` pixels horizontally and `dy` pixels vertically. This function is useful for creating infinite scrolling backgrounds.
 - **Parameters:**
   - `img`: Pointer to the loaded `Image` structure.
-  - `dx`: Number of pixels to wrap around.
+  - `dx`: Horizontal shift in pixels (default is 0).
     - A positive value of `dx` shifts the image to the right.
     - A negative value of `dx` shifts the image to the left.
+  - `dy`: Vertical shift in pixels (default is 0).
+    - A positive value of `dy` shifts the image down.
+    - A negative value of `dy` shifts the image up.
 - **Example:**
 
   ```cpp
   iWrapImage(&img, 50); // Wrap the image by 50 pixels to the right
   iWrapImage(&img, -50); // Wrap the image by 50 pixels to the left
+  iWrapImage(&img, 0, 30); // Wrap the image by 30 pixels down
+  iWrapImage(&img, 0, -30); // Wrap the image by 30 pixels up
   ```
 
 #### `void iFreeImage(Image* img)`
