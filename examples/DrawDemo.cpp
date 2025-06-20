@@ -93,6 +93,5 @@ int main(int argc, char *argv[])
     glutInit(&argc, argv);
     iSetTransparency(1); // To enable transparency
     iInitialize(width, height, "DrawDemo");
-    glutMainLoop(); // infinite loop
     return 0;
 }

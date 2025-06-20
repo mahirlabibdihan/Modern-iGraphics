@@ -276,10 +276,8 @@ int main(int argc, char *argv[])
     g_satelliteOrbitR = 20;
     g_satelliteR = 5;
 
-    // place your own initialization codes here.
-    iSetTimer(20, movePlanets);
+        iSetTimer(20, movePlanets);
     iInitialize(CX_MAX, CY_MAX, "Solar system!");
 
-    glutMainLoop(); // infinite loop
     return 0;
 }

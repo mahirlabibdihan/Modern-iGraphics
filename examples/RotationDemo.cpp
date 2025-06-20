@@ -9,7 +9,7 @@ void iDraw()
     // place your drawing codes here
     iClear();
     iRotate(200, 200, degree);
-    iShowTexture(200, 200, "assets/images/mario.png", 0.2);
+    iShowImage(200, 200, "assets/images/mario.png", 0.2, 0.2);
     iUnRotate();
 }
 
@@ -107,9 +107,8 @@ void iAnim()
 int main(int argc, char *argv[])
 {
     glutInit(&argc, argv);
-    // place your own initialization codes here.
+
     iSetTimer(10, iAnim); // Set a timer to call iAnim every 100 milliseconds
     iInitialize(400, 400, "demooo");
-    glutMainLoop(); // infinite loop
     return 0;
 }

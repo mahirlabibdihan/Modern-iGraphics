@@ -4,21 +4,22 @@ Image bg, mario;
 
 void loadResources()
 {
-    iLoadTexture(&bg, "assets/images/background.jpg");
-    iLoadTexture(&mario, "assets/images/mario.png");
+    iLoadImage(&bg, "assets/images/background.jpg");
+    iLoadImage(&mario, "assets/images/mario.png");
 }
 
 void iDraw()
 {
     // place your drawing codes here
     iClear();
-    iShowTexture(200, 200, "assets/images/background.jpg");
-    iShowLoadedTexture(211, 304, &mario, 0.1);
-    iShowLoadedTexture(311, 304, &mario, 0.12);
-    iShowLoadedTexture(411, 304, &mario, 0.13);
-    iShowLoadedTexture(511, 304, &mario, 0.14);
-    iShowLoadedTexture(611, 304, &mario, 0.15);
-    iShowLoadedTexture(711, 304, &mario, 0.16);
+    iShowImage(200, 200, "assets/images/background.jpg");
+    iShowImage(200, 200, "assets/images/mario.png", 0.2, 0.2);
+    iShowLoadedImage(211, 304, &mario, 0.1, 0.1);
+    iShowLoadedImage(311, 304, &mario, 0.12, 0.12);
+    iShowLoadedImage(411, 304, &mario, 0.13, 0.13, HORIZONTAL);
+    iShowLoadedImage(511, 304, &mario, 0.14, 0.14);
+    iShowLoadedImage(611, 304, &mario, 0.15, 0.15, VERTICAL);
+    iShowLoadedImage(711, 304, &mario, 0.16, 0.16, MIRROR_BOTH);
 }
 
 /*
@@ -91,10 +92,7 @@ void iSpecialKeyboard(unsigned char key)
 int main(int argc, char *argv[])
 {
     glutInit(&argc, argv);
-    iInitialize(900, 900, "ImageDemp");
-    // Add your own initialization codes here (After iInitialize)
     loadResources();
-    // Program enters in an infinite loop from here
-    glutMainLoop();
+    iInitialize(900, 900, "ImageDemp");
     return 0;
 }

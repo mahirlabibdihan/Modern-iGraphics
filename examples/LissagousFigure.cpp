@@ -143,7 +143,6 @@ void iSpecialKeyboard(unsigned char key)
 
 int main(int argc, char *argv[])
 {
-
     glutInit(&argc, argv);
     iInitialize(1920, 1080, "Graph");
     glutFullScreen();

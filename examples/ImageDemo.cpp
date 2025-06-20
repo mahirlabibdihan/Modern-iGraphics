@@ -15,6 +15,7 @@ void iDraw()
 	// place your drawing codes here
 	//  load background.jpg using stb_image
 	iClear();
+	// iShowLoadedImage(200, 200, &bg);
 	iShowImage(200, 200, "assets/images/background.jpg");
 	iShowLoadedImage(211, 304, &mario);
 }

@@ -1,5 +1,6 @@
 #include "iGraphics.h"
 #include "iSound.h"
+#include <time.h>
 Image bg;
 
 Sprite mario1, mario2, rect;
@@ -12,37 +13,40 @@ bool isMirroredX[2] = {false, false};
 
 void loadResources()
 {
+    clock_t start = clock(); // Start timing
+
     iLoadFramesFromSheet(pinkMonsterFrames, "assets/images/sprites/1 Pink_Monster/Pink_Monster_Idle_4.png", 1, 4);
-    iInitSprite(&pinkMonster, -1);
+    iInitSprite(&pinkMonster);
     iChangeSpriteFrames(&pinkMonster, pinkMonsterFrames, 4);
     iSetSpritePosition(&pinkMonster, 300, 250);
     iScaleSprite(&pinkMonster, 3.0);
 
     iLoadFramesFromFolder(golemFrames, "assets/images/sprites/Golem_2/Walking");
-    iInitSprite(&golem, -1);
+    iInitSprite(&golem);
     iChangeSpriteFrames(&golem, golemFrames, 24);
     iSetSpritePosition(&golem, 300, 200);
     iScaleSprite(&golem, 0.5);
 
     iLoadImage(&bg, "assets/images/background.jpg");
-    iResizeImage(&bg, 1800, 1000);
 
-    iLoadImage(&rectFrame, "assets/images/rect.png"); // Ignore white color for collision detection
-    iInitSprite(&rect, 0xFFFFFF);
+    iLoadImage(&rectFrame, "assets/images/rect.png", 0xFFFFFF);
+    iInitSprite(&rect);
     iChangeSpriteFrames(&rect, &rectFrame, 1);
     iSetSpritePosition(&rect, -100, -50);
     iScaleSprite(&rect, 2);
-    // iWrapSprite(&rect, 500);
+
+    clock_t end = clock(); // End timing
+    double elapsed_ms = 1.0 * (end - start) / CLOCKS_PER_SEC;
+
+    printf("Resource loading took %.2f seconds\n", elapsed_ms);
 }
 
 void iDraw()
 {
     // place your drawing codes here
     iClear();
-
     // iShowSprite(&mario1);
-    iShowLoadedImage(0, 0, &bg);
-    iWrapImage(&bg, -10);
+    iShowLoadedImage(0, 0, &bg, 3, 2.4);
     iShowSprite(&golem);
     iShowSprite(&pinkMonster);
     // iShowSprite(&mario2);
@@ -173,6 +177,7 @@ void iAnim()
     // place your codes here
     iAnimateSprite(&golem);
     iAnimateSprite(&pinkMonster);
+    iWrapImage(&bg, -2);
     // iUpdateSprite(&mario1);
     // iUpdateSprite(&mario2);
     // iUpdateSprite(&rect);
@@ -181,11 +186,10 @@ void iAnim()
 int main(int argc, char *argv[])
 {
     glutInit(&argc, argv);
-    loadResources();
     iInitializeSound();
-    iPlaySound("assets/sounds/background.wav", true);
     iSetTimer(50, iAnim);
+    loadResources();
+    iPlaySound("assets/sounds/background.wav", true);
     iInitialize(1800, 1000, "Sprite Demo");
-    glutMainLoop(); // infinite loop
     return 0;
 }

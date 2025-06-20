@@ -103,11 +103,10 @@ void iMouseWheel(int dir, int mx, int my)
 int main(int argc, char *argv[])
 {
     glutInit(&argc, argv);
-    // place your own initialization codes here.
+
     pic_x = 0;
     pic_y = 0;
 
     iInitialize(900, 900, "PictureDemo");
-    glutMainLoop(); // infinite loop
     return 0;
 }

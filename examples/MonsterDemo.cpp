@@ -183,7 +183,7 @@ void iSpecialKeyboard(unsigned char key)
 int main(int argc, char *argv[])
 {
 	glutInit(&argc, argv);
-	// place your own initialization codes here.
+
 	loadResources();
 	iSetTimer(100, updateMonster);
 	iInitialize(500, 400, "SpriteDemo");

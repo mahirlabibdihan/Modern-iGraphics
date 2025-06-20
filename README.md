@@ -241,8 +241,6 @@ int main(int argc, char *argv[])
 {
     glutInit(&argc, argv);
     iInitialize(400, 400, "demooo");
-    // place your own initialization codes here.
-    glutMainLoop(); // infinite loop
     return 0;
 }
 ```
@@ -654,38 +652,36 @@ int main(int argc, char *argv[])
 
 ### 🖼️ Image Functions
 
-#### `void iShowImage(int x, int y, const char *filename)`
+#### `void iShowImage(int x, int y, const char *filename, double scaleX = 1.0, double scaleY = 1.0, MirrorState mirror = NO_MIRROR, int ignoreColor = -1)`
 
 - **Description:** Displays an image at specified coordinates.
 - **Parameters:**
 
   - `x`, `y`: Coordinates where the image will be displayed.
   - `filename`: Path to the image file.
+  - `scaleX`, `scaleY`: Scaling factors for width and height (default is 1.0).
+  - `mirror`: Mirror state (default is `NO_MIRROR`). Here, `MirrorState` is an enum with values:
+    - `NO_MIRROR`: No mirroring.
+    - `HORIZONTAL`: Mirror horizontally.
+    - `VERTICAL`: Mirror vertically.
+    - `MIRROR_BOTH`: Mirror both horizontally and vertically.
+  - `ignoreColor`: Color to be ignored (default is -1, which means no color is ignored). If set to `0xRRGGBB`, it will ignore the color `RRGGBB` while loading the image (e.g., `0xFF0000` for red).
 
 - **Example:**
   ```cpp
   iShowImage(100, 200, "image.png");
   ```
 
-#### `void iShowTexture(int x, int y, const char *filename, double scale = 1.0)`
-
-- **Description:** Displays an image as a texture at specified coordinates.
-- **Parameters:**
-  - `x`, `y`: Coordinates where the image will be displayed.
-  - `filename`: Path to the image file.
-  - **Note:** This function is similar to `iShowImage`, but it uses OpenGL textures for rendering, which can be more efficient for larger images or repeated use. Also, it supports rotation using `iRotate` function and faster scaling using `scale` parameter.
-  - **Example:**
-  ```cpp
-  iShowTexture(100, 200, "texture.png");
-  ```
-
-#### `bool iLoadImage(Image* img, const char filename[])`
+#### `bool iLoadImage(Image* img, const char filename[], int ignoreColor = -1)`
 
 - **Description:** Loads an image from file. Supports multiple image formats (BMP, PNG, JPG, GIF) with the help of the stb_image library.
 
 - **Parameters:**
+
   - `img`: Pointer to an `Image` structure.
   - `filename`: Path to the image file.
+  - `ignoreColor`: Color to be ignored (default is -1, which means no color is ignored). If set to `0xRRGGBB`, it will ignore the color `RRGGBB` while loading the image (e.g., `0xFF0000` for red).
+
 - **Returns:** `true` if successful, `false` otherwise.
 - **Example:**
   ```cpp
@@ -706,31 +702,19 @@ int main(int argc, char *argv[])
   } Image;
   ```
 
-#### `void iLoadTexture(Image* img, const char filename[])`
-
-- **Description:** Loads an image from file as a texture.
-- **Parameters:**
-  - `img`: Pointer to an `Image` structure.
-  - `filename`: Path to the image file.
-  - **Note:** This function is similar to `iLoadImage`, but it uses OpenGL textures for rendering.
-  - **Important:** `iLoadTexture` can't be called before `iInitialize` function. It should be called after `iInitialize` to ensure OpenGL context is created.
-- **Example:**
-  ```cpp
-  Image img;
-  if (iLoadTexture(&img, "texture.png")) {
-      // Texture loaded successfully
-  } else {
-      // Failed to load texture
-  }
-  ```
-
-#### `void iShowLoadedImage(int x, int y, Image* img)`
+#### `void iShowLoadedImage(int x, int y, Image* img, double scaleX = 1.0, double scaleY = 1.0, MirrorState mirror = NO_MIRROR)`
 
 - **Description:** Displays an already loaded image at specified coordinates. Image should be loaded using `iLoadImage`.
 - **Parameters:**
 
   - `x`, `y`: Coordinates where the image will be displayed.
   - `img`: Pointer to the loaded `Image` structure.
+  - `scaleX`, `scaleY`: Scaling factors for width and height (default is 1.0).
+  - `mirror`: Mirror state (default is `NO_MIRROR`). Here, `MirrorState` is an enum with values:
+    - `NO_MIRROR`: No mirroring.
+    - `HORIZONTAL`: Mirror horizontally.
+    - `VERTICAL`: Mirror vertically.
+    - `MIRROR_BOTH`: Mirror both horizontally and vertically.
 
 - **Example:**
 
@@ -738,20 +722,6 @@ int main(int argc, char *argv[])
   Image img;
   iLoadImage(&img, "image.png");
   iShowLoadedImage(100, 200, &img);
-  ```
-
-#### `void iShowLoadedTexture(int x, int y, Image* img, double scale = 1.0)`
-
-- **Description:** Displays an already loaded image as a texture at specified coordinates. Image should be loaded using `iLoadTexture`.
-- **Parameters:**
-  - `x`, `y`: Coordinates where the image will be displayed.
-  - `img`: Pointer to the loaded `Image` structure.
-  - **Note:** This function is similar to `iShowLoadedImage`, but it uses OpenGL textures for rendering.
-  - **Example:**
-  ```cpp
-  Image img;
-  iLoadTexture(&img, "texture.png");
-  iShowLoadedTexture(100, 200, &img);
   ```
 
 #### `void iScaleImage(Image* img, double scale)`
@@ -815,18 +785,17 @@ int main(int argc, char *argv[])
 Free sprite resources: [https://craftpix.net/freebies/](https://craftpix.net/freebies/)\\
 Online sprite cutter: [https://ezgif.com/sprite-cutter](https://ezgif.com/sprite-cutter)
 
-#### `void iInitSprite(Sprite *s, int ignoreColor = -1)`
+#### `void iInitSprite(Sprite *s)`
 
 - **Description:** Initializes a sprite structure.
 - **Parameters:**
+
   - `s`: Pointer to a `Sprite` structure.
-  - `ignoreColor`: Color to be ignored. The ignored part will be transparent.
-    - `-1` to read the whole image
-    - `0xRRGGBB` to ignore the color `RRGGBB` while loading the image (e.g., `0xFF0000` for red).
+
 - **Example:**
   ```cpp
   Sprite s;
-  iInitSprite(&s, 0xFFFFFF); // Initialize sprite and ignore white color
+  iInitSprite(&s); // Initialize sprite and ignore white color
   ```
 - **Sprite Structure**
   ```cpp
@@ -838,19 +807,22 @@ Online sprite cutter: [https://ezgif.com/sprite-cutter](https://ezgif.com/sprite
   } Sprite;
   ```
 
-#### `void iLoadFramesFromFolder(Image *frames, const char *folderPath)`
+#### `void iLoadFramesFromFolder(Image *frames, const char *folderPath, int ignoreColor = -1)`
 
 - **Description:** Loads frames from a folder containing multiple images.
 - **Parameters:**
+
   - `frames`: Pointer to an array of `Image` structures.
   - `folderPath`: Path to the folder containing images.
+  - `ignoreColor`: Color to be ignored (default is -1, which means no color is ignored). If set to `0xRRGGBB`, it will ignore the color `RRGGBB` while loading the images (e.g., `0xFF0000` for red).
+
 - **Example:**
   ```cpp
   Image frames[10];
   iLoadFramesFromFolder(frames, "sprites/"); // Load images from a folder and ignore no color
   ```
 
-#### `void iLoadFramesFromSheet(Image *frames, const char *filename, int rows, int cols)`
+#### `void iLoadFramesFromSheet(Image *frames, const char *filename, int rows, int cols, int ignoreColor = -1)`
 
 - **Description:** Loads frames from a sprite sheet.
 - **Parameters:**
@@ -859,6 +831,7 @@ Online sprite cutter: [https://ezgif.com/sprite-cutter](https://ezgif.com/sprite
   - `filename`: Path to the sprite sheet image.
   - `rows`: Number of rows in the sprite sheet.
   - `cols`: Number of columns in the sprite sheet.
+  - `ignoreColor`: Color to be ignored (default is -1, which means no color is ignored). If set to `0xRRGGBB`, it will ignore the color `RRGGBB` while loading the images (e.g., `0xFF0000` for red).
 
 - **Example:**
   ```cpp
@@ -880,7 +853,7 @@ Online sprite cutter: [https://ezgif.com/sprite-cutter](https://ezgif.com/sprite
   Image frames[10];
   iLoadFramesFromFolder(frames,"sprites/"); // Load images from a folder
   Sprite s;
-  iInitSprite(&s, -1); // Initialize sprite
+  iInitSprite(&s); // Initialize sprite
   iChangeSpriteFrames(&s, frames, 4); // Change the frames of the sprite
   ```
 

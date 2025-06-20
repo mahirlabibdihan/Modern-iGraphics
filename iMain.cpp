@@ -95,8 +95,7 @@ void iSpecialKeyboard(unsigned char key)
 int main(int argc, char *argv[])
 {
     glutInit(&argc, argv);
-    // place your own initialization codes here.
+
     iInitialize(400, 400, "demooo");
-    glutMainLoop(); // infinite loop
     return 0;
 }

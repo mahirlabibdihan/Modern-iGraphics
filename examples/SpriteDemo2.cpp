@@ -168,12 +168,11 @@ void iSpecialKeyboard(unsigned char key)
 int main(int argc, char *argv[])
 {
     glutInit(&argc, argv);
-    // place your own initialization codes here.
+
     pic_x = 0;
     pic_y = 0;
     populate_monster_images();
     iSetTimer(100, update_monster);
     iInitialize(900, 900, "SpriteDemo");
-    glutMainLoop(); // infinite loop
     return 0;
 }

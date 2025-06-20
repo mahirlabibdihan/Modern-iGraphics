@@ -126,12 +126,11 @@ void randomizeBallPosition()
 int main(int argc, char *argv[])
 {
     glutInit(&argc, argv);
-    // place your own initialization codes here.
+
     iSetTimer(20, ballChange);
     // iSetTimer(2000, randomizeBallPosition);
 
     iInitialize(400, 400, "Ball Demo");
 
-    glutMainLoop(); // infinite loop
     return 0;
 }

@@ -37,7 +37,7 @@ void loadPinkMonster()
     iLoadFramesFromSheet(pinkMonster.walk, "assets/images/sprites/1 Pink_Monster/Pink_Monster_Walk_6.png", 1, 6);
     iLoadFramesFromSheet(pinkMonster.jump, "assets/images/sprites/1 Pink_Monster/Pink_Monster_Jump_8.png", 1, 8);
 
-    iInitSprite(&pinkMonster.sprite, -1);
+    iInitSprite(&pinkMonster.sprite);
     iChangeSpriteFrames(&pinkMonster.sprite, pinkMonster.idle, 4);
     iSetSpritePosition(&pinkMonster.sprite, 200, 0);
     iScaleSprite(&pinkMonster.sprite, 3.0);
@@ -51,7 +51,7 @@ void loadGolem()
     iLoadFramesFromFolder(golem.walk, "assets/images/sprites/Golem_2/Walking");
     iLoadFramesFromFolder(golem.jump, "assets/images/sprites/Golem_2/Jump Start");
 
-    iInitSprite(&golem.sprite, -1);
+    iInitSprite(&golem.sprite);
     iChangeSpriteFrames(&golem.sprite, golem.idle, 18);
     iSetSpritePosition(&golem.sprite, 300, -75);
     iScaleSprite(&golem.sprite, 0.5);
@@ -230,11 +230,9 @@ void iSpecialKeyboard(unsigned char key)
 int main(int argc, char *argv[])
 {
     glutInit(&argc, argv);
-    // place your own initialization codes here.
+    iSetTimer(100, iAnim);
     loadPinkMonster();
     loadGolem();
-    iSetTimer(100, iAnim);
     iInitialize(800, 400, "SpriteDemo");
-    glutMainLoop(); // infinite loop
     return 0;
 }

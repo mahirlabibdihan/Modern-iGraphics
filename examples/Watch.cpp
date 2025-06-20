@@ -152,6 +152,5 @@ int main(int argc, char *argv[])
     iSetTimer(1000, minute);
     iSetTimer(1000, hour);
     iInitialize(1000, 720, "demo");
-    glutMainLoop(); // infinite loop
     return 0;
 }
