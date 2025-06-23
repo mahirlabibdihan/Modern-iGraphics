@@ -453,6 +453,19 @@ int main(int argc, char *argv[])
   - `font`: Font type (default is `GLUT_STROKE_ROMAN`).
 - **Example:** `iTextAdvanced(50, 60, "This is a text", 0.5, 2.0);`
 
+#### `void iRotate(double x, double y, double degree)`
+
+- **Description:** Rotates the coordinate system around a point.
+- **Parameters:**
+  - `x`, `y`: Coordinates of the point to rotate around.
+  - `degree`: Angle in degrees to rotate.
+- **Example:**
+  ```cpp
+  iRotate(100, 100, 45); // Rotate around point (100, 100) by 45 degrees
+  iShowImage(50, 50, "image.png"); // This image will be rotated
+  iUnRotate();
+  ```
+
 ### ⏱️ Animation and Timer
 
 #### `int iSetTimer(int msec, void (*f)(void))`
