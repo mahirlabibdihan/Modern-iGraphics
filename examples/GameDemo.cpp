@@ -46,7 +46,7 @@ void iDraw()
     // place your drawing codes here
     iClear();
     // iShowSprite(&mario1);
-    iShowLoadedImage(0, 0, &bg, 3, 2.4);
+    iShowLoadedImage(0, 0, &bg, 1800, 1000);
     iShowSprite(&golem);
     iShowSprite(&pinkMonster);
     // iShowSprite(&mario2);
@@ -177,7 +177,7 @@ void iAnim()
     // place your codes here
     iAnimateSprite(&golem);
     iAnimateSprite(&pinkMonster);
-    iWrapImage(&bg, -2);
+    iWrapImage(&bg, -2, 0);
     // iUpdateSprite(&mario1);
     // iUpdateSprite(&mario2);
     // iUpdateSprite(&rect);

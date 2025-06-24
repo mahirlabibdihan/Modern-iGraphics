@@ -8,8 +8,10 @@ void iDraw()
 {
     // place your drawing codes here
     iClear();
+    iShowImage(190, 170, "assets/images/mario.png", 90, 100);
+    iFilledCircle(200, 200, 5);
     iRotate(200, 200, degree);
-    iShowImage(200, 200, "assets/images/mario.png", 0.2, 0.2);
+    iFilledRectangle(197.5, 180, 5, 80);
     iUnRotate();
 }
 
@@ -97,7 +99,7 @@ void iSpecialKeyboard(unsigned char key)
 
 void iAnim()
 {
-    degree += 1;
+    degree += 2;
     if (degree >= 360)
     {
         degree = 0;
@@ -108,7 +110,7 @@ int main(int argc, char *argv[])
 {
     glutInit(&argc, argv);
 
-    iSetTimer(10, iAnim); // Set a timer to call iAnim every 100 milliseconds
+    iSetTimer(1, iAnim); // Set a timer to call iAnim every 100 milliseconds
     iInitialize(400, 400, "demooo");
     return 0;
 }

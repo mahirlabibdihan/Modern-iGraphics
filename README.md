@@ -665,14 +665,14 @@ int main(int argc, char *argv[])
 
 ### 🖼️ Image Functions
 
-#### `void iShowImage(int x, int y, const char *filename, double scaleX = 1.0, double scaleY = 1.0, MirrorState mirror = NO_MIRROR, int ignoreColor = -1)`
+#### `void iShowImage(int x, int y, const char *filename, int width = -1, int height = -1, MirrorState mirror = NO_MIRROR, int ignoreColor = -1)`
 
 - **Description:** Displays an image at specified coordinates.
 - **Parameters:**
 
   - `x`, `y`: Coordinates where the image will be displayed.
   - `filename`: Path to the image file.
-  - `scaleX`, `scaleY`: Scaling factors for width and height (default is 1.0).
+  - `width`, `height`: Optional dimensions to scale the image. If set to -1, the image will be displayed at its original size.
   - `mirror`: Mirror state (default is `NO_MIRROR`). Here, `MirrorState` is an enum with values:
     - `NO_MIRROR`: No mirroring.
     - `HORIZONTAL`: Mirror horizontally.
@@ -715,14 +715,14 @@ int main(int argc, char *argv[])
   } Image;
   ```
 
-#### `void iShowLoadedImage(int x, int y, Image* img, double scaleX = 1.0, double scaleY = 1.0, MirrorState mirror = NO_MIRROR)`
+#### `void iShowLoadedImage(int x, int y, Image* img, int width = -1, int height = -1, MirrorState mirror = NO_MIRROR)`
 
 - **Description:** Displays an already loaded image at specified coordinates. Image should be loaded using `iLoadImage`.
 - **Parameters:**
 
   - `x`, `y`: Coordinates where the image will be displayed.
   - `img`: Pointer to the loaded `Image` structure.
-  - `scaleX`, `scaleY`: Scaling factors for width and height (default is 1.0).
+  - `width`, `height`: Optional dimensions to scale the image. If set to -1, the image will be displayed at its original size.
   - `mirror`: Mirror state (default is `NO_MIRROR`). Here, `MirrorState` is an enum with values:
     - `NO_MIRROR`: No mirroring.
     - `HORIZONTAL`: Mirror horizontally.

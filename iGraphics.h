@@ -251,10 +251,10 @@ void iFreeImage(Image *img)
     stbi_image_free(img->data);
 }
 
-void iShowTexture2(int x, int y, Image *img, double scaleX = 1.0, double scaleY = 1.0, MirrorState mirror = NO_MIRROR)
+void iShowTexture2(int x, int y, Image *img, int width = -1, int height = -1, MirrorState mirror = NO_MIRROR)
 {
-    int imgWidth = img->width * scaleX;
-    int imgHeight = img->height * scaleY;
+    int imgWidth = width == -1 ? img->width : width;
+    int imgHeight = height == -1 ? img->height : height;
 
     if (x + imgWidth <= 0 || y + imgHeight <= 0 || x >= iScreenWidth || y >= iScreenHeight)
         return;
@@ -295,7 +295,7 @@ void iShowTexture2(int x, int y, Image *img, double scaleX = 1.0, double scaleY 
     glDisable(GL_TEXTURE_2D);
 }
 
-void iShowTexture(int x, int y, const char *filename, double scaleX = 1.0, double scaleY = 1.0, MirrorState mirror = NO_MIRROR, int ignoreColor = -1)
+void iShowTexture(int x, int y, const char *filename, int width = -1, int height = -1, MirrorState mirror = NO_MIRROR, int ignoreColor = -1)
 {
     Image img;
     if (!iLoadImage(&img, filename, ignoreColor))
@@ -303,7 +303,7 @@ void iShowTexture(int x, int y, const char *filename, double scaleX = 1.0, doubl
         return;
     }
 
-    iShowTexture2(x, y, &img, scaleX, scaleY, mirror);
+    iShowTexture2(x, y, &img, width, height, mirror);
     iFreeImage(&img);
 }
 
@@ -363,17 +363,17 @@ void iShowImage2(int x, int y, Image *img)
     delete[] clippedData;
 }
 
-void iShowLoadedTexture(int x, int y, Image *img, double scaleX = 1.0, double scaleY = 1.0, MirrorState mirror = NO_MIRROR)
+void iShowLoadedTexture(int x, int y, Image *img, int width = -1, int height = -1, MirrorState mirror = NO_MIRROR)
 {
-    iShowTexture2(x, y, img, scaleX, scaleY, mirror);
+    iShowTexture2(x, y, img, width, height, mirror);
 }
 
-void iShowLoadedImage(int x, int y, Image *img, double scaleX = 1.0, double scaleY = 1.0, MirrorState mirror = NO_MIRROR)
+void iShowLoadedImage(int x, int y, Image *img, int width = -1, int height = -1, MirrorState mirror = NO_MIRROR)
 {
-    iShowTexture2(x, y, img, scaleX, scaleY, mirror);
+    iShowTexture2(x, y, img, width, height, mirror);
 }
 
-void iShowImage(int x, int y, const char *filename, double scaleX = 1.0, double scaleY = 1.0, MirrorState mirror = NO_MIRROR, int ignoreColor = -1)
+void iShowImage(int x, int y, const char *filename, int width = -1, int height = -1, MirrorState mirror = NO_MIRROR, int ignoreColor = -1)
 {
     Image img;
     if (!iLoadImage(&img, filename, ignoreColor))
@@ -381,7 +381,7 @@ void iShowImage(int x, int y, const char *filename, double scaleX = 1.0, double 
         printf("Failed to load image: %s\n", filename);
         return;
     }
-    iShowTexture2(x, y, &img, scaleX, scaleY, mirror);
+    iShowTexture2(x, y, &img, width, height, mirror);
     iFreeImage(&img);
 }
 
