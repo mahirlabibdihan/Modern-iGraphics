@@ -83,6 +83,29 @@ sudo apt install libsdl2-dev libsdl2-mixer-dev # Install SDL2 and SDL2_mixer if 
 ./runner.sh examples/BallDemo.cpp
 ```
 
+<!-- Release Guideline -->
+
+## 📦 Release Guideline (Windows)
+
+- **Organize Your Assets**
+
+  - Ensure all game assets (images, sprites, sounds, level designs, etc.) are inside the assets folder.
+  - Remove any unnecessary or default assets to save space.
+
+- **Save Files**
+
+  - Place any saved game data in the saves folder.
+
+- **Run the Release Script**
+
+  - Double-click release.bat or run it from the terminal using:
+    `.\release.bat iMain.cpp`
+
+- **Check the Output**
+  - After execution, a release folder will be created. Navigate to:
+    `release → windows → x86`
+  - Inside, you’ll find the necessary files to run your game. Please test `game.exe` to ensure your game runs properly.
+
 <!-- ### Step 1: Create a New Project
 
 1. `File → New → Project → Empty Project`
