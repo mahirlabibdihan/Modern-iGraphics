@@ -947,6 +947,18 @@ Online sprite cutter: [https://ezgif.com/sprite-cutter](https://ezgif.com/sprite
   - `s`: Pointer to a `Sprite` structure.
   - `state`: `HORIZONTAL` or `VERTICAL`.
 
+#### `void iRotateSprite(Sprite* s, double x, double y, double degree)`
+
+- **Description:** Rotates the sprite around a point `(x, y)` by a specified angle in degrees.
+- **Parameters:**
+  - `s`: Pointer to a `Sprite` structure.
+  - `x`, `y`: Coordinates of the point to rotate around.
+  - `degree`: Angle in degrees to rotate.
+- **Example:**
+  ```cpp
+  iRotateSprite(&s, 100, 100, 45); // Rotate sprite around point (100, 100) by 45 degrees
+  ```
+
 #### `void iFreeSprite(Sprite* s)`
 
 - **Description:** Frees the memory allocated for the sprite.
