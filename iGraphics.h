@@ -691,7 +691,6 @@ void iRotateSprite(Sprite *s, double x, double y, double degree)
 {
     if (!s)
         return;
-    float radians = degree * (3.14159265f / 180.0f);
     s->rotation = degree;
     s->rotationCenterX = x;
     s->rotationCenterY = y;
