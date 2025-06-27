@@ -7,6 +7,9 @@
 
 #pragma once
 
+#include <algorithm>
+#include <cmath>
+#include <tuple>
 #include <stdio.h>
 #include <stdlib.h>
 #ifdef _WIN32
@@ -50,6 +53,8 @@ typedef struct
     // Tracking transformation
     float scale;
     bool flipHorizontal, flipVertical;
+    float rotation;                         // in radians
+    float rotationCenterX, rotationCenterY; // Center of rotation relative to the sprite's top-left corner
 } Sprite;
 
 enum MirrorState
@@ -251,6 +256,29 @@ void iFreeImage(Image *img)
     stbi_image_free(img->data);
 }
 
+void iLine(double x1, double y1, double x2, double y2)
+{
+    glBegin(GL_LINE_STRIP);
+    glVertex2f(x1, y1);
+    glVertex2f(x2, y2);
+    glEnd();
+}
+
+void iRectangle(double left, double bottom, double dx, double dy)
+{
+    double x1, y1, x2, y2;
+
+    x1 = left;
+    y1 = bottom;
+    x2 = x1 + dx;
+    y2 = y1 + dy;
+
+    iLine(x1, y1, x2, y1);
+    iLine(x2, y1, x2, y2);
+    iLine(x2, y2, x1, y2);
+    iLine(x1, y2, x1, y1);
+}
+
 void iShowTexture2(int x, int y, Image *img, int width = -1, int height = -1, MirrorState mirror = NO_MIRROR)
 {
     int imgWidth = width == -1 ? img->width : width;
@@ -258,7 +286,6 @@ void iShowTexture2(int x, int y, Image *img, int width = -1, int height = -1, Mi
 
     if (x + imgWidth <= 0 || y + imgHeight <= 0 || x >= iScreenWidth || y >= iScreenHeight)
         return;
-
     if (img->textureId == 0)
     {
         if (!iLoadTexture(img))
@@ -268,9 +295,12 @@ void iShowTexture2(int x, int y, Image *img, int width = -1, int height = -1, Mi
         }
     }
 
+    // iRectangle(x, y, imgWidth, imgHeight); // Uncomment for debugging rectangle bounds
+
     glBindTexture(GL_TEXTURE_2D, img->textureId);
 
     glEnable(GL_TEXTURE_2D);
+
     glBegin(GL_QUADS);
 
     float tx1 = 0.0f, ty1 = 0.0f;
@@ -512,13 +542,6 @@ void iUpdateCollisionMask(Sprite *s)
     {
         return;
     }
-    // int ignorecolor = s->ignoreColor;
-    // if (ignorecolor == -1)
-    // {
-    //     s->collisionMask = nullptr;
-    //     return;
-    // }
-
     Image *frame = &s->frames[s->currentFrame];
     int width = frame->width;
     int height = frame->height;
@@ -537,16 +560,8 @@ void iUpdateCollisionMask(Sprite *s)
         for (int x = 0; x < width; x++)
         {
             int index = (y * width + x) * channels;
-
-            // unsigned char r = data[index];
-            // unsigned char g = (channels > 1) ? data[index + 1] : 0;
-            // unsigned char b = (channels > 2) ? data[index + 2] : 0;
             unsigned char a = (channels == 4) ? data[index + 3] : 255;
-
             bool isTransparent = (channels == 4 && a == 0);
-
-            // bool isIgnoredColor = (ignorecolor == -1 ? false : ((r == (ignorecolor >> 16 & 0xFF)) && (g == ((ignorecolor >> 8) & 0xFF)) && (b == ((ignorecolor) & 0xFF))));
-
             collisionMask[y * width + x] = (isTransparent) ? 0 : 1;
         }
     }
@@ -555,65 +570,194 @@ void iUpdateCollisionMask(Sprite *s)
 
 int iCheckCollision(Sprite *s1, Sprite *s2)
 {
-    if (!s1 || !s2)
-    {
+    // Early exit if invalid sprites or missing frames/masks
+    if (!s1 || !s2 || !s1->frames || !s2->frames || !s1->collisionMask || !s2->collisionMask)
         return 0;
-    }
 
-    if (!s1->frames || !s2->frames)
+    Image *frame1 = &s1->frames[s1->currentFrame];
+    Image *frame2 = &s2->frames[s2->currentFrame];
+    int w1 = frame1->width, h1 = frame1->height;
+    int w2 = frame2->width, h2 = frame2->height;
+
+    // Convert rotation angles to radians
+    float theta1 = s1->rotation * (3.14159265f / 180.0f);
+    float theta2 = s2->rotation * (3.14159265f / 180.0f);
+    float cos1 = cosf(theta1), sin1 = sinf(theta1);
+    float cos2 = cosf(theta2), sin2 = sinf(theta2);
+
+    // Helper function to compute rotated AABB (global pivot version)
+    auto computeRotatedAABB = [](float x, float y, int w, int h,
+                                 float pivotX, float pivotY,
+                                 float cosT, float sinT)
     {
-        return 0;
-    }
+        // Calculate local pivot offset (from sprite origin to rotation center)
+        float localPivotX = pivotX - x;
+        float localPivotY = pivotY - y;
 
-    int width1 = s1->frames[s1->currentFrame].width;
-    int height1 = s1->frames[s1->currentFrame].height;
-    unsigned char *collisionMask1 = s1->collisionMask;
+        // Corners relative to sprite origin
+        float cornersX[4] = {0, (float)w, 0, (float)w};
+        float cornersY[4] = {0, 0, (float)h, (float)h};
 
-    int width2 = s2->frames[s2->currentFrame].width;
-    int height2 = s2->frames[s2->currentFrame].height;
-    unsigned char *collisionMask2 = s2->collisionMask;
+        float minX = INFINITY, maxX = -INFINITY;
+        float minY = INFINITY, maxY = -INFINITY;
 
-    int x1 = s1->x;
-    int y1 = s1->y;
-    int x2 = s2->x;
-    int y2 = s2->y;
-    // check if the two images overlap
-    int startX = (x1 > x2) ? x1 : x2;
-    int endX = (x1 + width1 < x2 + width2) ? x1 + width1 : x2 + width2;
-    int startY = (y1 > y2) ? y1 : y2;
-    int endY = (y1 + height1 < y2 + height2) ? y1 + height1 : y2 + height2;
-    int noOverlap = startX >= endX || startY >= endY;
-
-    // If collisionMasks are not set, check the whole image for collision
-    if (collisionMask1 == nullptr || collisionMask2 == nullptr)
-    {
-        return noOverlap ? 0 : 1;
-    }
-    // now collisionMasks are set. Check only the overlapping region
-    if (noOverlap)
-    {
-        return 0;
-    }
-
-    for (int y = startY; y < endY; y++)
-    {
-        for (int x = startX; x < endX; x++)
+        for (int i = 0; i < 4; i++)
         {
-            int ix1 = x - x1;
-            int iy1 = y - y1;
-            int ix2 = x - x2;
-            int iy2 = y - y2;
+            // Get corner relative to pivot
+            float dx = cornersX[i] - localPivotX;
+            float dy = cornersY[i] - localPivotY;
 
-            int index1 = iy1 * width1 + ix1;
-            int index2 = iy2 * width2 + ix2;
-            if (collisionMask1[index1] && collisionMask2[index2])
+            // Rotate around pivot
+            float rx = x + localPivotX + (cosT * dx - sinT * dy);
+            float ry = y + localPivotY + (sinT * dx + cosT * dy);
+
+            minX = fminf(minX, rx);
+            maxX = fmaxf(maxX, rx);
+            minY = fminf(minY, ry);
+            maxY = fmaxf(maxY, ry);
+        }
+        return std::make_tuple(minX, maxX, minY, maxY);
+    };
+
+    // Compute rotated bounding boxes
+    float minX1, maxX1, minY1, maxY1;
+    std::tie(minX1, maxX1, minY1, maxY1) =
+        computeRotatedAABB(s1->x, s1->y, w1, h1,
+                           s1->rotationCenterX, s1->rotationCenterY,
+                           cos1, sin1);
+
+    float minX2, maxX2, minY2, maxY2;
+    std::tie(minX2, maxX2, minY2, maxY2) =
+        computeRotatedAABB(s2->x, s2->y, w2, h2,
+                           s2->rotationCenterX, s2->rotationCenterY,
+                           cos2, sin2);
+
+    // Find overlap area
+    int overlapMinX = (int)fmaxf(minX1, minX2);
+    int overlapMaxX = (int)fminf(maxX1, maxX2);
+    int overlapMinY = (int)fmaxf(minY1, minY2);
+    int overlapMaxY = (int)fminf(maxY1, maxY2);
+
+    if (overlapMinX >= overlapMaxX || overlapMinY >= overlapMaxY)
+        return 0; // No AABB overlap
+
+    // printf("AABB Overlap\n");
+
+    // Precompute inverse rotations (for screen-to-local transform)
+    float invCos1 = cos1, invSin1 = -sin1; // cos(-θ) = cos(θ), sin(-θ) = -sin(θ)
+    float invCos2 = cos2, invSin2 = -sin2;
+
+    // Pixel-perfect check in overlap region
+    for (int y = overlapMinY; y <= overlapMaxY; y++)
+    {
+        for (int x = overlapMinX; x <= overlapMaxX; x++)
+        {
+            // Transform to Sprite 1's local space
+            float dx1 = x - s1->rotationCenterX;
+            float dy1 = y - s1->rotationCenterY;
+            float localX1 = invCos1 * dx1 - invSin1 * dy1 + (s1->rotationCenterX - s1->x);
+            float localY1 = invSin1 * dx1 + invCos1 * dy1 + (s1->rotationCenterY - s1->y);
+
+            if (localX1 < 0 || localY1 < 0 || localX1 >= w1 || localY1 >= h1)
+                continue;
+
+            // Transform to Sprite 2's local space
+            float dx2 = x - s2->rotationCenterX;
+            float dy2 = y - s2->rotationCenterY;
+            float localX2 = invCos2 * dx2 - invSin2 * dy2 + (s2->rotationCenterX - s2->x);
+            float localY2 = invSin2 * dx2 + invCos2 * dy2 + (s2->rotationCenterY - s2->y);
+
+            if (localX2 < 0 || localY2 < 0 || localX2 >= w2 || localY2 >= h2)
+                continue;
+
+            // Check collision masks (with nearest-neighbor sampling)
+            int ix1 = (int)localX1, iy1 = (int)localY1;
+            int ix2 = (int)localX2, iy2 = (int)localY2;
+
+            if (ix1 >= 0 && iy1 >= 0 && ix1 < w1 && iy1 < h1 &&
+                ix2 >= 0 && iy2 >= 0 && ix2 < w2 && iy2 < h2)
             {
-                return 1;
+                int idx1 = iy1 * w1 + ix1;
+                int idx2 = iy2 * w2 + ix2;
+                if (s1->collisionMask[idx1] && s2->collisionMask[idx2])
+                    return 1; // Collision detected
             }
         }
     }
-    return 0;
+
+    return 0; // No collision found
 }
+void iRotateSprite(Sprite *s, double x, double y, double degree)
+{
+    if (!s)
+        return;
+    float radians = degree * (3.14159265f / 180.0f);
+    s->rotation = degree;
+    s->rotationCenterX = x;
+    s->rotationCenterY = y;
+}
+
+// int iCheckCollision(Sprite *s1, Sprite *s2)
+// {
+//     if (!s1 || !s2)
+//     {
+//         return 0;
+//     }
+
+//     if (!s1->frames || !s2->frames)
+//     {
+//         return 0;
+//     }
+
+//     int width1 = s1->frames[s1->currentFrame].width;
+//     int height1 = s1->frames[s1->currentFrame].height;
+//     unsigned char *collisionMask1 = s1->collisionMask;
+
+//     int width2 = s2->frames[s2->currentFrame].width;
+//     int height2 = s2->frames[s2->currentFrame].height;
+//     unsigned char *collisionMask2 = s2->collisionMask;
+
+//     int x1 = s1->x;
+//     int y1 = s1->y;
+//     int x2 = s2->x;
+//     int y2 = s2->y;
+//     // check if the two images overlap
+//     int startX = (x1 > x2) ? x1 : x2;
+//     int endX = (x1 + width1 < x2 + width2) ? x1 + width1 : x2 + width2;
+//     int startY = (y1 > y2) ? y1 : y2;
+//     int endY = (y1 + height1 < y2 + height2) ? y1 + height1 : y2 + height2;
+//     int noOverlap = startX >= endX || startY >= endY;
+
+//     // If collisionMasks are not set, check the whole image for collision
+//     if (collisionMask1 == nullptr || collisionMask2 == nullptr)
+//     {
+//         return noOverlap ? 0 : 1;
+//     }
+//     // now collisionMasks are set. Check only the overlapping region
+//     if (noOverlap)
+//     {
+//         return 0;
+//     }
+
+//     for (int y = startY; y < endY; y++)
+//     {
+//         for (int x = startX; x < endX; x++)
+//         {
+//             int ix1 = x - x1;
+//             int iy1 = y - y1;
+//             int ix2 = x - x2;
+//             int iy2 = y - y2;
+
+//             int index1 = iy1 * width1 + ix1;
+//             int index2 = iy2 * width2 + ix2;
+//             if (collisionMask1[index1] && collisionMask2[index2])
+//             {
+//                 return 1;
+//             }
+//         }
+//     }
+//     return 0;
+// }
 
 void iAnimateSprite(Sprite *sprite)
 {
@@ -762,6 +906,9 @@ void iInitSprite(Sprite *s)
     s->scale = 1.0f;           // Initialize scale
     s->flipHorizontal = false; // Initialize flip state
     s->flipVertical = false;   // Initialize flip state
+    s->rotation = 0.0f;        // Initialize rotation angle
+    s->rotationCenterX = 0.0f; // Initialize rotation center X
+    s->rotationCenterY = 0.0f; // Initialize rotation center Y
 }
 
 void deepCopyImage(Image src, Image *dst)
@@ -843,11 +990,53 @@ void iSetSpritePosition(Sprite *s, int x, int y)
     s->y = y;
 }
 
+//
+// Rotates the co-ordinate system
+// Parameters:
+//  (x, y) - The pivot point for rotation
+//  degree - degree of rotation
+//
+// After calling iRotate(), every subsequent rendering will
+// happen in rotated fashion. To stop rotation of subsequent rendering,
+// call iUnRotate(). Typical call pattern would be:
+//      iRotate();
+//      Render your objects, that you want rendered as rotated
+//      iUnRotate();
+//
+void iRotate(double x, double y, double degree)
+{
+    // push the current matrix stack
+    glPushMatrix();
+    //
+    // The below steps take effect in reverse order
+    //
+    // step 3: undo the translation
+    glTranslatef(x, y, 0.0);
+
+    // step 2: rotate the co-ordinate system across z-axis
+    glRotatef(degree, 0, 0, 1.0);
+
+    // step 1: translate the origin to (x, y)
+    glTranslatef(-x, -y, 0.0);
+}
+
+void iUnRotate()
+{
+    glPopMatrix();
+}
+
 void iShowSprite(const Sprite *s)
 {
     if (!s || !s->frames)
+    {
         return;
+    }
+    iRotate(
+        s->rotationCenterX,
+        s->rotationCenterY,
+        s->rotation);
     iShowTexture2(s->x, s->y, &s->frames[s->currentFrame]);
+    iUnRotate();
 }
 
 void iResizeSprite(Sprite *s, int width, int height)
@@ -1017,14 +1206,6 @@ void iPoint(double x, double y, int size = 0)
     glEnd();
 }
 
-void iLine(double x1, double y1, double x2, double y2)
-{
-    glBegin(GL_LINE_STRIP);
-    glVertex2f(x1, y1);
-    glVertex2f(x2, y2);
-    glEnd();
-}
-
 void iFilledPolygon(double x[], double y[], int n)
 {
     int i;
@@ -1050,21 +1231,6 @@ void iPolygon(double x[], double y[], int n)
     }
     glVertex2f(x[0], y[0]);
     glEnd();
-}
-
-void iRectangle(double left, double bottom, double dx, double dy)
-{
-    double x1, y1, x2, y2;
-
-    x1 = left;
-    y1 = bottom;
-    x2 = x1 + dx;
-    y2 = y1 + dy;
-
-    iLine(x1, y1, x2, y1);
-    iLine(x2, y1, x2, y2);
-    iLine(x2, y2, x1, y2);
-    iLine(x1, y2, x1, y1);
 }
 
 void iFilledRectangle(double left, double bottom, double dx, double dy)
@@ -1156,43 +1322,6 @@ void iFilledEllipse(double x, double y, double a, double b, int slices = 100)
         yp = y1;
     }
     glEnd();
-}
-
-//
-// Rotates the co-ordinate system
-// Parameters:
-//  (x, y) - The pivot point for rotation
-//  degree - degree of rotation
-//
-// After calling iRotate(), every subsequent rendering will
-// happen in rotated fashion. To stop rotation of subsequent rendering,
-// call iUnRotate(). Typical call pattern would be:
-//      iRotate();
-//      Render your objects, that you want rendered as rotated
-//      iUnRotate();
-//
-void iRotate(double x, double y, double degree)
-{
-    // push the current matrix stack
-    glPushMatrix();
-
-    //
-    // The below steps take effect in reverse order
-    //
-
-    // step 3: undo the translation
-    glTranslatef(x, y, 0.0);
-
-    // step 2: rotate the co-ordinate system across z-axis
-    glRotatef(degree, 0, 0, 1.0);
-
-    // step 1: translate the origin to (x, y)
-    glTranslatef(-x, -y, 0.0);
-}
-
-void iUnRotate()
-{
-    glPopMatrix();
 }
 
 void iSetColor(int r, int g, int b)
