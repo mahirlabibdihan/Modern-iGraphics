@@ -28,7 +28,7 @@ mkdir "%RELEASE_DIR%"
 
 
 :: Compile the source file to an object file (with irrKlang include path)
-g++.exe -Wall -fexceptions -g -I. -IOpenGL\\include -IOpenGL\\include\\SDL2 -c "%SOURCE_FILE%" -o obj\\opengl.o
+g++.exe -Wall -fexceptions -g -I. -IOpenGL\\include -IOpenGL\\include\\SDL2 -IOpenGL\\include\\Freetype -c "%SOURCE_FILE%" -o obj\\opengl.o
 
 if %ERRORLEVEL% neq 0 (
    echo Compilation failed.
@@ -37,7 +37,7 @@ if %ERRORLEVEL% neq 0 (
 
 echo Compiling %SOURCE_FILE% to object file...
 
-g++.exe -static-libgcc -static-libstdc++ -L.\\OpenGL\\lib -o "%RELEASE_DIR%\\game.exe" obj\\opengl.o -lmingw32 -lSDL2main -lSDL2 -lSDL2_mixer -lOPENGL32 -lfreeglut -lwinmm
+g++.exe -static-libgcc -static-libstdc++ -L.\\OpenGL\\lib -o "%RELEASE_DIR%\\game.exe" obj\\opengl.o -lmingw32 -lSDL2main -lSDL2 -lSDL2_mixer -lOPENGL32 -lfreeglut -lwinmm -lfreetype
 
 if %ERRORLEVEL% neq 0 (
     echo Linking failed.
