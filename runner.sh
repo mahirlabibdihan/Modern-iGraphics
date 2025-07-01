@@ -16,16 +16,16 @@ mkdir -p bin obj
 if [[ "$OSTYPE" == "linux-gnu"* ]]
 then
     # Compile the source file to an object file
-    g++ -w -fexceptions -g -I. -IOpenGL/include -IOpenGL/include/SDL2 -c "$SOURCE_FILE" -o obj/object.o
+    g++ -w -fexceptions -g -I. -IOpenGL/include -IOpenGL/include/SDL2 -IOpenGL/include/Freetype -c "$SOURCE_FILE" -o obj/object.o
 
     # Link the object file to create the executable
-    g++ -o bin/opengl obj/object.o -lGL -lGLU -lglut -pthread -lSDL2 -lSDL2main -lSDL2_mixer
+    g++ -o bin/opengl obj/object.o -lGL -lGLU -lglut -pthread -lSDL2 -lSDL2main -lSDL2_mixer -lfreetype
 
     echo "Finished building."
 
     ./bin/opengl
 else
-    g++ -w -fexceptions -g -I. -IOpenGL/include -IOpenGL/include/SDL2 "$SOURCE_FILE" -o bin/opengl.exe -static-libgcc -static-libstdc++ -lmingw32 -lSDL2main -lSDL2 -lSDL2_mixer -lOpenGL32 -lfreeglut
+    g++ -w -fexceptions -g -I. -IOpenGL/include -IOpenGL/include/SDL2 "$SOURCE_FILE" -o bin/opengl.exe -static-libgcc -static-libstdc++ -lmingw32 -lSDL2main -lSDL2 -lSDL2_mixer -lOpenGL32 -lfreeglut -lfreetype
     echo "Finished building."
     ./bin/opengl.exe
 fi

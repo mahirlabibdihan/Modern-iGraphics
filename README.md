@@ -79,7 +79,8 @@ Ensure that `g++` is installed on your system and available in your PATH. Then, 
 
 ```bash
 sudo apt install libglu1-mesa-dev freeglut3-dev mesa-common-dev
-sudo apt install libsdl2-dev libsdl2-mixer-dev # Install SDL2 and SDL2_mixer if not already installed
+sudo apt install libsdl2-dev libsdl2-mixer-dev
+sudo apt install libfreetype6-dev
 ./runner.sh examples/BallDemo.cpp
 ```
 
