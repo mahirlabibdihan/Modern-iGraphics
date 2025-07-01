@@ -226,7 +226,7 @@ void iMouseWheel(int dir, int mx, int my)
 function iKeyboard() is called whenever the user hits a key in keyboard.
 key- holds the ASCII value of the key pressed.
 */
-void iKeyboard(unsigned char key)
+void iKeyboard(unsigned char key, int state)
 {
     switch (key)
     {
@@ -248,7 +248,7 @@ GLUT_KEY_F7, GLUT_KEY_F8, GLUT_KEY_F9, GLUT_KEY_F10, GLUT_KEY_F11,
 GLUT_KEY_F12, GLUT_KEY_LEFT, GLUT_KEY_UP, GLUT_KEY_RIGHT, GLUT_KEY_DOWN,
 GLUT_KEY_PAGE_UP, GLUT_KEY_PAGE_DOWN, GLUT_KEY_HOME, GLUT_KEY_END,
 GLUT_KEY_INSERT */
-void iSpecialKeyboard(unsigned char key)
+void iSpecialKeyboard(unsigned char key, int state)
 {
     switch (key)
     {
@@ -567,42 +567,27 @@ int main(int argc, char *argv[])
 
 ### ⌨️ Keyboard Functions
 
-#### `void iKeyboard(unsigned char key)`
+#### `void iKeyboard(unsigned char key, int state)`
 
-- **Description:** Called when a key is pressed down.
-- **Parameters:** `key` pressed.
+- **Description:** Called when a key is pressed or released or held down.
+- **Parameters:**
+  - `key`: ASCII value of the key pressed.
+  - `state`: State of the key
+    - `GLUT_DOWN`: Key pressed.
+    - `GLUT_UP`: Key released.
+    - `GLUT_HOLD`: Key held down.
 - **Note:** _This function should be defined in the main file._
 
-#### `void iSpecialKeyboard(unsigned char key)`
+#### `void iSpecialKeyboard(unsigned char key, int state)`
 
-- **Description:** Called when a special key is pressed down.
-- **Parameters:** `key` pressed.
+- **Description:** Called when a special key is pressed or released or held down.
+- **Parameters:**
+  - `key`: Special key value (e.g., `GLUT_KEY_LEFT`, `GLUT_KEY_RIGHT`, etc.).
+  - `state`: State of the key
+    - `GLUT_DOWN`: Key pressed.
+    - `GLUT_UP`: Key released.
+    - `GLUT_HOLD`: Key held down.
 - **Note:** _This function should be defined in the main file._
-
-#### `bool isKeyPressed(unsigned char key)`
-
-- **Description:** Checks if a key is being pressed (Not yet released).
-- **Parameters:** `key` to check.
-- **Returns:** `true` if pressed, `false` otherwise.
-
-- **Example:**
-  ```cpp
-  if (isKeyPressed('a')) {
-      // 'a' key is pressed
-  }
-  ```
-
-#### `bool isSpecialKeyPressed(unsigned char key)`
-
-- **Description:** Checks if a special key is being pressed (Not yet released).
-- **Parameters:** `key` to check.
-- **Returns:** `true` if pressed, `false` otherwise.
-- **Example:**
-  ```cpp
-  if (isSpecialKeyPressed(GLUT_KEY_LEFT)) {
-      // Left arrow key is pressed
-  }
-  ```
 
 ### 🔉 Sound Functions
 
