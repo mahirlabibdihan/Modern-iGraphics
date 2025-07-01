@@ -1186,7 +1186,7 @@ void cleanupFont()
 }
 
 // Draw text at position (x, y) using font file `fontName`
-void iTextTTF(double x, double y, const char *text, const char *fontPath, int pixelSize = 48)
+void iTextTTF(double x, double y, const char *text, const char *fontPath, int fontSize = 48)
 {
     if (!g_ftInitialized)
     {
@@ -1200,7 +1200,7 @@ void iTextTTF(double x, double y, const char *text, const char *fontPath, int pi
         return;
     }
 
-    FT_Set_Pixel_Sizes(g_ftFace, 0, pixelSize);
+    FT_Set_Pixel_Sizes(g_ftFace, 0, fontSize);
 
     glEnable(GL_BLEND);
     glEnable(GL_TEXTURE_2D);

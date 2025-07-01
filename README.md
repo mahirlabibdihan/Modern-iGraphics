@@ -461,20 +461,18 @@ int main(int argc, char *argv[])
     - `GLUT_BITMAP_HELVETICA_18`
 - **Example:** `iText(50, 60, "This is a text", GLUT_BITMAP_TIMES_ROMAN_10);`
 
-#### `void iTextBold(double x, double y, char *str, void* font=GLUT_BITMAP_8_BY_13)`
+### `void iTextTTF(double x, double y, const char *text, const char *fontPath, int fontSize= 48)`
 
-- **Description:** Displays a bold string on screen.
-
-#### `void iTextAdvanced(double x, double y, const char *str, float scale = 0.3, float weight = 1.0, void *font = GLUT_STROKE_ROMAN)`
-
-- **Description:** Displays a string on screen with specified scale and weight.
+- **Description:** Displays a string on screen using TrueType font.
 - **Parameters:**
   - `x`, `y`: Coordinates of the first character.
-  - `str`: The text to display.
-  - `scale`: Scale factor for the text.
-  - `weight`: Weight of the text (1.0 for normal, 2.0 for bold).
-  - `font`: Font type (default is `GLUT_STROKE_ROMAN`).
-- **Example:** `iTextAdvanced(50, 60, "This is a text", 0.5, 2.0);`
+  - `text`: The text to display.
+  - `fontPath`: Path to the TrueType font file (e.g., "assets/fonts/arial.ttf").
+  - `fontSize`: Size of the font (default is 48).
+- **Example:**
+  ```cpp
+  iTextTTF(50, 60, "This is a text", "assets/fonts/arial.ttf", 48);
+  ```
 
 #### `void iRotate(double x, double y, double degree)`
 
