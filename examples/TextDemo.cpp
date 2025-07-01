@@ -7,11 +7,18 @@ void iDraw()
 {
     // place your drawing codes here
     iClear();
-    iText(140, 180, "Hello World");
-
-    // your OpenGL loop
-    iTextTTF(100, 200, "Hello OpenGL!", "assets/fonts/Antonio-Bold.ttf", 48);
-    iTextTTF(50, 50, "Hello OpenGL!", "assets/fonts/arial.ttf", 48);
+    iSetColor(0, 255, 0);
+    iTextTTF(150, 70, "Hello OpenGL!", "assets/fonts/arial.ttf", 48);
+    iSetColor(0, 0, 255);
+    iTextTTF(100, 200, "Hello OpenGL!", "assets/fonts/Antonio-Bold.ttf", 32);
+    iSetColor(255, 0, 0);
+    iTextTTF(50, 300, "Hello OpenGL!", "assets/fonts/DancingScript-Medium.ttf", 64);
+    iSetColor(255, 255, 0);
+    iTextTTF(200, 400, "Hello OpenGL!", "assets/fonts/RubikDoodleShadow-Regular.ttf", 72);
+    iSetColor(255, 0, 255);
+    iTextTTF(300, 250, "Hello OpenGL!", "assets/fonts/Monoton-Regular.ttf", 36);
+    iSetColor(0, 255, 255);
+    iTextTTF(220, 120, "Hello OpenGL!", "assets/fonts/Sixtyfour-Regular-VariableFont_BLED,SCAN.ttf", 48);
 }
 
 /*
@@ -100,6 +107,6 @@ int main(int argc, char *argv[])
 {
     glutInit(&argc, argv);
 
-    iInitialize(400, 400, "demooo");
+    iInitialize(800, 500, "Text Demo");
     return 0;
 }

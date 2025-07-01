@@ -1186,7 +1186,7 @@ void cleanupFont()
 }
 
 // Draw text at position (x, y) using font file `fontName`
-void iTextTTF(float x, float y, const char *text, const char *fontPath, int pixelSize = 48)
+void iTextTTF(double x, double y, const char *text, const char *fontPath, int pixelSize = 48)
 {
     if (!g_ftInitialized)
     {
@@ -1228,7 +1228,7 @@ void iTextTTF(float x, float y, const char *text, const char *fontPath, int pixe
             GL_UNSIGNED_BYTE,
             g->bitmap.buffer);
 
-        GLint swizzleMask[] = {GL_ONE, GL_ONE, GL_ONE, GL_RED};
+        // GLint swizzleMask[] = {GL_ONE, GL_ONE, GL_ONE, GL_RED};
         // glTexParameteriv(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_RGBA, swizzleMask);
 
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
