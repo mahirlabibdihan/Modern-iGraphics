@@ -81,8 +81,8 @@ int iAnimDelays[MAX_TIMERS];
 int iAnimPause[MAX_TIMERS];
 
 void iDraw();
-void iKeyboard(unsigned char);
-void iSpecialKeyboard(unsigned char);
+void iKeyboard(unsigned char, int);
+void iSpecialKeyboard(unsigned char, int);
 void iMouseDrag(int, int); // Renamed from iMouseMove to iMouseDrag
 void iMouseMove(int, int); // New function
 void iMouse(int button, int state, int x, int y);
@@ -1486,44 +1486,65 @@ void animFF(void)
     glutPostRedisplay();
 }
 
+/* Mouse button  state. */
+#define GLUT_PRESS 0   // The key was pressed.
+#define GLUT_RELEASE 1 // The key was released.
+#define GLUT_REPEAT 2  // The key is being held down
+
 bool keys[256] = {false};
-
-void keyboardHandler1FF(unsigned char key, int x, int y)
-{
-    iKeyboard(key);
-    keys[key] = true;
-    glutPostRedisplay();
-}
-
-void keyboardHandlerUp1FF(unsigned char key, int x, int y)
-{
-    keys[key] = false;
-    glutPostRedisplay();
-}
 
 bool isKeyPressed(unsigned char key)
 {
     return keys[key];
 }
 
+void keyboardHandler1FF(unsigned char key, int x, int y)
+{
+    if (isKeyPressed(key))
+    {
+        iKeyboard(key, GLUT_REPEAT);
+    }
+    else
+    {
+        iKeyboard(key, GLUT_PRESS);
+        keys[key] = true;
+    }
+    glutPostRedisplay();
+}
+
+void keyboardHandlerUp1FF(unsigned char key, int x, int y)
+{
+    keys[key] = false;
+    iKeyboard(key, GLUT_RELEASE);
+    glutPostRedisplay();
+}
+
 bool specialKeys[109] = {false};
+
+bool isSpecialKeyPressed(int key)
+{
+    return specialKeys[key];
+}
 
 void keyboardHandler2FF(int key, int x, int y)
 {
-    iSpecialKeyboard(key);
-    specialKeys[key] = true; // Mark special key as pressed
+    if (isSpecialKeyPressed(key))
+    {
+        iSpecialKeyboard(key, GLUT_REPEAT);
+    }
+    else
+    {
+        iSpecialKeyboard(key, GLUT_PRESS);
+        specialKeys[key] = true; // Mark special key as pressed
+    }
     glutPostRedisplay();
 }
 
 void keyboardHandlerUp2FF(int key, int x, int y)
 {
+    iSpecialKeyboard(key, GLUT_RELEASE);
     specialKeys[key] = false; // Mark special key as released
     glutPostRedisplay();
-}
-
-bool isSpecialKeyPressed(int key)
-{
-    return specialKeys[key];
 }
 
 void mouseMoveHandlerFF(int mx, int my)

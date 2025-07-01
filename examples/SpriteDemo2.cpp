@@ -13,7 +13,7 @@ int pic_x, pic_y;
 int idle_idx = 0;
 int jump_idx = 0;
 int walk_idx = 0;
-int state = IDLE;
+int m_state = IDLE;
 char monster_idle[18][100];
 char monster_jump[6][100];
 char monster_walk[24][100];
@@ -38,7 +38,7 @@ void populate_monster_images()
 
 void update_monster()
 {
-    switch (state)
+    switch (m_state)
     {
     case IDLE:
         monster_image = monster_idle[idle_idx];
@@ -53,7 +53,7 @@ void update_monster()
         jump_idx = (jump_idx + 1) % 6;
         if (jump_idx == 0)
         {
-            state = IDLE;
+            m_state = IDLE;
         }
         break;
     }
@@ -118,7 +118,7 @@ void iMouseWheel(int dir, int mx, int my)
     function iKeyboard() is called whenever the user hits a key in keyboard.
     key- holds the ASCII value of the key pressed.
 */
-void iKeyboard(unsigned char key)
+void iKeyboard(unsigned char key, int state)
 {
     if (key == 'x')
     {
@@ -137,9 +137,8 @@ void iKeyboard(unsigned char key)
     GLUT_KEY_LEFT, GLUT_KEY_UP, GLUT_KEY_RIGHT, GLUT_KEY_DOWN, GLUT_KEY_PAGE UP,
     GLUT_KEY_PAGE DOWN, GLUT_KEY_HOME, GLUT_KEY_END, GLUT_KEY_INSERT
 */
-void iSpecialKeyboard(unsigned char key)
+void iSpecialKeyboard(unsigned char key, int state)
 {
-
     if (key == GLUT_KEY_END)
     {
         exit(0);
@@ -151,12 +150,12 @@ void iSpecialKeyboard(unsigned char key)
     if (key == GLUT_KEY_RIGHT)
     {
         pic_x += 2;
-        state = WALK;
+        m_state = WALK;
     }
     if (key == GLUT_KEY_UP)
     {
         pic_y += 2;
-        state = JUMP;
+        m_state = JUMP;
     }
     if (key == GLUT_KEY_DOWN)
     {
