@@ -15,6 +15,10 @@ set "PATH=%BASE_DIR%;%BASE_DIR%\bin;%PATH%"
 
 echo Using g++ from: %BASE_DIR%
 
+:: Create obj directory if it doesn't exist
+if not exist "obj" (
+    mkdir obj
+)
 :: Compile the source file to an object file (with irrKlang include path)
 
 g++.exe -Wall -fexceptions -g -I. -IOpenGL\\include -IOpenGL\\include\\SDL2 -IOpenGL\\include\\Freetype -c "%SOURCE_FILE%" -o obj\\opengl.o

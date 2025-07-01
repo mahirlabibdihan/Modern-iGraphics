@@ -1185,6 +1185,7 @@ void cleanupFont()
     }
 }
 
+// Freetype: https://gnuwin32.sourceforge.net/packages/freetype.htm
 // Draw text at position (x, y) using font file `fontName`
 void iTextTTF(double x, double y, const char *text, const char *fontPath, int fontSize = 48)
 {
