@@ -1486,10 +1486,10 @@ void animFF(void)
     glutPostRedisplay();
 }
 
-/* Mouse button  state. */
-#define GLUT_PRESS 0   // The key was pressed.
-#define GLUT_RELEASE 1 // The key was released.
-#define GLUT_REPEAT 2  // The key is being held down
+/* Keyboard key state. */
+#define GLUT_DOWN 0 // The key was pressed.
+#define GLUT_UP 1   // The key was released.
+#define GLUT_HOLD 2 // The key is being held down
 
 bool keys[256] = {false};
 
@@ -1502,11 +1502,11 @@ void keyboardHandler1FF(unsigned char key, int x, int y)
 {
     if (isKeyPressed(key))
     {
-        iKeyboard(key, GLUT_REPEAT);
+        iKeyboard(key, GLUT_HOLD);
     }
     else
     {
-        iKeyboard(key, GLUT_PRESS);
+        iKeyboard(key, GLUT_DOWN);
         keys[key] = true;
     }
     glutPostRedisplay();
@@ -1515,7 +1515,7 @@ void keyboardHandler1FF(unsigned char key, int x, int y)
 void keyboardHandlerUp1FF(unsigned char key, int x, int y)
 {
     keys[key] = false;
-    iKeyboard(key, GLUT_RELEASE);
+    iKeyboard(key, GLUT_UP);
     glutPostRedisplay();
 }
 
@@ -1530,11 +1530,11 @@ void keyboardHandler2FF(int key, int x, int y)
 {
     if (isSpecialKeyPressed(key))
     {
-        iSpecialKeyboard(key, GLUT_REPEAT);
+        iSpecialKeyboard(key, GLUT_HOLD);
     }
     else
     {
-        iSpecialKeyboard(key, GLUT_PRESS);
+        iSpecialKeyboard(key, GLUT_DOWN);
         specialKeys[key] = true; // Mark special key as pressed
     }
     glutPostRedisplay();
@@ -1542,7 +1542,7 @@ void keyboardHandler2FF(int key, int x, int y)
 
 void keyboardHandlerUp2FF(int key, int x, int y)
 {
-    iSpecialKeyboard(key, GLUT_RELEASE);
+    iSpecialKeyboard(key, GLUT_UP);
     specialKeys[key] = false; // Mark special key as released
     glutPostRedisplay();
 }
