@@ -37,11 +37,37 @@ It was originally created by [Shahriar Nirjon](https://www.cs.unc.edu/~nirjon/) 
 - [Tetris](https://youtu.be/jC8eX8RNuUM?si=ai22EmpSUbyJSyTN)
 - [Snake Game](https://youtu.be/mjOVhspXOjY?si=VVC-PrjMz3F79m_f)
 
+You can find executable games [here](https://github.com/mahirlabibdihan/Modern-iGraphics/releases/download/v0.0.1/demo.zip)
+
 ---
 
-## 🧱 Setup in Code::Blocks
+## Necessary Files
 
-Download the ZIP file from [here](https://github.com/mahirlabibdihan/Modern-iGraphics/archive/refs/heads/main.zip) and extract it.
+- Download `the Modern-iGraphics-main.zip` file from [here](https://github.com/mahirlabibdihan/Modern-iGraphics/archive/refs/heads/main.zip) and extract it.
+- Download `MINGW.zip` file from [here](https://github.com/mahirlabibdihan/Modern-iGraphics/releases/download/v0.0.1/MINGW.zip) and extract it.
+- Copy the `MINGW` folder to the extracted `Modern-iGraphics-main` folder.
+- The final folder structure should look like this:
+
+```
+Modern-iGraphics-main
+├── MINGW
+│   ├── bin
+│   ├── include
+│   ├── lib
+│   ├── ....
+│   └── share
+├── OpenGL
+├── assets
+├── bin
+├── obj
+├── examples
+├── iGraphics.h
+├── iGraphics.cbp
+├── iMain.cpp
+├── ....
+```
+
+## 🧱 Setup in Code::Blocks
 
 Open `iGraphics.cbp` in Code::Blocks. The project is already configured with all the necessary settings. You can directly run the project. By default, the main file is `iMain.cpp`. You can remove it and add a different file if you want.
 
