@@ -589,6 +589,30 @@ int main(int argc, char *argv[])
     - `GLUT_HOLD`: Key held down.
 - **Note:** _This function should be defined in the main file._
 
+#### `bool isKeyPressed(unsigned char key)`
+
+- **Description:** Checks if a key is being pressed (Not yet released).
+- **Parameters:** `key` to check.
+- **Returns:** `true` if pressed, `false` otherwise.
+- **Example:**
+  ```cpp
+  if (isKeyPressed('a')) {
+      // 'a' key is pressed
+  }
+  ```
+
+#### `bool isSpecialKeyPressed(unsigned char key)`
+
+- **Description:** Checks if a special key is being pressed (Not yet released).
+- **Parameters:** `key` to check.
+- **Returns:** `true` if pressed, `false` otherwise.
+- **Example:**
+  ```cpp
+  if (isSpecialKeyPressed(GLUT_KEY_LEFT)) {
+      // Left arrow key is pressed
+  }
+  ```
+
 ### 🔉 Sound Functions
 
 `iGraphics` was originally designed for graphical applications, but it has been extended to support sound playback using the `SDL2` library. The sound functions are available in `iSound.h` and are shown below:
