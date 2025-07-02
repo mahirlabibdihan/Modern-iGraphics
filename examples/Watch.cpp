@@ -82,14 +82,14 @@ void iMouse(int button, int state, int mx, int my)
     }
 }
 
-void iKeyboard(unsigned char key)
+void iKeyboard(unsigned char key, int state)
 {
     if (key == 'q')
     {
     }
 }
 
-void iSpecialKeyboard(unsigned char key)
+void iSpecialKeyboard(unsigned char key, int state)
 {
 
     if (key == GLUT_KEY_END)

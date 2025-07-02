@@ -1487,9 +1487,7 @@ void animFF(void)
 }
 
 /* Keyboard key state. */
-#define GLUT_DOWN 0 // The key was pressed.
-#define GLUT_UP 1   // The key was released.
-#define GLUT_HOLD 2 // The key is being held down
+#define GLUT_HOLD 0x0002 // The key is being held down
 
 bool keys[256] = {false};
 
@@ -1615,6 +1613,16 @@ void reshapeFF(int width, int height)
     glOrtho(0.0, iScreenWidth, 0.0, iScreenHeight, -1.0, 1.0);
     glViewport(0.0, 0.0, iScreenWidth, iScreenHeight);
     glutPostRedisplay();
+}
+
+void iHideCursor()
+{
+    glutSetCursor(GLUT_CURSOR_NONE);
+}
+
+void iShowCursor()
+{
+    glutSetCursor(GLUT_CURSOR_INHERIT);
 }
 
 void iInitialize(int width = 500, int height = 500, const char *title = "iGraphics")

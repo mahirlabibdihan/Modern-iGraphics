@@ -182,7 +182,7 @@ void iMouse(int button, int state, int mx, int my)
     function iKeyboard() is called whenever the user hits a key in keyboard.
     key- holds the ASCII value of the key pressed.
 */
-void iKeyboard(unsigned char key)
+void iKeyboard(unsigned char key, int state)
 {
     switch (key)
     {
@@ -216,7 +216,7 @@ void iKeyboard(unsigned char key)
     GLUT_KEY_LEFT, GLUT_KEY_UP, GLUT_KEY_RIGHT, GLUT_KEY_DOWN, GLUT_KEY_PAGE UP,
     GLUT_KEY_PAGE DOWN, GLUT_KEY_HOME, GLUT_KEY_END, GLUT_KEY_INSERT
 */
-void iSpecialKeyboard(unsigned char key)
+void iSpecialKeyboard(unsigned char key, int state)
 {
     switch (key)
     {
@@ -276,7 +276,7 @@ int main(int argc, char *argv[])
     g_satelliteOrbitR = 20;
     g_satelliteR = 5;
 
-        iSetTimer(20, movePlanets);
+    iSetTimer(20, movePlanets);
     iInitialize(CX_MAX, CY_MAX, "Solar system!");
 
     return 0;

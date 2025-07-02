@@ -13,9 +13,9 @@ void iDraw()
     // place your drawing codes here
     iClear();
     iShowImage(200, 200, "assets/images/background.jpg");
-    iShowImage(200, 200, "assets/images/mario.png", 90, 100);
+    iShowImage(200, 200, "assets/images/mario.png", 50, 100);
     iShowLoadedImage(211, 304, &mario, 60, 70);
-    iShowLoadedImage(311, 304, &mario, 70, 80);
+    iShowLoadedImage(311, 304, &mario, 150, 100);
     iShowLoadedImage(411, 304, &mario, 80, 90, HORIZONTAL);
     iShowLoadedImage(511, 304, &mario, 90, 100);
     iShowLoadedImage(611, 304, &mario, 100, 110, VERTICAL);
@@ -64,7 +64,7 @@ void iMouseWheel(int dir, int mx, int my)
     function iKeyboard() is called whenever the user hits a key in keyboard.
     key- holds the ASCII value of the key pressed.
 */
-void iKeyboard(unsigned char key)
+void iKeyboard(unsigned char key, int state)
 {
     // place your codes for other keys here
 }
@@ -78,7 +78,7 @@ void iKeyboard(unsigned char key)
     GLUT_KEY_LEFT, GLUT_KEY_UP, GLUT_KEY_RIGHT, GLUT_KEY_DOWN, GLUT_KEY_PAGE UP,
     GLUT_KEY_PAGE DOWN, GLUT_KEY_HOME, GLUT_KEY_END, GLUT_KEY_INSERT
 */
-void iSpecialKeyboard(unsigned char key)
+void iSpecialKeyboard(unsigned char key, int state)
 {
 
     if (key == GLUT_KEY_END)
