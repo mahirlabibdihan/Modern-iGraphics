@@ -37,7 +37,7 @@ if %ERRORLEVEL% neq 0 (
 
 echo Compiling %SOURCE_FILE% to object file...
 
-g++.exe -static-libgcc -static-libstdc++ -L.\\OpenGL\\lib -o "%RELEASE_DIR%\\game.exe" obj\\opengl.o -lmingw32 -lSDL2main -lSDL2 -lSDL2_mixer -lOPENGL32 -lfreeglut -lwinmm -lfreetype
+g++.exe -static-libgcc -static-libstdc++ -L.\\OpenGL\\lib -o "%RELEASE_DIR%\\game.exe" obj\\opengl.o -lmingw32 -lSDL2main -lSDL2 -lSDL2_mixer -lOPENGL32 -lfreeglut -lwinmm -lfreetype -mwindows
 
 if %ERRORLEVEL% neq 0 (
     echo Linking failed.
