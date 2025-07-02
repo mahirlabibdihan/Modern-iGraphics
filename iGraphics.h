@@ -89,9 +89,9 @@ void iMouse(int button, int state, int x, int y);
 void iMouseWheel(int dir, int x, int y);
 // void iResize(int width, int height);
 
-#define max(a, b) ((a) > (b) ? (a) : (b))
-#define min(a, b) ((a) < (b) ? (a) : (b))
-#define swap(a, b)            \
+#define mmax(a, b) ((a) > (b) ? (a) : (b))
+#define mmin(a, b) ((a) < (b) ? (a) : (b))
+#define sswap(a, b)           \
     do                        \
     {                         \
         typeof(a) temp = (a); \
@@ -310,9 +310,9 @@ void iShowTexture2(int x, int y, Image *img, int width = -1, int height = -1, Mi
 
     // Handle mirror states
     if (mirror == HORIZONTAL || mirror == MIRROR_BOTH)
-        swap(tx1, tx2);
+        sswap(tx1, tx2);
     if (mirror == VERTICAL || mirror == MIRROR_BOTH)
-        swap(ty1, ty2);
+        sswap(ty1, ty2);
 
     glTexCoord2f(tx1, ty1);
     glVertex2i(x, y);
@@ -363,13 +363,13 @@ void iShowImage2(int x, int y, Image *img)
     }
 
     // Improved visible region calculation with clamping
-    int startX = max(0, -x);
-    int startY = max(0, -y);
-    int drawX = max(0, x);
-    int drawY = max(0, y);
+    int startX = mmax(0, -x);
+    int startY = mmax(0, -y);
+    int drawX = mmax(0, x);
+    int drawY = mmax(0, y);
 
-    int drawWidth = min(imgWidth - startX, screenWidth - drawX);
-    int drawHeight = min(imgHeight - startY, screenHeight - drawY);
+    int drawWidth = mmin(imgWidth - startX, screenWidth - drawX);
+    int drawHeight = mmin(imgHeight - startY, screenHeight - drawY);
 
     // Don't draw if completely out of bounds
     if (drawWidth <= 0 || drawHeight <= 0)
