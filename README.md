@@ -1140,3 +1140,4 @@ This library is for educational purposes and is typically used in academic or ho
   - [zlib](https://gnuwin32.sourceforge.net/packages/zlib.htm): v1.2.3
 - [stb_image](https://github.com/nothings/stb/blob/master/stb_image.h): v2.30
   - [stb_image_resize](https://github.com/nothings/stb/blob/master/stb_image_resize_test/old_image_resize.h): v0.96
+- [Nano SVG](https://github.com/memononen/nanosvg)
