@@ -888,6 +888,55 @@ Custom font rendering is supported using TrueType fonts. `freetype` library is u
 
 - **Description:** Frees the memory allocated for the image.
 
+<!-- SVG FUnctions -->
+
+### 📊 SVG Functions
+
+#### `void iShowSVG(int x, int y, const char *filename, double scale = 1.0, MirrorState mirror = NO_MIRROR)`
+
+- **Description:** Displays an SVG image at specified coordinates.
+- **Parameters:**
+  - `x`, `y`: Coordinates where the SVG will be displayed.
+  - `filename`: Path to the SVG file.
+  - `scale`: Scaling factor (default is 1.0).
+  - `mirror`: Mirror state (default is `NO_MIRROR`).
+- **Example:**
+  ```cpp
+  iShowSVG(100, 200, "image.svg", 1.5, HORIZONTAL);
+  ```
+
+#### `bool iLoadSVG(SVG *svg, const char *filename, double scale = 1.0)`
+
+- **Description:** Loads an SVG image from file.
+- **Parameters:**
+  - `svg`: Pointer to an `SVG` structure.
+  - `filename`: Path to the SVG file.
+  - `scale`: Scaling factor (default is 1.0).
+  - **Returns:** `true` if successful, `false` otherwise.
+  - **Example:**
+  ```cpp
+  Image svg;
+  if (iLoadSVG(&svg, "image.svg", 1.5)) {
+      // SVG loaded successfully
+  } else {
+      // Failed to load SVG
+  }
+  ```
+
+#### `void iShowLoadedSVG(int x, int y, Image *svg, MirrorState mirror = NO_MIRROR)`
+
+- **Description:** Displays an already loaded SVG image at specified coordinates.
+- **Parameters:**
+  - `x`, `y`: Coordinates where the SVG will be displayed.
+  - `svg`: Pointer to the loaded svg image.
+  - `mirror`: Mirror state (default is `NO_MIRROR`).
+- **Example:**
+  ```cpp
+  Image svg;
+  iLoadSVG(&svg, "image.svg", 1.5);
+  iShowLoadedSVG(100, 200, &svg);
+  ```
+
 ### 🧩 Sprite Functions
 
 Free sprite resources: [https://craftpix.net/freebies/](https://craftpix.net/freebies/)\\
