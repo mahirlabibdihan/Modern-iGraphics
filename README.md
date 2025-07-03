@@ -488,19 +488,6 @@ int main(int argc, char *argv[])
     - `GLUT_BITMAP_HELVETICA_18`
 - **Example:** `iText(50, 60, "This is a text", GLUT_BITMAP_TIMES_ROMAN_10);`
 
-### `void iTextTTF(double x, double y, const char *text, const char *fontPath, int fontSize= 48)`
-
-- **Description:** Displays a string on screen using TrueType font.
-- **Parameters:**
-  - `x`, `y`: Coordinates of the first character.
-  - `text`: The text to display.
-  - `fontPath`: Path to the TrueType font file (e.g., "assets/fonts/arial.ttf").
-  - `fontSize`: Size of the font (default is 48).
-- **Example:**
-  ```cpp
-  iTextTTF(50, 60, "This is a text", "assets/fonts/arial.ttf", 48);
-  ```
-
 #### `void iRotate(double x, double y, double degree)`
 
 - **Description:** Rotates the coordinate system around a point.
@@ -719,6 +706,34 @@ int main(int argc, char *argv[])
 - **Parameters:**
   - `index`: Index of the sound.
   - `amount`: Amount to decrease the volume by (0-100).
+
+### 🅰️ Text Functions
+
+Custom font rendering is supported using TrueType fonts. `freetype` library is used to render text. The new text functions are available in `iFont.h` and are shown below:
+
+#### `void iShowText(double x, double y, const char *text, const char *fontPath, int fontSize= 48)`
+
+- **Description:** Displays a string on screen using TrueType font.
+- **Parameters:**
+  - `x`, `y`: Coordinates of the first character.
+  - `text`: The text to display.
+  - `fontPath`: Path to the TrueType font file (e.g., "assets/fonts/arial.ttf").
+  - `fontSize`: Size of the font (default is 48).
+- **Example:**
+
+  ```cpp
+  #include "iFont.h" // Include the font header
+  ...
+  int main(int argc, char *argv[])
+  {
+      glutInit(&argc, argv);
+      iInitializeFont(); // Need to initialize freeType library
+      iInitialize(600, 250, "Text Demo");
+      return 0;
+  }
+  ...
+  iShowText(50, 60, "This is a text", "assets/fonts/arial.ttf", 48);
+  ```
 
 ### 🖼️ Image Functions
 

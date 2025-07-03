@@ -13,7 +13,7 @@ FT_Library g_ftLibrary;
 FT_Face g_ftFace;
 bool g_ftInitialized = false;
 
-bool iInitFont()
+bool iInitializeFont()
 {
     if (g_ftInitialized)
     {

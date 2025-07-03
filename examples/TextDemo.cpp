@@ -106,7 +106,7 @@ void iSpecialKeyboard(unsigned char key, int state)
 int main(int argc, char *argv[])
 {
     glutInit(&argc, argv);
-    iInitFont();
+    iInitializeFont();
     iInitialize(800, 500, "Text Demo");
     return 0;
 }
