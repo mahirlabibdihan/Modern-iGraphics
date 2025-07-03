@@ -1086,8 +1086,8 @@ This library is for educational purposes and is typically used in academic or ho
 ## 📚 Libraries
 
 - [SDL2](https://www.libsdl.org/): v2.0.12
-- [SDL2_Mixer](https://www.libsdl.org/projects/SDL_mixer/): v2.0.4
+  - [SDL2_Mixer](https://www.libsdl.org/projects/SDL_mixer/): v2.0.4
 - [Freetype](https://gnuwin32.sourceforge.net/packages/freetype.htm): v2.3.5
-- [zlib](https://gnuwin32.sourceforge.net/packages/zlib.htm): v1.2.3
+  - [zlib](https://gnuwin32.sourceforge.net/packages/zlib.htm): v1.2.3
 - [stb_image](https://github.com/nothings/stb/blob/master/stb_image.h): v2.30
-- [stb_image_resize](https://github.com/nothings/stb/blob/master/stb_image_resize_test/old_image_resize.h): v0.96
+  - [stb_image_resize](https://github.com/nothings/stb/blob/master/stb_image_resize_test/old_image_resize.h): v0.96
