@@ -124,7 +124,7 @@ void iFreeFont()
 // #define STB_TRUETYPE_IMPLEMENTATION
 // #include "stb_truetype.h"
 
-// void render_text_to_opengl(float pos_x, float pos_y, const char *font_path, const char *text, float pixel_height)
+// void render_text_to_opengl(float pos_x, float pos_y, const char *text, const char *font_path, float pixel_height)
 // {
 //     /* load font file */
 //     long size;
@@ -179,8 +179,8 @@ void iFreeFont()
 //     ascent = roundf(ascent * scale);
 //     descent = roundf(descent * scale);
 
-//     int b_w = text_width + 20;
-//     int b_h = text_height + 20;
+//     int b_w = text_width;
+//     int b_h = text_height;
 
 //     // Round up to nearest power of two
 //     // b_w = 1 << (int)ceil(log2(b_w));
