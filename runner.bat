@@ -21,7 +21,7 @@ if not exist "obj" (
 )
 :: Compile the source file to an object file (with irrKlang include path)
 
-g++.exe -Wall -fexceptions -g -I. -IOpenGL\\include -IOpenGL\\include\\SDL2 -IOpenGL\\include\\Freetype -c "%SOURCE_FILE%" -o obj\\opengl.o
+g++.exe -w -fexceptions -g -I. -IOpenGL\\include -IOpenGL\\include\\SDL2 -IOpenGL\\include\\Freetype -c "%SOURCE_FILE%" -o obj\\opengl.o
 
 if %ERRORLEVEL% neq 0 (
    echo Compilation failed.

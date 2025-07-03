@@ -27,8 +27,8 @@ REM Create the release folder
 mkdir "%RELEASE_DIR%"
 
 
-:: Compile the source file to an object file (with irrKlang include path)
-g++.exe -Wall -fexceptions -g -I. -IOpenGL\\include -IOpenGL\\include\\SDL2 -IOpenGL\\include\\Freetype -c "%SOURCE_FILE%" -o obj\\opengl.o
+:: Compile the source file to an object file
+g++.exe -w -fexceptions -g -I. -IOpenGL\\include -IOpenGL\\include\\SDL2 -IOpenGL\\include\\Freetype -c "%SOURCE_FILE%" -o obj\\opengl.o
 
 if %ERRORLEVEL% neq 0 (
    echo Compilation failed.
