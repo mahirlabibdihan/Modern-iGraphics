@@ -85,4 +85,7 @@
     <installed tarname="make-3.82.90-2-mingw32-cvs-20120902-doc.tar.lzma" />
     <installed tarname="make-3.82.90-2-mingw32-cvs-20120902-lic.tar.lzma" />
     <installed tarname="make-3.82.90-2-mingw32-cvs-20120902-lang.tar.lzma" />
+    <installed tarname="libz-1.2.8-1-mingw32-dll-1.tar">
+        <download tarname="zlib-1.2.8-1-mingw32-dll.tar.lzma" />
+    </installed>
 </sysroot>
