@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<package id="manifest-0-048-472f-1c1958">
+    <release tarname="make-3.82.90-2-mingw32-cvs-20120902-doc.tar.lzma" />
+    <references>
+        <sysroot id="sysroot-0-002-a7c6-d7dbb5" />
+    </references>
+    <manifest>
+        <dir path="share/doc" />
+        <dir path="share/doc/make" />
+        <dir path="share/doc/make/3.82.90" />
+        <file path="share/doc/make/3.82.90/AUTHORS" />
+        <file path="share/doc/make/3.82.90/ChangeLog" />
+        <file path="share/doc/make/3.82.90/NEWS" />
+        <dir path="share/doc/MinGW" />
+        <file path="share/doc/MinGW/make.README.txt" />
+        <dir path="share/info" />
+        <file path="share/info/make.info" />
+        <file path="share/info/make.info-1" />
+        <file path="share/info/make.info-2" />
+        <dir path="share/man" />
+        <dir path="share/man/man1" />
+        <file path="share/man/man1/mingw32-make.1.gz" />
+    </manifest>
+</package>
