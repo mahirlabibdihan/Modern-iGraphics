@@ -578,6 +578,24 @@ int main(int argc, char *argv[])
   - `mx`, `my`: Coordinates of the mouse pointer.
 - **Note:** _This function should be defined in the main file._
 
+#### `void iShowCursor()`
+
+- **Description:** Shows the mouse cursor.
+- **Parameters:** None
+- **Example:**
+  ```cpp
+  iShowCursor();
+  ```
+
+#### `void iHideCursor()`
+
+- **Description:** Hides the mouse cursor.
+- **Parameters:** None
+- **Example:**
+  ```cpp
+  iHideCursor();
+  ```
+
 ### ⌨️ Keyboard Functions
 
 #### `void iKeyboard(unsigned char key, int state)`
@@ -1039,21 +1057,33 @@ Online sprite cutter: [https://ezgif.com/sprite-cutter](https://ezgif.com/sprite
 
 ---
 
-## ✨ Contributors
+<!-- ## ✨ Contributors
 
 | [![Shahriar Nirjon](https://github.com/nirjon.png?size=100)](https://github.com/nirjon) | [![Mahir Labib Dihan](https://github.com/mahirlabibdihan.png?size=100)](https://github.com/mahirlabibdihan) | [![Anwarul Bashar Shuaib](https://github.com/shuaibw.png?size=100)](https://github.com/shuaibw) | [![Ashrafur Rahman Khan](https://github.com/risenfromashes.png?size=100)](https://github.com/risenfromashes) |
 | :-------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------------: | :----------------------------------------------------------------------------------------------------------: |
 |                                   **Shahriar Nirjon**                                   |                                            **Mahir Labib Dihan**                                            |                                    **Anwarul Bashar Shuaib**                                    |                                         **Md. Ashrafur Rahman Khan**                                         |
 
----
+--- -->
 
 ## 📄 License
 
 This library is for educational purposes and is typically used in academic or hobbyist OpenGL projects.
 
-<!--
 ## 🙏 Acknowledgements
 
--   [Extended iGraphics by Ash](https://github.com/risenfromashes/Curves/) - Implementation of cross-platform iGraphics library with additional features.
--   [irrKlang](https://github.com/jonas2602/irrKlang) - The sound engine used for sound playback.
--   [freeglut](https://freeglut.sourceforge.net/) - The OpenGL Utility Toolkit. -->
+- [Shahriar Nirjon](https://github.com/nirjon) - Original iGraphics library
+- [Ashrafur Rahman Khan](https://github.com/risenfromashes) - Linux Support, Freeglut, SDL2 sound engine, Transparent Color, Mouse passive motion.
+- [Anwarul Bashar Shuaib](https://github.com/shuaibw) - Image resize, mirror, wrap, and collision detection functionality
+
+<!-- ## 🙏 Acknowledgements
+
+- [Extended iGraphics by Ash](https://github.com/risenfromashes/Curves/) - Implementation of cross-platform iGraphics library with additional features.
+- [irrKlang](https://github.com/jonas2602/irrKlang) - The sound engine used for sound playback.
+- [freeglut](https://freeglut.sourceforge.net/) - The OpenGL Utility Toolkit. -->
+
+<!-- Resources -->
+
+## 📚 Resources
+
+- [SDL2](https://www.libsdl.org/)
+- [Freetype for Windows](https://gnuwin32.sourceforge.net/packages/freetype.htm)
