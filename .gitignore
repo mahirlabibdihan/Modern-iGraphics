@@ -4,6 +4,6 @@
 *.bin
 bin/*.exe
 release
-MINGW
 *.o
 demo
+MINGW
