@@ -30,6 +30,12 @@
 #include "stb_image.h"
 #define STB_IMAGE_RESIZE_IMPLEMENTATION
 #include "stb_image_resize.h"
+
+#define NANOSVG_IMPLEMENTATION
+#include "nanosvg.h"
+#define NANOSVGRAST_IMPLEMENTATION
+#include "nanosvgrast.h"
+
 using namespace std;
 
 static int transparent = 1;
@@ -39,6 +45,8 @@ typedef struct
     unsigned char *data;
     int width, height, channels;
     GLuint textureId; // OpenGL texture ID
+    // image type svg and non-svg
+    bool isSVG; // true if the image is SVG, false if it's a raster image
 } Image;
 
 typedef struct
@@ -225,11 +233,71 @@ bool iLoadTexture(Image *img)
     return true;
 }
 
+bool iLoadSVG(Image *img, const char *filepath, double scale = 1.0)
+{
+    // Load SVG
+    NSVGimage *image = nsvgParseFromFile(filepath, "px", 96.0f);
+    if (!image)
+    {
+        fprintf(stderr, "Could not open SVG file: %s\n", filepath);
+        return false;
+    }
+
+    int origW = (int)image->width;
+    int origH = (int)image->height;
+
+    int outW = (int)(origW * scale);
+    int outH = (int)(origH * scale);
+
+    // printf("SVG image size: %d x %d, scaled to: %d x %d\n", origW, origH, outW, outH);
+
+    img->data = (unsigned char *)malloc(outW * outH * 4);
+    if (!img->data)
+    {
+        fprintf(stderr, "Failed to allocate image buffer\n");
+        nsvgDelete(image);
+        return false;
+    }
+
+    NSVGrasterizer *rast = nsvgCreateRasterizer();
+    if (!rast)
+    {
+        fprintf(stderr, "Failed to create rasterizer\n");
+        free(img->data);
+        nsvgDelete(image);
+        return false;
+    }
+
+    nsvgRasterize(rast, image, 0, 0, scale, img->data, outW, outH, outW * 4);
+
+    img->width = outW;
+    img->height = outH;
+    img->channels = 4; // RGBA
+    img->isSVG = true; // Mark as SVG image
+    img->textureId = 0;
+
+    nsvgDeleteRasterizer(rast);
+    nsvgDelete(image);
+
+    return true;
+}
+
 // Additional functions for displaying images
 bool iLoadImage(Image *img, const char filename[], int ignoreColor = -1)
 {
+    // Check if the image is svg based on extension
+    const char *ext = strrchr(filename, '.');
+
     stbi_set_flip_vertically_on_load(true);
-    img->data = stbi_load(filename, &img->width, &img->height, &img->channels, 0);
+    if (ext && (strcmp(ext, ".svg") == 0 || strcmp(ext, ".SVG") == 0))
+    {
+        iLoadSVG(img, filename);
+    }
+    else
+    {
+        img->data = stbi_load(filename, &img->width, &img->height, &img->channels, 0);
+    }
+
     if (img->data == nullptr)
     {
         printf("Failed to load image: %s\n", stbi_failure_reason());
@@ -312,6 +380,11 @@ void iShowTexture2(int x, int y, Image *img, int width = -1, int height = -1, Mi
     if (mirror == VERTICAL || mirror == MIRROR_BOTH)
         sswap(ty1, ty2);
 
+    if (img->isSVG) // If the image is an SVG, we need to flip vertically
+    {
+        // SVG images are typically flipped vertically in OpenGL
+        sswap(ty1, ty2);
+    }
     glTexCoord2f(tx1, ty1);
     glVertex2i(x, y);
     glTexCoord2f(tx2, ty1);
@@ -413,6 +486,37 @@ void iShowImage(int x, int y, const char *filename, int width = -1, int height =
     }
     iShowTexture2(x, y, &img, width, height, mirror);
     iFreeImage(&img);
+}
+
+void iShowSVG(double x, double y, const char *filepath, double scale = 1.0, MirrorState mirror = NO_MIRROR)
+{
+    // Load SVG
+    Image img;
+    if (!iLoadSVG(&img, filepath, scale))
+    {
+        printf("Failed to load svg: %s\n", filepath);
+        return;
+    }
+    iShowTexture2(x, y, &img, img.width, img.height, mirror);
+    iFreeImage(&img);
+}
+
+void iShowLoadedSVG(double x, double y, Image *img, MirrorState mirror = NO_MIRROR)
+{
+    // Ensure the image is an SVG
+    if (!img->isSVG)
+    {
+        fprintf(stderr, "Image is not an SVG.\n");
+        return;
+    }
+
+    // Load the SVG texture if not already loaded
+    if (img->textureId == 0)
+    {
+        iLoadTexture(img);
+    }
+
+    iShowTexture2(x, y, img, img->width, img->height, mirror);
 }
 
 void iWrapImage(Image *img, int dx = 0, int dy = 0)
@@ -916,7 +1020,8 @@ void deepCopyImage(Image src, Image *dst)
     dst->width = src.width;
     dst->height = src.height;
     dst->channels = src.channels;
-    dst->textureId = 0; // Copy texture ID
+    dst->isSVG = src.isSVG; // Copy SVG flag
+    dst->textureId = 0;     // Copy texture ID
 
     // Allocate memory for the image data in the destination
     dst->data = (unsigned char *)malloc(src.width * src.height * src.channels);
