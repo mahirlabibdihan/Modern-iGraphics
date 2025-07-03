@@ -8,10 +8,6 @@ void iDraw()
     // place your drawing codes here
     iClear();
     iText(140, 180, "Hello World");
-
-    // your OpenGL loop
-    iTextTTF(100, 200, "Hello OpenGL!", "assets/fonts/Antonio-Bold.ttf", 48);
-    iTextTTF(50, 50, "Hello OpenGL!", "assets/fonts/arial.ttf", 48);
 }
 
 /*
@@ -61,12 +57,15 @@ void iMouseWheel(int dir, int mx, int my)
 function iKeyboard() is called whenever the user hits a key in keyboard.
 key- holds the ASCII value of the key pressed.
 */
-void iKeyboard(unsigned char key)
+void iKeyboard(unsigned char key, int state)
 {
     switch (key)
     {
-    case 'q':
-        // do something with 'q'
+    case 'h':
+        iHideCursor(); // Show the cursor
+        break;
+    case 's':
+        iShowCursor(); // Hide the cursor
         break;
     // place your codes for other keys here
     default:
@@ -83,7 +82,7 @@ GLUT_KEY_F7, GLUT_KEY_F8, GLUT_KEY_F9, GLUT_KEY_F10, GLUT_KEY_F11,
 GLUT_KEY_F12, GLUT_KEY_LEFT, GLUT_KEY_UP, GLUT_KEY_RIGHT, GLUT_KEY_DOWN,
 GLUT_KEY_PAGE_UP, GLUT_KEY_PAGE_DOWN, GLUT_KEY_HOME, GLUT_KEY_END,
 GLUT_KEY_INSERT */
-void iSpecialKeyboard(unsigned char key)
+void iSpecialKeyboard(unsigned char key, int state)
 {
     switch (key)
     {

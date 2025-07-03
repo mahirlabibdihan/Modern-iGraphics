@@ -39,8 +39,15 @@ if %ERRORLEVEL% neq 0 (
 
 echo Linking %SOURCE_FILE% to executable...
 
-
 echo Finished building.
 
-bin\opengl.exe
-endlocal
+set "OUTPUT_EXE=opengl.exe"
+:: Run the executable
+echo Running bin\%OUTPUT_EXE%...
+bin\%OUTPUT_EXE%
+
+:: Check for runtime errors
+if %ERRORLEVEL% neq 0 (
+    echo Error occurred while running %OUTPUT_EXE% ^(exit code: %ERRORLEVEL%^)
+    exit /b %ERRORLEVEL%
+)
