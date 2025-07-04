@@ -221,6 +221,7 @@ bool iLoadTexture(Image *img)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 1); // critical
 
     // Determine format
     GLenum format = (img->channels == 4) ? GL_RGBA : GL_RGB;
@@ -296,6 +297,7 @@ bool iLoadImage(Image *img, const char filename[], int ignoreColor = -1)
     else
     {
         img->data = stbi_load(filename, &img->width, &img->height, &img->channels, 0);
+        img->isSVG = false; // Mark as non-SVG image
     }
 
     if (img->data == nullptr)
