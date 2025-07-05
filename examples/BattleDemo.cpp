@@ -98,7 +98,7 @@ void iDraw()
     iShowSprite(&pinkMonster.sprite);
 
     int count = iCheckCollision(&golem.sprite, &pinkMonster.sprite);
-    int visibleCount = iGetVisiblePixelCount(&pinkMonster.sprite);
+    int visibleCount = iGetVisiblePixelsCount(&pinkMonster.sprite);
 
     if (count / (1.0 * visibleCount) > 0.01) // 1% collision threshold
     {

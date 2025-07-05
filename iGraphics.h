@@ -1060,7 +1060,7 @@ void iScaleSprite(Sprite *s, double scale)
     iUpdateCollisionMask(s);
 }
 
-int iGetVisiblePixelCount(Sprite *s)
+int iGetVisiblePixelsCount(Sprite *s)
 {
     // Use sprite collision mask to count visible pixels
     if (!s || !s->collisionMask || !s->frames)
