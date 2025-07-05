@@ -1,7 +1,18 @@
+/***
+ * iGraphics.h: v0.4.0
+ * A simple graphics library for C++ using OpenGL and GLUT.
+ * Provides functions for drawing shapes, images, and handling input events.
+ * This library is designed to be easy to use for beginners and supports basic graphics operations.
+ * It includes features like image loading, sprite handling, and collision detection.
+ *
+ * Author: Mahir Labib Dihan
+ * Email: mahirlabibdihan@gmail.com
+ * GitHub: https://github.com/mahirlabibdihan
+ * Date: July 5, 2025
+ */
+
 //
 //  Original Author: S. M. Shahriar Nirjon
-//  last modified: Jun 24, 2025 (Mahir Labib Dihan)
-//
 //  Version: 2.0.2012.2015.2024.2025
 //
 
