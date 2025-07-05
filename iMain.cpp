@@ -61,11 +61,8 @@ void iKeyboard(unsigned char key, int state)
 {
     switch (key)
     {
-    case 'h':
-        iHideCursor(); // Show the cursor
-        break;
-    case 's':
-        iShowCursor(); // Hide the cursor
+    case 'q':
+        iExitProgram();
         break;
     // place your codes for other keys here
     default:
@@ -98,7 +95,7 @@ void iSpecialKeyboard(unsigned char key, int state)
 int main(int argc, char *argv[])
 {
     glutInit(&argc, argv);
-
-    iInitialize(400, 400, "demooo");
+    iInitialize(400, 400, "iGraphics");
+    printf("Exiting...");
     return 0;
 }

@@ -1746,6 +1746,11 @@ void iShowCursor()
     glutSetCursor(GLUT_CURSOR_INHERIT);
 }
 
+void iExitProgram()
+{
+    glutLeaveMainLoop();
+}
+
 void iInitialize(int width = 500, int height = 500, const char *title = "iGraphics")
 {
     iSmallScreenHeight = iScreenHeight = height;
@@ -1798,5 +1803,6 @@ void iInitialize(int width = 500, int height = 500, const char *title = "iGraphi
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     }
     // glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
+    glutSetOption(GLUT_ACTION_ON_WINDOW_CLOSE, GLUT_ACTION_CONTINUE_EXECUTION);
     glutMainLoop();
 }
