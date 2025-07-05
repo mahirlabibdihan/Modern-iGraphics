@@ -100,7 +100,7 @@ void iDraw()
     int count = iCheckCollision(&golem.sprite, &pinkMonster.sprite);
     int visibleCount = iGetVisiblePixelsCount(&pinkMonster.sprite);
 
-    if (count / (1.0 * visibleCount) > 0.01) // 1% collision threshold
+    if (count / (1.0 * visibleCount) > 0.01) // 1% collision threshold // or we can just use count > 0
     {
         iSetColor(255, 0, 0);
         iText(100, 300, "Collision Detected", GLUT_BITMAP_TIMES_ROMAN_24);
