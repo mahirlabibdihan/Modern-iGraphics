@@ -94,7 +94,7 @@ void iSpecialKeyboard(unsigned char key, int state)
 int main(int argc, char *argv[])
 {
 	glutInit(&argc, argv);
-	iInitialize(600, 250, "Sound Demo");
+	iOpenWindow(600, 250, "Sound Demo");
 	iStartProgram();
 	return 0;
 }

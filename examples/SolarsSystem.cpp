@@ -277,7 +277,7 @@ int main(int argc, char *argv[])
     g_satelliteR = 5;
 
     iSetTimer(20, movePlanets);
-    iInitialize(CX_MAX, CY_MAX, "Solar system!");
-    iStartProgram();
+    iOpenWindow(CX_MAX, CY_MAX, "Solar system!");
+
     return 0;
 }

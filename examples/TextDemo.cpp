@@ -107,7 +107,7 @@ int main(int argc, char *argv[])
 {
     glutInit(&argc, argv);
     iInitializeFont();
-    iInitialize(800, 500, "Text Demo");
-    iStartProgram();
+    iOpenWindow(800, 500, "Text Demo");
+
     return 0;
 }

@@ -130,7 +130,7 @@ int main(int argc, char *argv[])
     iSetTimer(20, ballChange);
     // iSetTimer(2000, randomizeBallPosition);
 
-    iInitialize(400, 400, "Ball Demo");
-    iStartProgram();
+    iOpenWindow(400, 400, "Ball Demo");
+
     return 0;
 }

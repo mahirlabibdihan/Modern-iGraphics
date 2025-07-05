@@ -191,7 +191,7 @@ int main(int argc, char *argv[])
     iSetTimer(50, iAnim);
     loadResources();
     iPlaySound("assets/sounds/background.wav", true);
-    iInitialize(1800, 1000, "Sprite Demo");
-    iStartProgram();
+    iOpenWindow(1800, 1000, "Sprite Demo");
+
     return 0;
 }

@@ -172,7 +172,7 @@ int main(int argc, char *argv[])
     pic_y = 0;
     populate_monster_images();
     iSetTimer(100, update_monster);
-    iInitialize(900, 900, "SpriteDemo");
-    iStartProgram();
+    iOpenWindow(900, 900, "SpriteDemo");
+
     return 0;
 }

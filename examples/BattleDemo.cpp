@@ -238,7 +238,7 @@ int main(int argc, char *argv[])
     iSetTimer(100, iAnim);
     loadPinkMonster();
     loadGolem();
-    iInitialize(800, 400, "SpriteDemo");
-    iStartProgram();
+    iOpenWindow(800, 400, "SpriteDemo");
+
     return 0;
 }

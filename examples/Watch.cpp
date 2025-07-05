@@ -151,7 +151,7 @@ int main(int argc, char *argv[])
     iSetTimer(1000, second);
     iSetTimer(1000, minute);
     iSetTimer(1000, hour);
-    iInitialize(1000, 720, "demo");
-    iStartProgram();
+    iOpenWindow(1000, 720, "demo");
+
     return 0;
 }

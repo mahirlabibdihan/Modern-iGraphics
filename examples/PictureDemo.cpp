@@ -107,7 +107,7 @@ int main(int argc, char *argv[])
     pic_x = 0;
     pic_y = 0;
 
-    iInitialize(900, 900, "PictureDemo");
-    iStartProgram();
+    iOpenWindow(900, 900, "PictureDemo");
+
     return 0;
 }

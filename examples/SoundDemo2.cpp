@@ -106,7 +106,7 @@ int main(int argc, char *argv[])
 	glutInit(&argc, argv);
 	iInitializeSound();
 	bgSoundIdx = iPlaySound("assets/sounds/background.wav", true, 50);
-	iInitialize(600, 250, "Sound Demo");
+	iOpenWindow(600, 250, "Sound Demo");
 	iStartProgram();
 	return 0;
 }

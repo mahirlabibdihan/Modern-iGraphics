@@ -290,7 +290,7 @@ void iSpecialKeyboard(unsigned char key, int state)
 int main(int argc, char *argv[])
 {
     glutInit(&argc, argv);
-    iInitialize(400, 400, "demooo");
+    iOpenWindow(400, 400, "demooo");
     return 0;
 }
 ```
@@ -301,7 +301,7 @@ int main(int argc, char *argv[])
 
 ### 🖼️ Graphics Functions
 
-#### `void iInitialize(int width=500, int height=500, char* title="iGraphics")`
+#### `void iOpenWindow(int width=500, int height=500, char* title="iGraphics")`
 
 - **Description:** Creates a window of specified size and title.
 - **Parameters:**
@@ -310,7 +310,7 @@ int main(int argc, char *argv[])
   - `title`: Title of the window.
 - **Example:**
   ```cpp
-  iInitialize(300, 300, "demooo");
+  iOpenWindow(300, 300, "demooo");
   ```
 
 #### `void iClear()`
@@ -533,9 +533,9 @@ int main(int argc, char *argv[])
   int main(int argc, char *argv[])
   {
       ...
-      int t = iSetTimer(100, func); // //call it inside main() before iInitialize();
+      int t = iSetTimer(100, func); // //call it inside main() before iOpenWindow();
       ...
-      iInitialize(400, 400, "demooo");
+      iOpenWindow(400, 400, "demooo");
   }
   ```
 
@@ -679,7 +679,7 @@ int main(int argc, char *argv[])
   {
       glutInit(&argc, argv);
       iInitializeSound(); // Need to initialize sound engine
-      iInitialize(600, 250, "Sound Demo");
+      iOpenWindow(600, 250, "Sound Demo");
       return 0;
   }
   ...
@@ -759,7 +759,7 @@ Custom font rendering is supported using TrueType fonts. `freetype` library is u
   {
       glutInit(&argc, argv);
       iInitializeFont(); // Need to initialize freeType library
-      iInitialize(600, 250, "Text Demo");
+      iOpenWindow(600, 250, "Text Demo");
       return 0;
   }
   ...

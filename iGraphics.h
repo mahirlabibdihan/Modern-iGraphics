@@ -1746,7 +1746,7 @@ void iShowCursor()
     glutSetCursor(GLUT_CURSOR_INHERIT);
 }
 
-void iExitProgram()
+void iCloseWindow()
 {
     glutLeaveMainLoop();
 }
@@ -1756,7 +1756,7 @@ void iStartProgram()
     glutMainLoop();
 }
 
-void iInitialize(int width = 500, int height = 500, const char *title = "iGraphics")
+void iOpenWindow(int width = 500, int height = 500, const char *title = "iGraphics")
 {
     iSmallScreenHeight = iScreenHeight = height;
     iSmallScreenWidth = iScreenWidth = width;

@@ -109,7 +109,7 @@ int main(int argc, char *argv[])
 {
     glutInit(&argc, argv);
     loadResources(); // Load resources before initializing graphics
-    iInitialize(1000, 800, "SVG Demo");
-    iStartProgram();
+    iOpenWindow(1000, 800, "SVG Demo");
+
     return 0;
 }

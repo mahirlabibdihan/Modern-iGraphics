@@ -62,7 +62,7 @@ void iKeyboard(unsigned char key, int state)
     switch (key)
     {
     case 'q':
-        iExitProgram();
+        iCloseWindow();
         break;
     // place your codes for other keys here
     default:
@@ -95,8 +95,7 @@ void iSpecialKeyboard(unsigned char key, int state)
 int main(int argc, char *argv[])
 {
     glutInit(&argc, argv);
-    iInitialize(400, 400, "iGraphics");
-    iStartProgram(); // Infinite Loop
+    iOpenWindow(400, 400, "iGraphics"); // Infinite Loop
     // Add clean up code
     printf("Exiting...");
     return 0;

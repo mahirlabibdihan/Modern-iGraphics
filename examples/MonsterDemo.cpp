@@ -185,7 +185,7 @@ int main(int argc, char *argv[])
 	glutInit(&argc, argv);
 	loadResources();
 	iSetTimer(100, updateMonster);
-	iInitialize(500, 400, "SpriteDemo");
+	iOpenWindow(500, 400, "SpriteDemo");
 	iStartProgram();
 	return 0;
 }
