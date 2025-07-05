@@ -729,7 +729,7 @@ int main(int argc, char *argv[])
 
 Custom font rendering is supported using TrueType fonts. `freetype` library is used to render text. The new text functions are available in `iFont.h` and are shown below:
 
-#### `void iShowText(double x, double y, const char *text, const char *fontPath, int fontSize= 48)`
+#### `void iShowText(double x, double y, const char *text, const char *fontPath, int fontSize = 48)`
 
 - **Description:** Displays a string on screen using TrueType font.
 - **Parameters:**
@@ -755,27 +755,20 @@ Custom font rendering is supported using TrueType fonts. `freetype` library is u
 
 ### 🖼️ Image Functions
 
-#### `void iShowImage(int x, int y, const char *filename, int width = -1, int height = -1, MirrorState mirror = NO_MIRROR, int ignoreColor = -1)`
+#### `void iShowImage(int x, int y, const char *filename)`
 
 - **Description:** Displays an image at specified coordinates.
 - **Parameters:**
 
   - `x`, `y`: Coordinates where the image will be displayed.
   - `filename`: Path to the image file.
-  - `width`, `height`: Optional dimensions to scale the image. If set to -1, the image will be displayed at its original size.
-  - `mirror`: Mirror state (default is `NO_MIRROR`). Here, `MirrorState` is an enum with values:
-    - `NO_MIRROR`: No mirroring.
-    - `HORIZONTAL`: Mirror horizontally.
-    - `VERTICAL`: Mirror vertically.
-    - `MIRROR_BOTH`: Mirror both horizontally and vertically.
-  - `ignoreColor`: Color to be ignored (default is -1, which means no color is ignored). If set to `0xRRGGBB`, it will ignore the color `RRGGBB` while loading the image (e.g., `0xFF0000` for red).
 
 - **Example:**
   ```cpp
   iShowImage(100, 200, "image.png");
   ```
 
-#### `bool iLoadImage(Image* img, const char filename[], int ignoreColor = -1)`
+#### `bool iLoadImage(Image* img, const char filename[])`
 
 - **Description:** Loads an image from file. Supports multiple image formats (BMP, PNG, JPG, GIF) with the help of the stb_image library.
 
@@ -783,7 +776,7 @@ Custom font rendering is supported using TrueType fonts. `freetype` library is u
 
   - `img`: Pointer to an `Image` structure.
   - `filename`: Path to the image file.
-  - `ignoreColor`: Color to be ignored (default is -1, which means no color is ignored). If set to `0xRRGGBB`, it will ignore the color `RRGGBB` while loading the image (e.g., `0xFF0000` for red).
+  <!-- - `ignoreColor`: Color to be ignored (default is -1, which means no color is ignored). If set to `0xRRGGBB`, it will ignore the color `RRGGBB` while loading the image (e.g., `0xFF0000` for red). -->
 
 - **Returns:** `true` if successful, `false` otherwise.
 - **Example:**
@@ -805,19 +798,13 @@ Custom font rendering is supported using TrueType fonts. `freetype` library is u
   } Image;
   ```
 
-#### `void iShowLoadedImage(int x, int y, Image* img, int width = -1, int height = -1, MirrorState mirror = NO_MIRROR)`
+#### `void iShowLoadedImage(int x, int y, Image* img)`
 
 - **Description:** Displays an already loaded image at specified coordinates. Image should be loaded using `iLoadImage`.
 - **Parameters:**
 
   - `x`, `y`: Coordinates where the image will be displayed.
   - `img`: Pointer to the loaded `Image` structure.
-  - `width`, `height`: Optional dimensions to scale the image. If set to -1, the image will be displayed at its original size.
-  - `mirror`: Mirror state (default is `NO_MIRROR`). Here, `MirrorState` is an enum with values:
-    - `NO_MIRROR`: No mirroring.
-    - `HORIZONTAL`: Mirror horizontally.
-    - `VERTICAL`: Mirror vertically.
-    - `MIRROR_BOTH`: Mirror both horizontally and vertically.
 
 - **Example:**
 
@@ -890,7 +877,7 @@ Custom font rendering is supported using TrueType fonts. `freetype` library is u
 
 <!-- SVG FUnctions -->
 
-### 📊 SVG Functions
+<!-- ### 📊 SVG Functions
 
 #### `void iShowSVG(int x, int y, const char *filename, double scale = 1.0, MirrorState mirror = NO_MIRROR)`
 
@@ -935,7 +922,7 @@ Custom font rendering is supported using TrueType fonts. `freetype` library is u
   Image svg;
   iLoadSVG(&svg, "image.svg", 1.5);
   iShowLoadedSVG(100, 200, &svg);
-  ```
+  ``` -->
 
 ### 🧩 Sprite Functions
 
@@ -964,14 +951,13 @@ Online sprite cutter: [https://ezgif.com/sprite-cutter](https://ezgif.com/sprite
   } Sprite;
   ```
 
-#### `void iLoadFramesFromFolder(Image *frames, const char *folderPath, int ignoreColor = -1)`
+#### `void iLoadFramesFromFolder(Image *frames, const char *folderPath)`
 
 - **Description:** Loads frames from a folder containing multiple images.
 - **Parameters:**
 
   - `frames`: Pointer to an array of `Image` structures.
   - `folderPath`: Path to the folder containing images.
-  - `ignoreColor`: Color to be ignored (default is -1, which means no color is ignored). If set to `0xRRGGBB`, it will ignore the color `RRGGBB` while loading the images (e.g., `0xFF0000` for red).
 
 - **Example:**
   ```cpp
@@ -979,7 +965,7 @@ Online sprite cutter: [https://ezgif.com/sprite-cutter](https://ezgif.com/sprite
   iLoadFramesFromFolder(frames, "sprites/"); // Load images from a folder and ignore no color
   ```
 
-#### `void iLoadFramesFromSheet(Image *frames, const char *filename, int rows, int cols, int ignoreColor = -1)`
+#### `void iLoadFramesFromSheet(Image *frames, const char *filename, int rows, int cols)`
 
 - **Description:** Loads frames from a sprite sheet.
 - **Parameters:**
@@ -988,7 +974,6 @@ Online sprite cutter: [https://ezgif.com/sprite-cutter](https://ezgif.com/sprite
   - `filename`: Path to the sprite sheet image.
   - `rows`: Number of rows in the sprite sheet.
   - `cols`: Number of columns in the sprite sheet.
-  - `ignoreColor`: Color to be ignored (default is -1, which means no color is ignored). If set to `0xRRGGBB`, it will ignore the color `RRGGBB` while loading the images (e.g., `0xFF0000` for red).
 
 - **Example:**
   ```cpp
