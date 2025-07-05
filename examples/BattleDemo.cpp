@@ -39,7 +39,7 @@ void loadPinkMonster()
 
     iInitSprite(&pinkMonster.sprite);
     iChangeSpriteFrames(&pinkMonster.sprite, pinkMonster.idle, 4);
-    iSetSpritePosition(&pinkMonster.sprite, 200, 0);
+    iSetSpritePosition(&pinkMonster.sprite, 250, 0);
     iScaleSprite(&pinkMonster.sprite, 3.0);
     pinkMonster.state = IDLE;
     pinkMonster.direction = 1; // 1 for right, -1 for left
@@ -53,7 +53,7 @@ void loadGolem()
 
     iInitSprite(&golem.sprite);
     iChangeSpriteFrames(&golem.sprite, golem.idle, 18);
-    iSetSpritePosition(&golem.sprite, 300, -75);
+    iSetSpritePosition(&golem.sprite, 250, -75);
     iScaleSprite(&golem.sprite, 0.5);
     iMirrorSprite(&golem.sprite, HORIZONTAL);
     golem.state = IDLE;
@@ -92,10 +92,15 @@ void iDraw()
 {
     // place your drawing codes here
     iClear();
+    iSetColor(255, 255, 255);
+    iFilledRectangle(0, 0, 800, 400);
     iShowSprite(&golem.sprite);
     iShowSprite(&pinkMonster.sprite);
 
-    if (iCheckCollision(&golem.sprite, &pinkMonster.sprite))
+    int count = iCheckCollision(&golem.sprite, &pinkMonster.sprite);
+    int visibleCount = iGetVisiblePixelCount(&pinkMonster.sprite);
+
+    if (count / (1.0 * visibleCount) > 0.01) // 1% collision threshold
     {
         iSetColor(255, 0, 0);
         iText(100, 300, "Collision Detected", GLUT_BITMAP_TIMES_ROMAN_24);

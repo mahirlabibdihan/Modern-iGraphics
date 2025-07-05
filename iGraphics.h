@@ -753,6 +753,7 @@ int iCheckCollision(Sprite *s1, Sprite *s2)
     float invCos1 = cos1, invSin1 = -sin1; // cos(-θ) = cos(θ), sin(-θ) = -sin(θ)
     float invCos2 = cos2, invSin2 = -sin2;
 
+    int count = 0; // Count of overlapping pixels
     // Pixel-perfect check in overlap region
     for (int y = overlapMinY; y <= overlapMaxY; y++)
     {
@@ -786,12 +787,17 @@ int iCheckCollision(Sprite *s1, Sprite *s2)
                 int idx1 = iy1 * w1 + ix1;
                 int idx2 = iy2 * w2 + ix2;
                 if (s1->collisionMask[idx1] && s2->collisionMask[idx2])
-                    return 1; // Collision detected
+                {
+
+                    count++;
+                    // printf("Collision at pixel (%d, %d)\n", x, y);
+                    // If you want to return immediately on first collision, uncomment the next line
+                    // return 1;
+                }
             }
         }
     }
-
-    return 0; // No collision found
+    return count;
 }
 void iRotateSprite(Sprite *s, double x, double y, double degree)
 {
@@ -1052,6 +1058,31 @@ void iScaleSprite(Sprite *s, double scale)
     }
 
     iUpdateCollisionMask(s);
+}
+
+int iGetVisiblePixelCount(Sprite *s)
+{
+    // Use sprite collision mask to count visible pixels
+    if (!s || !s->collisionMask || !s->frames)
+        return 0;
+
+    Image *frame = &s->frames[s->currentFrame];
+    int width = frame->width;
+    int height = frame->height;
+    int visibleCount = 0;
+    for (int y = 0; y < height; ++y)
+    {
+        for (int x = 0; x < width; ++x)
+        {
+            int index = y * width + x;
+            if (s->collisionMask[index] > 0) // Assuming non-zero means visible
+            {
+                visibleCount++;
+            }
+        }
+    }
+
+    return visibleCount;
 }
 
 void iChangeSpriteFrames(Sprite *s, const Image *frames, int totalFrames)
