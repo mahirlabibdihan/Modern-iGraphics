@@ -1237,10 +1237,12 @@ void iRotate(double x, double y, double degree)
     glTranslatef(-x, -y, 0.0);
 }
 
-void iScale(double scaleX, double scaleY)
+void iScale(double x, double y, double scaleX, double scaleY)
 {
     glPushMatrix();
+    glTranslatef(x, y, 0.0);
     glScalef(scaleX, scaleY, 1.0f);
+    glTranslatef(-x, -y, 0.0);
 }
 
 void iUnRotate()
