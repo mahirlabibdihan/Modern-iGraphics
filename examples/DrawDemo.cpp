@@ -93,6 +93,5 @@ int main(int argc, char *argv[])
     glutInit(&argc, argv);
     iSetTransparency(1); // To enable transparency
     iOpenWindow(width, height, "DrawDemo");
-
     return 0;
 }

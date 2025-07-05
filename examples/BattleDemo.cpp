@@ -239,6 +239,5 @@ int main(int argc, char *argv[])
     loadPinkMonster();
     loadGolem();
     iOpenWindow(800, 400, "SpriteDemo");
-
     return 0;
 }

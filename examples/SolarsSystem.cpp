@@ -278,6 +278,5 @@ int main(int argc, char *argv[])
 
     iSetTimer(20, movePlanets);
     iOpenWindow(CX_MAX, CY_MAX, "Solar system!");
-
     return 0;
 }

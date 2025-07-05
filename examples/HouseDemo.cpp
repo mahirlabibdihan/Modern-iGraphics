@@ -169,6 +169,5 @@ int main(int argc, char *argv[])
 {
     glutInit(&argc, argv);
     iOpenWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Demo!");
-
     return 0;
 }

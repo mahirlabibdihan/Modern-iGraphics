@@ -147,6 +147,5 @@ int main(int argc, char *argv[])
     glutInit(&argc, argv);
     loadNames();
     iOpenWindow(600, 400, "Mousedemo");
-
     return 0;
 }

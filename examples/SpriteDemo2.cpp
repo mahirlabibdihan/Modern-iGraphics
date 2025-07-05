@@ -173,6 +173,5 @@ int main(int argc, char *argv[])
     populate_monster_images();
     iSetTimer(100, update_monster);
     iOpenWindow(900, 900, "SpriteDemo");
-
     return 0;
 }

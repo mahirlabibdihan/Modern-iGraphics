@@ -192,6 +192,5 @@ int main(int argc, char *argv[])
     loadResources();
     iPlaySound("assets/sounds/background.wav", true);
     iOpenWindow(1800, 1000, "Sprite Demo");
-
     return 0;
 }

@@ -108,6 +108,5 @@ int main(int argc, char *argv[])
     pic_y = 0;
 
     iOpenWindow(900, 900, "PictureDemo");
-
     return 0;
 }
