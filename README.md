@@ -1083,6 +1083,19 @@ Online sprite cutter: [https://ezgif.com/sprite-cutter](https://ezgif.com/sprite
   }
   ```
 
+#### `int iGetVisiblePixelsCount(Sprite* s1)`
+
+- **Description:** Counts the number of visible pixels in a sprite. This is useful for collision detection.
+- **Parameters:**
+  - `s1`: Pointer to the `Sprite` structure.
+  - **Returns:** Number of visible pixels in the sprite.
+- **Example:**
+- ```cpp
+  Sprite s1;
+  ...
+  int visiblePixels = iGetVisiblePixelsCount(&s1);
+  ```
+
 ### 🧰 Miscellaneous
 
 #### `void iToggleFullscreen()`
