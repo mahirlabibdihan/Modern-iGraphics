@@ -28,8 +28,9 @@ void loadResources()
     iScaleSprite(&golem, 0.5);
 
     iLoadImage(&bg, "assets/images/background.jpg");
+    iResizeImage(&bg, 1800, 1000);
 
-    iLoadImage(&rectFrame, "assets/images/rect.png", 0xFFFFFF);
+    iLoadImage2(&rectFrame, "assets/images/rect.png", 0xFFFFFF);
     iInitSprite(&rect);
     iChangeSpriteFrames(&rect, &rectFrame, 1);
     iSetSpritePosition(&rect, -100, -50);
@@ -46,7 +47,7 @@ void iDraw()
     // place your drawing codes here
     iClear();
     // iShowSprite(&mario1);
-    iShowLoadedImage(0, 0, &bg, 1800, 1000);
+    iShowLoadedImage(0, 0, &bg);
     iShowSprite(&golem);
     iShowSprite(&pinkMonster);
     // iShowSprite(&mario2);

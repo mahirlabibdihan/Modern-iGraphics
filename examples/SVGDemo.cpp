@@ -4,26 +4,20 @@
 function iDraw() is called again and again by the system.
 */
 
-Image tigerSVG;
+Image tigerSVG, tigerImg;
 void loadResources()
 {
     // Load any resources needed for the application
     // For example, load images, fonts, etc.
-    iLoadSVG(&tigerSVG, "assets/images/23.svg", 0.7);
+    iLoadImage(&tigerImg, "assets/images/23.svg");
+    iScaleImage(&tigerImg, 0.7);
 }
-double degree = 0.0;
+
 void iDraw()
 {
-    degree++;
     // place your drawing codes here
     iClear();
-    // iText(140, 180, "Hello World");
-
-    iShowImage(100, 50, "assets/images/23.svg", 345, 559);
-    iTextAdvanced(160, 140, "iShowImage", 0.4, 3);
-    iShowSVG(500, 50, "assets/images/23.svg", 0.7);
-    iTextAdvanced(590, 140, "iShowSVG", 0.4, 3);
-    // iShowLoadedSVG(800, 50, &tigerSVG);
+    iShowLoadedImage(100, 50, &tigerImg);
 }
 
 /*

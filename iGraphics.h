@@ -284,7 +284,7 @@ bool iLoadSVG(Image *img, const char *filepath, double scale = 1.0)
 }
 
 // Additional functions for displaying images
-bool iLoadImage(Image *img, const char filename[], int ignoreColor = -1)
+bool iLoadImage2(Image *img, const char filename[], int ignoreColor = -1)
 {
     // Check if the image is svg based on extension
     const char *ext = strrchr(filename, '.');
@@ -310,6 +310,11 @@ bool iLoadImage(Image *img, const char filename[], int ignoreColor = -1)
     iIgnorePixels(img, ignoreColor);
     img->textureId = 0; // Initialize texture ID to 0
     return true;
+}
+
+bool iLoadImage(Image *img, const char filename[])
+{
+    iLoadImage2(img, filename, -1);
 }
 
 void iFreeTexture(Image *img)
@@ -400,97 +405,90 @@ void iShowTexture2(int x, int y, Image *img, int width = -1, int height = -1, Mi
     glDisable(GL_TEXTURE_2D);
 }
 
-void iShowTexture(int x, int y, const char *filename, int width = -1, int height = -1, MirrorState mirror = NO_MIRROR, int ignoreColor = -1)
-{
-    Image img;
-    if (!iLoadImage(&img, filename, ignoreColor))
-    {
-        return;
-    }
+// void iShowImage3(int x, int y, Image *img)
+// {
+//     int imgWidth = img->width;
+//     int imgHeight = img->height;
+//     int channels = img->channels;
+//     unsigned char *data = img->data;
 
-    iShowTexture2(x, y, &img, width, height, mirror);
-    iFreeImage(&img);
-}
+//     // Get OpenGL viewport size
+//     GLint viewport[4];
+//     glGetIntegerv(GL_VIEWPORT, viewport);
+//     int screenWidth = viewport[2];
+//     int screenHeight = viewport[3];
 
-void iShowImage2(int x, int y, Image *img)
-{
-    int imgWidth = img->width;
-    int imgHeight = img->height;
-    int channels = img->channels;
-    unsigned char *data = img->data;
+//     // Fast path: no clipping needed
+//     if (x >= 0 && y >= 0)
+//     {
+//         glRasterPos2i(x, y);
+//         glDrawPixels(imgWidth, imgHeight,
+//                      (channels == 4) ? GL_RGBA : GL_RGB,
+//                      GL_UNSIGNED_BYTE, data);
+//         return;
+//     }
 
-    // Get OpenGL viewport size
-    GLint viewport[4];
-    glGetIntegerv(GL_VIEWPORT, viewport);
-    int screenWidth = viewport[2];
-    int screenHeight = viewport[3];
+//     // Improved visible region calculation with clamping
+//     int startX = mmax(0, -x);
+//     int startY = mmax(0, -y);
+//     int drawX = mmax(0, x);
+//     int drawY = mmax(0, y);
 
-    // Fast path: no clipping needed
-    if (x >= 0 && y >= 0)
-    {
-        glRasterPos2i(x, y);
-        glDrawPixels(imgWidth, imgHeight,
-                     (channels == 4) ? GL_RGBA : GL_RGB,
-                     GL_UNSIGNED_BYTE, data);
-        return;
-    }
+//     int drawWidth = mmin(imgWidth - startX, screenWidth - drawX);
+//     int drawHeight = mmin(imgHeight - startY, screenHeight - drawY);
 
-    // Improved visible region calculation with clamping
-    int startX = mmax(0, -x);
-    int startY = mmax(0, -y);
-    int drawX = mmax(0, x);
-    int drawY = mmax(0, y);
+//     // Don't draw if completely out of bounds
+//     if (drawWidth <= 0 || drawHeight <= 0)
+//         return;
 
-    int drawWidth = mmin(imgWidth - startX, screenWidth - drawX);
-    int drawHeight = mmin(imgHeight - startY, screenHeight - drawY);
+//     // Create a buffer for the clipped image
+//     unsigned char *clippedData = new unsigned char[drawWidth * drawHeight * channels];
+//     int srcStride = imgWidth * channels;
+//     int dstStride = drawWidth * channels;
 
-    // Don't draw if completely out of bounds
-    if (drawWidth <= 0 || drawHeight <= 0)
-        return;
+//     unsigned char *dstPtr = clippedData;
+//     unsigned char *srcPtr = data + startY * srcStride + startX * channels;
 
-    // Create a buffer for the clipped image
-    unsigned char *clippedData = new unsigned char[drawWidth * drawHeight * channels];
-    int srcStride = imgWidth * channels;
-    int dstStride = drawWidth * channels;
+//     for (int dy = 0; dy < drawHeight; dy++)
+//     {
+//         memcpy(dstPtr, srcPtr, dstStride);
+//         dstPtr += dstStride;
+//         srcPtr += srcStride;
+//     }
 
-    unsigned char *dstPtr = clippedData;
-    unsigned char *srcPtr = data + startY * srcStride + startX * channels;
+//     glRasterPos2i(drawX, drawY);
+//     glDrawPixels(drawWidth, drawHeight, (channels == 4) ? GL_RGBA : GL_RGB, GL_UNSIGNED_BYTE, clippedData);
+//     delete[] clippedData;
+// }
 
-    for (int dy = 0; dy < drawHeight; dy++)
-    {
-        memcpy(dstPtr, srcPtr, dstStride);
-        dstPtr += dstStride;
-        srcPtr += srcStride;
-    }
-
-    glRasterPos2i(drawX, drawY);
-    glDrawPixels(drawWidth, drawHeight, (channels == 4) ? GL_RGBA : GL_RGB, GL_UNSIGNED_BYTE, clippedData);
-    delete[] clippedData;
-}
-
-void iShowLoadedTexture(int x, int y, Image *img, int width = -1, int height = -1, MirrorState mirror = NO_MIRROR)
+void iShowLoadedImage2(int x, int y, Image *img, int width = -1, int height = -1, MirrorState mirror = NO_MIRROR)
 {
     iShowTexture2(x, y, img, width, height, mirror);
 }
 
-void iShowLoadedImage(int x, int y, Image *img, int width = -1, int height = -1, MirrorState mirror = NO_MIRROR)
+void iShowLoadedImage(int x, int y, Image *img)
 {
-    iShowTexture2(x, y, img, width, height, mirror);
+    iShowLoadedImage2(x, y, img);
 }
 
-void iShowImage(int x, int y, const char *filename, int width = -1, int height = -1, MirrorState mirror = NO_MIRROR, int ignoreColor = -1)
+void iShowImage2(int x, int y, const char *filename, int ignoreColor = -1)
 {
     Image img;
-    if (!iLoadImage(&img, filename, ignoreColor))
+    if (!iLoadImage2(&img, filename, ignoreColor))
     {
         printf("Failed to load image: %s\n", filename);
         return;
     }
-    iShowTexture2(x, y, &img, width, height, mirror);
+    iShowTexture2(x, y, &img, -1, -1, NO_MIRROR);
     iFreeImage(&img);
 }
 
-void iShowSVG(double x, double y, const char *filepath, double scale = 1.0, MirrorState mirror = NO_MIRROR)
+void iShowImage(int x, int y, const char *filename)
+{
+    iShowImage2(x, y, filename);
+}
+
+void iShowSVG2(double x, double y, const char *filepath, double scale = 1.0, MirrorState mirror = NO_MIRROR)
 {
     // Load SVG
     Image img;
@@ -503,7 +501,12 @@ void iShowSVG(double x, double y, const char *filepath, double scale = 1.0, Mirr
     iFreeImage(&img);
 }
 
-void iShowLoadedSVG(double x, double y, Image *img, MirrorState mirror = NO_MIRROR)
+void iShowSVG(double x, double y, const char *filepath)
+{
+    iShowSVG2(x, y, filepath);
+}
+
+void iShowLoadedSVG2(double x, double y, Image *img, MirrorState mirror = NO_MIRROR)
 {
     // Ensure the image is an SVG
     if (!img->isSVG)
@@ -519,6 +522,11 @@ void iShowLoadedSVG(double x, double y, Image *img, MirrorState mirror = NO_MIRR
     }
 
     iShowTexture2(x, y, img, img->width, img->height, mirror);
+}
+
+void iShowLoadedSVG(double x, double y, Image *img)
+{
+    iShowLoadedSVG2(x, y, img);
 }
 
 void iWrapImage(Image *img, int dx = 0, int dy = 0)
@@ -674,6 +682,56 @@ void iUpdateCollisionMask(Sprite *s)
     s->collisionMask = collisionMask;
 }
 
+int iCheckImageCollision(int x1, int y1, Image *img1, int x2, int y2, Image *img2)
+{
+    if (!img1 || !img2 || !img1->data || !img2->data)
+        return 0; // Invalid images
+
+    int w1 = img1->width, h1 = img1->height;
+    int w2 = img2->width, h2 = img2->height;
+
+    // Calculate bounding box overlap
+    int overlapMinX = mmax(x1, x2);
+    int overlapMaxX = mmin(x1 + w1, x2 + w2);
+    int overlapMinY = mmax(y1, y2);
+    int overlapMaxY = mmin(y1 + h1, y2 + h2);
+
+    if (overlapMinX >= overlapMaxX || overlapMinY >= overlapMaxY)
+        return 0; // No overlap
+
+    int count = 0;
+    // Check pixel-perfect collision in the overlapping area
+    for (int y = overlapMinY; y < overlapMaxY; y++)
+    {
+        for (int x = overlapMinX; x < overlapMaxX; x++)
+        {
+            // Get pixel coordinates in both images
+            int localX1 = x - x1;
+            int localY1 = y - y1;
+            int localX2 = x - x2;
+            int localY2 = y - y2;
+
+            if (localX1 < 0 || localY1 < 0 || localX1 >= w1 || localY1 >= h1 ||
+                localX2 < 0 || localY2 < 0 || localX2 >= w2 || localY2 >= h2)
+                continue;
+
+            unsigned char *pixel1 = &img1->data[(localY1 * w1 + localX1) * img1->channels];
+            unsigned char *pixel2 = &img2->data[(localY2 * w2 + localX2) * img2->channels];
+
+            // Check if both pixels are not transparent
+            bool isPixel1Transparent = (img1->channels == 4 && pixel1[3] == 0);
+            bool isPixel2Transparent = (img2->channels == 4 && pixel2[3] == 0);
+
+            if (!isPixel1Transparent && !isPixel2Transparent)
+            {
+                // Both pixels are opaque, collision detected
+                count++;
+            }
+        }
+    }
+    return count;
+}
+
 int iCheckCollision(Sprite *s1, Sprite *s2)
 {
     // Early exit if invalid sprites or missing frames/masks
@@ -799,6 +857,7 @@ int iCheckCollision(Sprite *s1, Sprite *s2)
     }
     return count;
 }
+
 void iRotateSprite(Sprite *s, double x, double y, double degree)
 {
     if (!s)
@@ -903,11 +962,11 @@ void iAllocateTexture(Image *img)
     img->textureId = texId;
 }
 
-void iLoadFramesFromSheet(Image *frames, const char *filename, int rows, int cols, int ignoreColor = -1)
+void iLoadFramesFromSheet2(Image *frames, const char *filename, int rows, int cols, int ignoreColor = -1)
 {
     // Load the sprite sheet image
     Image tmp;
-    iLoadImage(&tmp, filename, ignoreColor);
+    iLoadImage2(&tmp, filename, ignoreColor);
 
     int frameWidth = tmp.width / cols;
     int frameHeight = tmp.height / rows;
@@ -951,10 +1010,15 @@ void iLoadFramesFromSheet(Image *frames, const char *filename, int rows, int col
     delete[] tmp.data;
 }
 
+void iLoadFramesFromSheet(Image *frames, const char *filename, int rows, int cols)
+{
+    iLoadFramesFromSheet2(frames, filename, rows, cols);
+}
+
 #define MAX_FILES 1024
 #define MAX_FILENAME_LEN 512
 
-void iLoadFramesFromFolder(Image *frames, const char *folderPath, int ignoreColor = -1)
+void iLoadFramesFromFolder2(Image *frames, const char *folderPath, int ignoreColor = -1)
 {
     DIR *dir = opendir(folderPath);
     if (dir == nullptr)
@@ -997,9 +1061,14 @@ void iLoadFramesFromFolder(Image *frames, const char *folderPath, int ignoreColo
     {
         char fullPath[MAX_FILENAME_LEN];
         snprintf(fullPath, sizeof(fullPath), "%s/%s", folderPath, filenames[i]);
-        iLoadImage(&frames[i], fullPath, ignoreColor);
+        iLoadImage2(&frames[i], fullPath, ignoreColor);
         free(filenames[i]); // free allocated memory
     }
+}
+
+void iLoadFramesFromFolder(Image *frames, const char *folderPath)
+{
+    iLoadFramesFromFolder2(frames, folderPath);
 }
 
 void iInitSprite(Sprite *s)
@@ -1157,7 +1226,18 @@ void iRotate(double x, double y, double degree)
     glTranslatef(-x, -y, 0.0);
 }
 
+void iScale(double scaleX, double scaleY)
+{
+    glPushMatrix();
+    glScalef(scaleX, scaleY, 1.0f);
+}
+
 void iUnRotate()
+{
+    glPopMatrix();
+}
+
+void iUnScale()
 {
     glPopMatrix();
 }
