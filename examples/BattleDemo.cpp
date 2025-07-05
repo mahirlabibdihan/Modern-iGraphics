@@ -239,5 +239,6 @@ int main(int argc, char *argv[])
     loadPinkMonster();
     loadGolem();
     iInitialize(800, 400, "SpriteDemo");
+    iStartProgram();
     return 0;
 }

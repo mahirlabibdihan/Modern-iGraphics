@@ -168,7 +168,7 @@ void iSpecialKeyboard(unsigned char key, int state)
 int main(int argc, char *argv[])
 {
     glutInit(&argc, argv);
-
     iInitialize(SCREEN_WIDTH, SCREEN_HEIGHT, "Demo!");
+    iStartProgram();
     return 0;
 }

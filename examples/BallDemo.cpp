@@ -131,6 +131,6 @@ int main(int argc, char *argv[])
     // iSetTimer(2000, randomizeBallPosition);
 
     iInitialize(400, 400, "Ball Demo");
-
+    iStartProgram();
     return 0;
 }

@@ -95,5 +95,6 @@ int main(int argc, char *argv[])
 {
 	glutInit(&argc, argv);
 	iInitialize(600, 250, "Sound Demo");
+	iStartProgram();
 	return 0;
 }

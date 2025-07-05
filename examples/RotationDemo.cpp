@@ -153,5 +153,6 @@ int main(int argc, char *argv[])
     iSetTimer(1, iAnim); // Set a timer to call iAnim every 100 milliseconds
     loadResources();
     iInitialize(1000, 400, "demooo");
+    iStartProgram();
     return 0;
 }

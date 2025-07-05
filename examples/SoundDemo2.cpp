@@ -107,5 +107,6 @@ int main(int argc, char *argv[])
 	iInitializeSound();
 	bgSoundIdx = iPlaySound("assets/sounds/background.wav", true, 50);
 	iInitialize(600, 250, "Sound Demo");
+	iStartProgram();
 	return 0;
 }

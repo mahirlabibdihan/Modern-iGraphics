@@ -278,6 +278,6 @@ int main(int argc, char *argv[])
 
     iSetTimer(20, movePlanets);
     iInitialize(CX_MAX, CY_MAX, "Solar system!");
-
+    iStartProgram();
     return 0;
 }
