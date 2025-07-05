@@ -1751,6 +1751,11 @@ void iExitProgram()
     glutLeaveMainLoop();
 }
 
+void iStartProgram()
+{
+    glutMainLoop();
+}
+
 void iInitialize(int width = 500, int height = 500, const char *title = "iGraphics")
 {
     iSmallScreenHeight = iScreenHeight = height;
@@ -1804,5 +1809,4 @@ void iInitialize(int width = 500, int height = 500, const char *title = "iGraphi
     }
     // glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
     glutSetOption(GLUT_ACTION_ON_WINDOW_CLOSE, GLUT_ACTION_CONTINUE_EXECUTION);
-    glutMainLoop();
 }

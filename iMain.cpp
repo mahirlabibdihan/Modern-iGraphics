@@ -96,6 +96,8 @@ int main(int argc, char *argv[])
 {
     glutInit(&argc, argv);
     iInitialize(400, 400, "iGraphics");
+    iStartProgram();
+    // Add clean up code
     printf("Exiting...");
     return 0;
 }
