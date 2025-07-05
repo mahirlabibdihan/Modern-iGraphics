@@ -501,6 +501,19 @@ int main(int argc, char *argv[])
   iUnRotate();
   ```
 
+#### `void iScale(double scaleX, double scaleY)`
+
+- **Description:** Scales the coordinate system by specified factors.
+- **Parameters:**
+  - `scaleX`: Scaling factor in the x-direction.
+  - `scaleY`: Scaling factor in the y-direction.
+  - **Example:**
+  ```cpp
+  iScale(2.0, 1.5); // Scale x by 2.0 and y by 1.5
+  // This will affect all subsequent drawing operations
+  iUnScale();
+  ```
+
 ### ⏱️ Animation and Timer
 
 #### `int iSetTimer(int msec, void (*f)(void))`
