@@ -18,13 +18,14 @@ void loadResources()
     iSetSpritePosition(&mario2, 650, 100);
     iScaleSprite(&mario1, 0.2);
     iScaleSprite(&mario2, 0.4);
+    iResizeImage(&marioImage, 90, 100);
 }
 
 void iDraw()
 {
     // place your drawing codes here
     iClear();
-    iShowImage(190, 170, "assets/images/mario.png", 90, 100);
+    iShowLoadedImage(190, 170, &marioImage);
     iFilledCircle(200, 200, 5);
     iRotate(200, 200, degree);
     iFilledRectangle(197.5, 180, 5, 80);
@@ -149,8 +150,7 @@ void iAnim()
 int main(int argc, char *argv[])
 {
     glutInit(&argc, argv);
-
-    iSetTimer(1, iAnim); // Set a timer to call iAnim every 100 milliseconds
+    iSetTimer(10, iAnim); // Set a timer to call iAnim every 100 milliseconds
     loadResources();
     iOpenWindow(1000, 400, "demooo");
     return 0;

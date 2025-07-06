@@ -30,6 +30,39 @@ int Curve2 = XAxis;
 
 double t = 0;
 
+void iDashedLine(double x1, double y1, double x2, double y2)
+{
+
+    int j;
+
+    double dir = (atan(abs(1.0 * (y1 - y2) / (x1 - x2))) * 180) / acos(-1);
+
+    if (dir > 45)
+    {
+        double m = 1.0 * (x1 - x2) / (y1 - y2);
+        double c = x1 - y1 * m;
+        for (j = min(y1, y2); j <= max(y1, y2) - 15; j += 30)
+        {
+            glBegin(GL_LINE_STRIP);
+            glVertex2f(m * j + c, j);
+            glVertex2f(m * (j + 15) + c, j + 15);
+            glEnd();
+        }
+    }
+    else
+    {
+        double m = 1.0 * (y1 - y2) / (x1 - x2);
+        double c = y1 - x1 * m;
+        for (j = min(x1, x2); j <= max(x1, x2) - 15; j += 30)
+        {
+            glBegin(GL_LINE_STRIP);
+            glVertex2f(j, m * j + c);
+            glVertex2f(j + 15, m * (j + 15) + c);
+            glEnd();
+        }
+    }
+}
+
 void iDraw(void)
 {
     glClear(GL_COLOR_BUFFER_BIT);
@@ -117,14 +150,6 @@ void iMouseMove(int mx, int my)
     // place your codes here
 }
 
-/*
-    function iMouseMove() is called automatically when the mouse pointer is in motion
-*/
-void iMouseMove(int mx, int my)
-{
-    // place your code here
-}
-
 void iMouseWheel(int dir, int mx, int my)
 {
 }
@@ -145,5 +170,4 @@ int main(int argc, char *argv[])
 {
     glutInit(&argc, argv);
     iOpenWindow(1920, 1080, "Graph");
-    glutFullScreen();
 }
