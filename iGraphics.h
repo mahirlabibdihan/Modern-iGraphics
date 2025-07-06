@@ -39,8 +39,9 @@
 // #include "glaux.h"
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
+#define STBIRDEF extern
 #define STB_IMAGE_RESIZE_IMPLEMENTATION
-#include "stb_image_resize.h"
+#include "stb_image_resize2.h"
 
 #define NANOSVG_IMPLEMENTATION
 #include "nanosvg.h"
@@ -585,7 +586,17 @@ void iResizeImage(Image *img, int width, int height)
     int channels = img->channels;
     unsigned char *data = img->data;
     unsigned char *resizedData = new unsigned char[width * height * channels];
-    stbir_resize_uint8(data, imgWidth, imgHeight, 0, resizedData, width, height, 0, channels);
+    stbir_pixel_layout layout;
+    if (channels == 3)
+        layout = STBIR_RGB;
+    else if (channels == 4)
+        layout = STBIR_RGBA;
+    else
+    {
+        // handle error
+    }
+    stbir_resize_uint8_srgb(data, imgWidth, imgHeight, 0, resizedData, width, height, 0, layout);
+    // stbir_resize_uint8(data, imgWidth, imgHeight, 0, resizedData, width, height, 0, channels);
     stbi_image_free(data);
     img->data = resizedData;
     img->width = width;
@@ -606,10 +617,20 @@ void iScaleImage(Image *img, double scale)
     unsigned char *data = img->data;
     unsigned char *resizedData = new unsigned char[newWidth * newHeight * channels];
 
-    stbir_resize_uint8(
-        data, img->width, img->height, 0,
-        resizedData, newWidth, newHeight, 0,
-        channels);
+    stbir_pixel_layout layout;
+    if (channels == 3)
+        layout = STBIR_RGB;
+    else if (channels == 4)
+        layout = STBIR_RGBA;
+    else
+    {
+        // handle error
+    }
+    stbir_resize_uint8_srgb(data, img->width, img->height, 0, resizedData, newWidth, newHeight, 0, layout);
+    // stbir_resize_uint8(
+    //     data, img->width, img->height, 0,
+    //     resizedData, newWidth, newHeight, 0,
+    //     channels);
 
     stbi_image_free(data);
     img->data = resizedData;
