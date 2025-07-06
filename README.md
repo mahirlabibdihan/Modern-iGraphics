@@ -523,15 +523,16 @@ int main(int argc, char *argv[])
   iUnRotate();
   ```
 
-#### `void iScale(double scaleX, double scaleY)`
+#### `void iScale(double x, double y, double scaleX, double scaleY)`
 
-- **Description:** Scales the coordinate system by specified factors.
+- **Description:** Scales the coordinate system around a point.
 - **Parameters:**
+  - `x`, `y`: Coordinates of the point to scale around.
   - `scaleX`: Scaling factor in the x-direction.
   - `scaleY`: Scaling factor in the y-direction.
   - **Example:**
   ```cpp
-  iScale(2.0, 1.5); // Scale x by 2.0 and y by 1.5
+  iScale(0,0, 2.0, 1.5); // Scale around the origin (0, 0) by 2.0 in x and 1.5 in y
   // This will affect all subsequent drawing operations
   iUnScale();
   ```
