@@ -20,5 +20,5 @@ jobs:
           python-version: "3.x"
 
       - name: Execute test.py script
-        run: python tests/windows-test.py
+        run: python windows-test.py
         working-directory: ${{ github.workspace }}

@@ -20,5 +20,5 @@ jobs:
           python-version: "3.x"
 
       - name: Execute test.py script
-        run: python tests/linux-test.py
+        run: python linux-test.py
         working-directory: ${{ github.workspace }}
