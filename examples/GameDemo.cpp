@@ -109,6 +109,14 @@ void iKeyboard(unsigned char key, int state)
 {
 
     // place your codes for other keys here
+    switch (key)
+    {
+    case 'q':
+        iCloseWindow();
+        break;
+    default:
+        break;
+    }
 }
 
 /*
@@ -191,6 +199,7 @@ int main(int argc, char *argv[])
     iSetTimer(50, iAnim);
     loadResources();
     iPlaySound("assets/sounds/background.wav", true);
-    iOpenWindow(1800, 1000, "Sprite Demo");
+    iOpenWindow(1366, 768, "Game Demo", true);
+    printf("Exiting...");
     return 0;
 }

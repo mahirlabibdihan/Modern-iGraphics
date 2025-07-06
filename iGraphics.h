@@ -51,6 +51,9 @@ using namespace std;
 
 static int transparent = 1;
 static int isFullScreen = 0;
+static int isGameMode = 0;
+static int programEnded = 0;
+const char *iWindowTitle = nullptr;
 typedef struct
 {
     unsigned char *data;
@@ -1597,6 +1600,13 @@ void displayFF(void)
     glutSwapBuffers();
 }
 
+void redraw()
+{
+    if (!programEnded || !isGameMode)
+    {
+        glutPostRedisplay();
+    }
+}
 void animFF(void)
 {
     if (ifft == 0)
@@ -1604,7 +1614,7 @@ void animFF(void)
         ifft = 1;
         iClear();
     }
-    glutPostRedisplay();
+    redraw();
 }
 
 /* Keyboard key state. */
@@ -1628,14 +1638,14 @@ void keyboardHandler1FF(unsigned char key, int x, int y)
         iKeyboard(key, GLUT_DOWN);
         keys[key] = true;
     }
-    glutPostRedisplay();
+    redraw();
 }
 
 void keyboardHandlerUp1FF(unsigned char key, int x, int y)
 {
     keys[key] = false;
     iKeyboard(key, GLUT_UP);
-    glutPostRedisplay();
+    redraw();
 }
 
 bool specialKeys[109] = {false};
@@ -1656,14 +1666,14 @@ void keyboardHandler2FF(int key, int x, int y)
         iSpecialKeyboard(key, GLUT_DOWN);
         specialKeys[key] = true; // Mark special key as pressed
     }
-    glutPostRedisplay();
+    redraw();
 }
 
 void keyboardHandlerUp2FF(int key, int x, int y)
 {
     iSpecialKeyboard(key, GLUT_UP);
     specialKeys[key] = false; // Mark special key as released
-    glutPostRedisplay();
+    redraw();
 }
 
 void mouseMoveHandlerFF(int mx, int my)
@@ -1693,8 +1703,6 @@ void mouseHandlerFF(int button, int state, int x, int y)
 
     glFlush();
 }
-
-// Added by - Mahir Labib Dihan
 
 void mouseWheelHandlerFF(int button, int dir, int x, int y)
 {
@@ -1730,10 +1738,12 @@ void reshapeFF(int width, int height)
     iScreenHeight = height;
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    // iResize(width, height);
+    // iResize(width, height); // Need to define iResize in main file
     glOrtho(0.0, iScreenWidth, 0.0, iScreenHeight, -1.0, 1.0);
     glViewport(0.0, 0.0, iScreenWidth, iScreenHeight);
-    glutPostRedisplay();
+    redraw();
+
+    glutReshapeWindow(iSmallScreenWidth, iSmallScreenHeight); // Comment above lines and uncomment this line to disable window resizing. (Credit: Mohammad Kamrul Hasan)
 }
 
 void iHideCursor()
@@ -1748,20 +1758,53 @@ void iShowCursor()
 
 void iCloseWindow()
 {
-    glutLeaveMainLoop();
+    if (isGameMode)
+    {
+        glutLeaveGameMode();
+    }
+    else
+    {
+        glutLeaveMainLoop();
+    }
+    programEnded = 1;
 }
 
-void iOpenWindow(int width = 500, int height = 500, const char *title = "iGraphics")
+void iOpenWindow(int width = 500, int height = 500, const char *title = "iGraphics", bool fullscreen = false)
 {
     iSmallScreenHeight = iScreenHeight = height;
     iSmallScreenWidth = iScreenWidth = width;
+    iWindowTitle = title;
 
     glutSetOption(GLUT_MULTISAMPLE, 8);
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_ALPHA | GLUT_MULTISAMPLE);
     glEnable(GLUT_MULTISAMPLE);
-    glutInitWindowSize(width, height);
-    glutInitWindowPosition(10, 10);
-    glutCreateWindow(title);
+
+    if (fullscreen)
+    {
+        char gameModeStr[20];
+        sprintf(gameModeStr, "%dx%d", width, height);
+        glutGameModeString(gameModeStr); // Supports: 640×480 800×600 1024×768 1280×720 1366x768
+        if (glutGameModeGet(GLUT_GAME_MODE_POSSIBLE))
+        {
+            isGameMode = 1;
+            glutEnterGameMode();
+        }
+        else
+        {
+            printf("Game Mode not possible with specified settings\n");
+            // Fallback to normal window
+            glutInitWindowSize(width, height);
+            glutInitWindowPosition(10, 10);
+            glutCreateWindow(title);
+        }
+    }
+    else
+    {
+        glutInitWindowSize(width, height);
+        glutInitWindowPosition(10, 10);
+        glutCreateWindow(title);
+    }
+
     glClearColor(0.0, 0.0, 0.0, 0.0);
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();

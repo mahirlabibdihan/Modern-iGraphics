@@ -87,6 +87,5 @@ int main(int argc, char *argv[])
 {
 	glutInit(&argc, argv);
 	iOpenWindow(600, 400, "Mousedemo");
-	iStartProgram();
 	return 0;
 }
