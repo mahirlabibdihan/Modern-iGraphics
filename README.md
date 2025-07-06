@@ -258,6 +258,7 @@ void iKeyboard(unsigned char key, int state)
     {
     case 'q':
         // do something with 'q'
+        iCloseWindow();
         break;
     // place your codes for other keys here
     default:
@@ -290,7 +291,9 @@ void iSpecialKeyboard(unsigned char key, int state)
 int main(int argc, char *argv[])
 {
     glutInit(&argc, argv);
-    iOpenWindow(400, 400, "demooo");
+    // Initialization code before opening the window
+    iOpenWindow(400, 400, "iGraphics");
+    // Execution will continue from here once iCloseWindow() is called.
     return 0;
 }
 ```
@@ -310,7 +313,26 @@ int main(int argc, char *argv[])
   - `title`: Title of the window.
 - **Example:**
   ```cpp
-  iOpenWindow(300, 300, "demooo");
+  iOpenWindow(300, 300, "iGraphics");
+  ```
+
+#### `void iCloseWindow()`
+
+- **Description:** Closes the current window.
+- **Parameters:** None
+- **Example:**
+  ```cpp
+  void iKeyboard(unsigned char key, int state)
+  {
+      switch (key)
+      {
+      case 'q':
+          iCloseWindow();
+          break;
+      default:
+          break;
+      }
+  }
   ```
 
 #### `void iClear()`
