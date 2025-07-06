@@ -558,7 +558,7 @@ int main(int argc, char *argv[])
       ...
       int t = iSetTimer(100, func); // //call it inside main() before iOpenWindow();
       ...
-      iOpenWindow(400, 400, "demooo");
+      iOpenWindow(400, 400, "iGraphics");
   }
   ```
 
