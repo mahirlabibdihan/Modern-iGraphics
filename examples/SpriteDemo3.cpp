@@ -157,6 +157,5 @@ int main(int argc, char *argv[])
 	loadResources();
 	iSetTimer(100, iAnim);
 	iOpenWindow(800, 800, "SpriteDemo");
-	iStartProgram();
 	return 0;
 }

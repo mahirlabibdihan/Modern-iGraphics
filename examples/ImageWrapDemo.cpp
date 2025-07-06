@@ -100,6 +100,5 @@ int main(int argc, char *argv[])
 	glutInit(&argc, argv);
 	loadResources();
 	iOpenWindow(900, 450, "ImageDemp");
-	iStartProgram();
 	return 0;
 }
