@@ -1769,7 +1769,7 @@ void iCloseWindow()
     programEnded = 1;
 }
 
-void iOpenWindow(int width = 500, int height = 500, const char *title = "iGraphics", bool fullscreen = false)
+void iOpenWindow(int width = 500, int height = 500, const char *title = "iGraphics", int fullscreen = 0)
 {
     iSmallScreenHeight = iScreenHeight = height;
     iSmallScreenWidth = iScreenWidth = width;

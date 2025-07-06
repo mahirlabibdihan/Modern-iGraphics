@@ -199,7 +199,7 @@ int main(int argc, char *argv[])
     iSetTimer(50, iAnim);
     loadResources();
     iPlaySound("assets/sounds/background.wav", true);
-    iOpenWindow(1366, 768, "Game Demo", true);
+    iOpenWindow(1366, 768, "Game Demo", 1);
     printf("Exiting...");
     return 0;
 }
