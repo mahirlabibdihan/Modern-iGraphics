@@ -43,7 +43,7 @@ You can find executable games [here](https://github.com/mahirlabibdihan/Modern-i
 
 ## Necessary Files
 
-- Download `the Modern-iGraphics-main.zip` file from [here](https://github.com/mahirlabibdihan/Modern-iGraphics/archive/refs/heads/main.zip) and extract it.
+- Download the `Modern-iGraphics-main.zip` file from [here](https://github.com/mahirlabibdihan/Modern-iGraphics/archive/refs/heads/main.zip) and extract it.
 - Download `MINGW.zip` file from [here](https://github.com/mahirlabibdihan/Modern-iGraphics/releases/download/v0.0.1/MINGW.zip) and extract it.
 - Copy the `MINGW` folder to the extracted `Modern-iGraphics-main` folder.
 - The final folder structure should look like this:
