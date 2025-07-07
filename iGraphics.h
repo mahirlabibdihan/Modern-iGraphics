@@ -30,8 +30,7 @@
 #include <unistd.h>
 #endif
 
-#include "glut.h"
-#include "freeglut_ext.h"
+#include "freeglut.h"
 #include <time.h>
 #include <math.h>
 #include <dirent.h>
