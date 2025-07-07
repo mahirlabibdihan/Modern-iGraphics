@@ -48,8 +48,6 @@
 #define NANOSVGRAST_IMPLEMENTATION
 #include "nanosvgrast.h"
 
-using namespace std;
-
 static int transparent = 1;
 static int isFullScreen = 0;
 static int isGameMode = 0;
@@ -236,7 +234,6 @@ bool iLoadTexture(Image *img)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
-    glPixelStorei(GL_UNPACK_ALIGNMENT, 1); // critical
 
     // Determine format
     GLenum format = (img->channels == 4) ? GL_RGBA : GL_RGB;
@@ -317,7 +314,7 @@ bool iLoadImage2(Image *img, const char filename[], int ignoreColor = -1)
 
     if (img->data == nullptr)
     {
-        printf("Failed to load image: %s\n", stbi_failure_reason());
+        printf("ERROR: Failed to load image: %s\n", stbi_failure_reason());
         return false;
     }
 
@@ -491,7 +488,7 @@ void iShowImage2(int x, int y, const char *filename, int ignoreColor = -1)
     Image img;
     if (!iLoadImage2(&img, filename, ignoreColor))
     {
-        printf("Failed to load image: %s\n", filename);
+        printf("ERROR: Failed to load image: %s\n", filename);
         return;
     }
     iShowTexture2(x, y, &img, -1, -1, NO_MIRROR);
@@ -509,7 +506,7 @@ void iShowSVG2(double x, double y, const char *filepath, double scale = 1.0, Mir
     Image img;
     if (!iLoadSVG(&img, filepath, scale))
     {
-        printf("Failed to load svg: %s\n", filepath);
+        printf("ERROR: Failed to load svg: %s\n", filepath);
         return;
     }
     iShowTexture2(x, y, &img, img.width, img.height, mirror);
@@ -1058,7 +1055,7 @@ void iLoadFramesFromFolder2(Image *frames, const char *folderPath, int ignoreCol
     DIR *dir = opendir(folderPath);
     if (dir == nullptr)
     {
-        fprintf(stderr, "Failed to open directory: %s\n", folderPath);
+        fprintf(stderr, "ERROR: Failed to open directory: %s\n", folderPath);
         return;
     }
 
@@ -1140,7 +1137,7 @@ void deepCopyImage(Image src, Image *dst)
     if (dst->data == NULL)
     {
         // Handle memory allocation failure
-        printf("Memory allocation failed\n");
+        printf("ERROR: Memory allocation failed\n");
         return;
     }
 
@@ -1792,6 +1789,12 @@ void iCloseWindow()
 
 void iOpenWindow(int width = 500, int height = 500, const char *title = "iGraphics", int fullscreen = 0)
 {
+    // Verify GLUT was initialized
+    if (!glutGet(GLUT_INIT_STATE))
+    {
+        printf("ERROR: GLUT not initialized. Call glutInit() first.\n");
+        return;
+    }
     iSmallScreenHeight = iScreenHeight = height;
     iSmallScreenWidth = iScreenWidth = width;
     iWindowTitle = title;
@@ -1812,7 +1815,7 @@ void iOpenWindow(int width = 500, int height = 500, const char *title = "iGraphi
         }
         else
         {
-            printf("Game Mode not possible with specified settings\n");
+            printf("ERROR: Game Mode not possible with %s\n", gameModeStr);
             // Fallback to normal window
             glutInitWindowSize(width, height);
             glutInitWindowPosition(10, 10);
@@ -1826,13 +1829,17 @@ void iOpenWindow(int width = 500, int height = 500, const char *title = "iGraphi
         glutCreateWindow(title);
     }
 
-    glClearColor(0.0, 0.0, 0.0, 0.0);
+    // Basic OpenGL setup
+    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+
+    // Set up viewport and orthographic projection
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
     glOrtho(0.0, width, 0.0, height, -1.0, 1.0);
 
     iClear();
 
+    // Register callbacks
     glutDisplayFunc(displayFF);
     glutReshapeFunc(reshapeFF);
     glutKeyboardFunc(keyboardHandler1FF);     // normal
@@ -1844,20 +1851,16 @@ void iOpenWindow(int width = 500, int height = 500, const char *title = "iGraphi
     glutPassiveMotionFunc(mousePassiveMoveHandlerFF);
     glutMouseWheelFunc(mouseWheelHandlerFF);
     glutIdleFunc(animFF);
-    //
-    // Setup Alpha channel testing.
-    // If alpha value is greater than 0, then those
-    // pixels will be rendered. Otherwise, they would not be rendered
-    //
+
+    // Enable alpha testing
     glAlphaFunc(GL_GREATER, 0.0f);
     glEnable(GL_ALPHA_TEST);
 
+    // Enable smoothing
     glEnable(GL_POINT_SMOOTH);
     glHint(GL_POINT_SMOOTH_HINT, GL_LINEAR);
-
     glEnable(GL_LINE_SMOOTH);
     glHint(GL_LINE_SMOOTH_HINT, GL_LINEAR);
-
     glEnable(GL_POLYGON_SMOOTH);
     glHint(GL_POLYGON_SMOOTH_HINT, GL_LINEAR);
 
@@ -1866,6 +1869,9 @@ void iOpenWindow(int width = 500, int height = 500, const char *title = "iGraphi
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     }
+
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 1); // critical
+
     // glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
     glutSetOption(GLUT_ACTION_ON_WINDOW_CLOSE, GLUT_ACTION_CONTINUE_EXECUTION);
     glutMainLoop();
