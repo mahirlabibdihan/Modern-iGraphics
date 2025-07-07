@@ -69,12 +69,10 @@ Modern-iGraphics-main
 
 ## 🧱 Setup in Code::Blocks
 
+Change the compiler path of Code::Blocks as following:
+`Settings` → `Compiler` → Go to `Toolchain executables` tab → Change the `Compiler's installation directory` to the `MINGW` directory in the iGraphics folder. You can do that by clicking the three dots (`...`) on right. After you change the compiler, clear the `.o` files inside `obj` folder (If there is any).
+
 Open `iGraphics.cbp` in Code::Blocks. The project is already configured with all the necessary settings. You can directly run the project. By default, the main file is `iMain.cpp`. You can remove it and add a different file if you want.
-
-In some versions of Code::Blocks, you may need to change the compiler path as following:
-`Settings` → `Compiler` → Go to `Toolchain executables` tab → Change the `Compiler's installation directory` to the `MINGW` directory in the iGraphics folder. You can do that by clicking the three dots (`...`) on right.
-
-After you change the compiler, clear the `.o` files inside `obj` folder.
 
 _You can find the slides with step-by-step screenshots_ [here](https://docs.google.com/presentation/d/1VTaBzzTKQhPsGCA9_CBIUZvDUh3l6v3_gnTCPSLk_XM/edit?usp=sharing).
 
