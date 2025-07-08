@@ -55,7 +55,7 @@ void iShowText(double x, double y, const char *text, const char *fontPath, int f
 
     FT_Set_Pixel_Sizes(g_ftFace, 0, fontSize);
 
-    glEnable(GL_BLEND);
+    // glEnable(GL_BLEND);
     glEnable(GL_TEXTURE_2D);
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
@@ -109,7 +109,7 @@ void iShowText(double x, double y, const char *text, const char *fontPath, int f
     }
 
     glDisable(GL_TEXTURE_2D);
-    glDisable(GL_BLEND);
+    // glDisable(GL_BLEND);
 
     FT_Done_Face(g_ftFace);
 }
