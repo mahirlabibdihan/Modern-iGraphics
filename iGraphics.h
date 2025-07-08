@@ -713,6 +713,57 @@ void iUpdateCollisionMask(Sprite *s)
     s->collisionMask = collisionMask;
 }
 
+int iCheckImageSpriteCollision(int x1, int y1, Image *img, Sprite *s)
+{
+    if (!img || !s || !s->frames || s->currentFrame < 0 || s->currentFrame >= s->totalFrames)
+        return 0; // Invalid image or sprite
+
+    Image *frame = &s->frames[s->currentFrame];
+    int x2 = s->x;
+    int y2 = s->y;
+
+    // Calculate bounding box overlap
+    int overlapMinX = mmax(x1, x2);
+    int overlapMaxX = mmin(x1 + img->width, x2 + frame->width);
+    int overlapMinY = mmax(y1, y2);
+    int overlapMaxY = mmin(y1 + img->height, y2 + frame->height);
+
+    if (overlapMinX >= overlapMaxX || overlapMinY >= overlapMaxY)
+        return 0; // No overlap
+
+    int count = 0;
+    // Check pixel-perfect collision in the overlapping area
+    for (int y = overlapMinY; y < overlapMaxY; y++)
+    {
+        for (int x = overlapMinX; x < overlapMaxX; x++)
+        {
+            // Get pixel coordinates in both images
+            int localX1 = x - x1;
+            int localY1 = y - y1;
+            int localX2 = x - x2;
+            int localY2 = y - y2;
+
+            if (localX1 < 0 || localY1 < 0 || localX1 >= img->width || localY1 >= img->height ||
+                localX2 < 0 || localY2 < 0 || localX2 >= frame->width || localY2 >= frame->height)
+                continue;
+
+            unsigned char *pixel1 = &img->data[(localY1 * img->width + localX1) * img->channels];
+            unsigned char *pixel2 = &frame->data[(localY2 * frame->width + localX2) * frame->channels];
+
+            // Check if both pixels are not transparent
+            bool isPixel1Transparent = (img->channels == 4 && pixel1[3] == 0);
+            bool isPixel2Transparent = (frame->channels == 4 && pixel2[3] == 0);
+
+            if (!isPixel1Transparent && !isPixel2Transparent)
+            {
+                // Both pixels are opaque, collision detected
+                count++;
+            }
+        }
+    }
+    return count;
+}
+
 int iCheckImageCollision(int x1, int y1, Image *img1, int x2, int y2, Image *img2)
 {
     if (!img1 || !img2 || !img1->data || !img2->data)
