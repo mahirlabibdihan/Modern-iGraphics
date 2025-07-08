@@ -1,5 +1,5 @@
 /***
- * iFont.h: v0.1.0
+ * iFont.h: v0.1.2
  * A simple font rendering system using FreeType and OpenGL.
  * Provides functions to initialize the font system, render text at specified positions,
  * and free resources.
@@ -39,6 +39,46 @@ bool iInitializeFont()
 
 // Freetype: https://gnuwin32.sourceforge.net/packages/freetype.htm
 // Draw text at position (x, y) using font file `fontName`
+
+uint32_t getNextUTF8Codepoint(const char *&p)
+{
+    uint32_t codepoint = 0;
+    const unsigned char *ptr = (const unsigned char *)p;
+
+    if (*ptr < 0x80)
+    {
+        codepoint = *ptr;
+        p += 1;
+    }
+    else if ((*ptr & 0xE0) == 0xC0)
+    {
+        codepoint = (*ptr & 0x1F) << 6;
+        codepoint |= (ptr[1] & 0x3F);
+        p += 2;
+    }
+    else if ((*ptr & 0xF0) == 0xE0)
+    {
+        codepoint = (*ptr & 0x0F) << 12;
+        codepoint |= (ptr[1] & 0x3F) << 6;
+        codepoint |= (ptr[2] & 0x3F);
+        p += 3;
+    }
+    else if ((*ptr & 0xF8) == 0xF0)
+    {
+        codepoint = (*ptr & 0x07) << 18;
+        codepoint |= (ptr[1] & 0x3F) << 12;
+        codepoint |= (ptr[2] & 0x3F) << 6;
+        codepoint |= (ptr[3] & 0x3F);
+        p += 4;
+    }
+    else
+    {
+        p += 1; // invalid byte, skip
+    }
+
+    return codepoint;
+}
+
 void iShowText(double x, double y, const char *text, const char *fontPath, int fontSize = 48)
 {
     if (!g_ftInitialized)
@@ -53,16 +93,21 @@ void iShowText(double x, double y, const char *text, const char *fontPath, int f
         return;
     }
 
+    FT_Select_Charmap(g_ftFace, FT_ENCODING_UNICODE);
     FT_Set_Pixel_Sizes(g_ftFace, 0, fontSize);
 
-    // glEnable(GL_BLEND);
     glEnable(GL_TEXTURE_2D);
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
     float originX = x;
-    for (int i = 0; text[i]; i++)
+    const char *p = text;
+
+    while (*p)
     {
-        if (FT_Load_Char(g_ftFace, text[i], FT_LOAD_RENDER))
+        uint32_t codepoint = getNextUTF8Codepoint(p);
+        FT_UInt glyph_index = FT_Get_Char_Index(g_ftFace, codepoint);
+
+        if (FT_Load_Glyph(g_ftFace, glyph_index, FT_LOAD_RENDER))
             continue;
 
         FT_GlyphSlot g = g_ftFace->glyph;
@@ -81,14 +126,11 @@ void iShowText(double x, double y, const char *text, const char *fontPath, int f
             GL_UNSIGNED_BYTE,
             g->bitmap.buffer);
 
-        // GLint swizzleMask[] = {GL_ONE, GL_ONE, GL_ONE, GL_RED};
-        // glTexParameteriv(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_RGBA, swizzleMask);
-
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
         float xpos = originX + g->bitmap_left;
-        float ypos = y - (g->metrics.height / 64.0 - g->bitmap_top); // Account for vertical alignment
+        float ypos = y - (g->metrics.height / 64.0 - g->bitmap_top);
         float w = g->bitmap.width;
         float h = g->bitmap.rows;
 
@@ -104,13 +146,10 @@ void iShowText(double x, double y, const char *text, const char *fontPath, int f
         glEnd();
 
         originX += (g->advance.x >> 6);
-
         glDeleteTextures(1, &tex);
     }
 
     glDisable(GL_TEXTURE_2D);
-    // glDisable(GL_BLEND);
-
     FT_Done_Face(g_ftFace);
 }
 
