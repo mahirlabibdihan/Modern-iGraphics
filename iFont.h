@@ -1,5 +1,5 @@
 /***
- * iFont.h: v0.1.0
+ * iFont.h: v0.1.2
  * A simple font rendering system using FreeType and OpenGL.
  * Provides functions to initialize the font system, render text at specified positions,
  * and free resources.
@@ -39,6 +39,46 @@ bool iInitializeFont()
 
 // Freetype: https://gnuwin32.sourceforge.net/packages/freetype.htm
 // Draw text at position (x, y) using font file `fontName`
+
+uint32_t getNextUTF8Codepoint(const char *&p)
+{
+    uint32_t codepoint = 0;
+    const unsigned char *ptr = (const unsigned char *)p;
+
+    if (*ptr < 0x80)
+    {
+        codepoint = *ptr;
+        p += 1;
+    }
+    else if ((*ptr & 0xE0) == 0xC0)
+    {
+        codepoint = (*ptr & 0x1F) << 6;
+        codepoint |= (ptr[1] & 0x3F);
+        p += 2;
+    }
+    else if ((*ptr & 0xF0) == 0xE0)
+    {
+        codepoint = (*ptr & 0x0F) << 12;
+        codepoint |= (ptr[1] & 0x3F) << 6;
+        codepoint |= (ptr[2] & 0x3F);
+        p += 3;
+    }
+    else if ((*ptr & 0xF8) == 0xF0)
+    {
+        codepoint = (*ptr & 0x07) << 18;
+        codepoint |= (ptr[1] & 0x3F) << 12;
+        codepoint |= (ptr[2] & 0x3F) << 6;
+        codepoint |= (ptr[3] & 0x3F);
+        p += 4;
+    }
+    else
+    {
+        p += 1; // invalid byte, skip
+    }
+
+    return codepoint;
+}
+
 void iShowText(double x, double y, const char *text, const char *fontPath, int fontSize = 48)
 {
     if (!g_ftInitialized)
@@ -53,16 +93,21 @@ void iShowText(double x, double y, const char *text, const char *fontPath, int f
         return;
     }
 
+    FT_Select_Charmap(g_ftFace, FT_ENCODING_UNICODE);
     FT_Set_Pixel_Sizes(g_ftFace, 0, fontSize);
 
-    glEnable(GL_BLEND);
     glEnable(GL_TEXTURE_2D);
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
     float originX = x;
-    for (int i = 0; text[i]; i++)
+    const char *p = text;
+
+    while (*p)
     {
-        if (FT_Load_Char(g_ftFace, text[i], FT_LOAD_RENDER))
+        uint32_t codepoint = getNextUTF8Codepoint(p);
+        FT_UInt glyph_index = FT_Get_Char_Index(g_ftFace, codepoint);
+
+        if (FT_Load_Glyph(g_ftFace, glyph_index, FT_LOAD_RENDER))
             continue;
 
         FT_GlyphSlot g = g_ftFace->glyph;
@@ -81,14 +126,11 @@ void iShowText(double x, double y, const char *text, const char *fontPath, int f
             GL_UNSIGNED_BYTE,
             g->bitmap.buffer);
 
-        // GLint swizzleMask[] = {GL_ONE, GL_ONE, GL_ONE, GL_RED};
-        // glTexParameteriv(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_RGBA, swizzleMask);
-
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
         float xpos = originX + g->bitmap_left;
-        float ypos = y - (g->metrics.height / 64.0 - g->bitmap_top); // Account for vertical alignment
+        float ypos = y - (g->metrics.height / 64.0 - g->bitmap_top);
         float w = g->bitmap.width;
         float h = g->bitmap.rows;
 
@@ -104,13 +146,10 @@ void iShowText(double x, double y, const char *text, const char *fontPath, int f
         glEnd();
 
         originX += (g->advance.x >> 6);
-
         glDeleteTextures(1, &tex);
     }
 
     glDisable(GL_TEXTURE_2D);
-    glDisable(GL_BLEND);
-
     FT_Done_Face(g_ftFace);
 }
 
@@ -122,153 +161,3 @@ void iFreeFont()
         g_ftInitialized = false;
     }
 }
-
-// #include <stdio.h>
-// #include <stdlib.h>
-// #include <string.h>
-// #include <GL/gl.h>
-
-// #define STB_TRUETYPE_IMPLEMENTATION
-// #include "stb_truetype.h"
-
-// void render_text_to_opengl(float pos_x, float pos_y, const char *text, const char *font_path, float pixel_height)
-// {
-//     /* load font file */
-//     long size;
-//     unsigned char *fontBuffer;
-
-//     FILE *fontFile = fopen(font_path, "rb");
-//     if (!fontFile)
-//     {
-//         printf("Failed to open font file\n");
-//         return;
-//     }
-
-//     fseek(fontFile, 0, SEEK_END);
-//     size = ftell(fontFile);
-//     fseek(fontFile, 0, SEEK_SET);
-
-//     fontBuffer = (unsigned char *)malloc(size);
-//     fread(fontBuffer, size, 1, fontFile);
-//     fclose(fontFile);
-
-//     /* prepare font */
-//     stbtt_fontinfo info;
-//     if (!stbtt_InitFont(&info, fontBuffer, 0))
-//     {
-//         printf("Failed to initialize font\n");
-//         free(fontBuffer);
-//         return;
-//     }
-
-//     /* Calculate required dimensions */
-//     float scale = stbtt_ScaleForPixelHeight(&info, pixel_height);
-
-//     // First pass to calculate text dimensions
-//     int text_width = 0;
-//     for (int i = 0; i < strlen(text); ++i)
-//     {
-//         int ax, lsb;
-//         stbtt_GetCodepointHMetrics(&info, text[i], &ax, &lsb);
-//         text_width += roundf(ax * scale);
-
-//         if (i < strlen(text) - 1)
-//         {
-//             text_width += roundf(stbtt_GetCodepointKernAdvance(&info, text[i], text[i + 1]) * scale);
-//         }
-//     }
-
-//     int x_pos = 0; // Current x position in the bitmap
-
-//     int ascent, descent;
-//     stbtt_GetFontVMetrics(&info, &ascent, &descent, NULL);
-//     int text_height = roundf((ascent - descent) * scale);
-//     ascent = roundf(ascent * scale);
-//     descent = roundf(descent * scale);
-
-//     int b_w = text_width;
-//     int b_h = text_height;
-
-//     // Round up to nearest power of two
-//     // b_w = 1 << (int)ceil(log2(b_w));
-//     // b_h = 1 << (int)ceil(log2(b_h));
-
-//     /* create a bitmap for the phrase */
-//     unsigned char *bitmap = (unsigned char *)calloc(b_w * b_h, sizeof(unsigned char));
-
-//     /* Render each character to bitmap */
-//     for (int i = 0; i < strlen(text); ++i)
-//     {
-//         /* character metrics */
-//         int ax, lsb;
-//         stbtt_GetCodepointHMetrics(&info, text[i], &ax, &lsb);
-
-//         /* bounding box */
-//         int c_x1, c_y1, c_x2, c_y2;
-//         stbtt_GetCodepointBitmapBox(&info, text[i], scale, scale, &c_x1, &c_y1, &c_x2, &c_y2);
-
-//         /* compute y position */
-//         int y = ascent + c_y1;
-
-//         /* render character */
-//         int byteOffset = x_pos + roundf(lsb * scale) + (y * b_w);
-//         stbtt_MakeCodepointBitmap(&info, bitmap + byteOffset, c_x2 - c_x1, c_y2 - c_y1, b_w, scale, scale, text[i]);
-
-//         /* advance x */
-//         x_pos += roundf(ax * scale);
-
-//         /* add kerning */
-//         if (i < strlen(text) - 1)
-//         {
-//             int kern = stbtt_GetCodepointKernAdvance(&info, text[i], text[i + 1]);
-//             x_pos += roundf(kern * scale);
-//         }
-//     }
-
-//     /* Create and upload OpenGL texture */
-//     GLuint texture;
-//     glGenTextures(1, &texture);
-//     glBindTexture(GL_TEXTURE_2D, texture);
-
-//     /* Basic texture parameters */
-//     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-//     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-//     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
-//     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
-
-//     /* Upload as alpha texture */
-//     glTexImage2D(GL_TEXTURE_2D, 0, GL_ALPHA, b_w, b_h, 0,
-//                  GL_ALPHA, GL_UNSIGNED_BYTE, bitmap);
-
-//     /* Set up rendering state */
-//     glEnable(GL_TEXTURE_2D);
-//     glEnable(GL_BLEND);
-//     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-//     /* Use current color (don't override it) */
-//     /* The texture alpha will modulate with current color */
-
-//     /* Calculate text dimensions */
-//     // float text_width = x_pos;
-//     // float text_height = (ascent - descent);
-
-//     /* Render texture to screen at specified position */
-//     glBegin(GL_QUADS);
-//     glTexCoord2f(0.0f, 1.0f);
-//     glVertex2f(pos_x, pos_y);
-//     glTexCoord2f(1.0f, 1.0f);
-//     glVertex2f(pos_x + text_width, pos_y);
-//     glTexCoord2f(1.0f, 0.0f);
-//     glVertex2f(pos_x + text_width, pos_y + text_height);
-//     glTexCoord2f(0.0f, 0.0f);
-//     glVertex2f(pos_x, pos_y + text_height);
-//     glEnd();
-
-//     /* Clean up */
-//     glDisable(GL_BLEND);
-//     glDisable(GL_TEXTURE_2D);
-//     glDeleteTextures(1, &texture);
-
-//     free(fontBuffer);
-//     free(bitmap);
-// }
