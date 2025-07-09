@@ -1152,10 +1152,10 @@ This library is for educational purposes and is typically used in academic or ho
 
 ## 🙏 Acknowledgements
 
-- [Shahriar Nirjon](https://github.com/nirjon) - Original iGraphics library
-- [Ashrafur Rahman Khan](https://github.com/risenfromashes) - Linux Support, Freeglut, SDL2 sound engine, Transparent Color, Mouse passive motion.
-- [Anwarul Bashar Shuaib](https://github.com/shuaibw) - Image caching, resize, mirror, wrap, and pixel-perfect collision detection functionality
-- [Wasif Jalal](https://github.com/wjalal) - SDL2 sound engine, Game Mode
+- [Shahriar Nirjon](https://github.com/nirjon) - Original iGraphics library 
+- [Ashrafur Rahman Khan](https://github.com/risenfromashes) - Linux Support, Freeglut, SDL2 sound engine, Transparent Color, Mouse passive motion ([repository](https://github.com/risenfromashes/catch-the-egg))
+- [Anwarul Bashar Shuaib](https://github.com/shuaibw) - Image cache, resize, mirror, wrap, and pixel-perfect collision detection functionality  ([repository](https://github.com/shuaibw/iGraphics-extended/))
+- [Wasif Jalal](https://github.com/wjalal) - SDL2 sound engine, Game Mode ([repository](https://github.com/wjalal/1-1_term_project_igraphics_dxball))
 
 <!-- ## 🙏 Acknowledgements
 
