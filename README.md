@@ -1156,8 +1156,8 @@ This library is for educational purposes and is typically used in academic or ho
 
 - [Shahriar Nirjon](https://github.com/nirjon) - Original iGraphics library
 - [Ashrafur Rahman Khan](https://github.com/risenfromashes) - Linux Support, Freeglut, SDL2 sound engine, Transparent Color, Mouse passive motion.
-- [Anwarul Bashar Shuaib](https://github.com/shuaibw) - Image resize, mirror, wrap, and collision detection functionality
-- [Wasif Jalal](https://github.com/wjalal) - SDL2, Game Mode
+- [Anwarul Bashar Shuaib](https://github.com/shuaibw) - Image caching, resize, mirror, wrap, and pixel-perfect collision detection functionality
+- [Wasif Jalal](https://github.com/wjalal) - SDL2 sound engine, Game Mode
 
 <!-- ## 🙏 Acknowledgements
 
