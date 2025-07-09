@@ -1811,7 +1811,7 @@ void reshapeFF(int width, int height)
     glViewport(0.0, 0.0, iScreenWidth, iScreenHeight);
     redraw();
 
-    glutReshapeWindow(iSmallScreenWidth, iSmallScreenHeight); // Comment above lines and uncomment this line to disable window resizing. (Credit: Mohammad Kamrul Hasan)
+    // glutReshapeWindow(iSmallScreenWidth, iSmallScreenHeight); // Comment above lines and uncomment this line to disable window resizing. (Credit: Mohammad Kamrul Hasan)
 }
 
 void iHideCursor()
