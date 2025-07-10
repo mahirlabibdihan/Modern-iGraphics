@@ -1471,27 +1471,6 @@ void iTextAdvanced(double x, double y, const char *str, float scale = 0.3, float
     glPopMatrix();      // Restore transformation matrix
 }
 
-int frameCount = 0;
-int previousTime = 0;
-int fps = 0;
-
-void iShowSpeed(double x, double y)
-{
-    frameCount++;
-    int currentTime = glutGet(GLUT_ELAPSED_TIME);
-    int timeInterval = currentTime - previousTime;
-    if (timeInterval > 1000)
-    {
-        fps = (frameCount * 1000.0) / timeInterval;
-        previousTime = currentTime;
-        frameCount = 0;
-    }
-
-    char fpsText[20];
-    sprintf(fpsText, "FPS: %d", fps);
-    iText(x, y, fpsText);
-}
-
 void iPoint(double x, double y, int size = 0)
 {
     int i, j;
@@ -1671,13 +1650,51 @@ void displayFF(void)
     glutSwapBuffers();
 }
 
+int frameCount = 0;
+int previousTime = 0, previousFpsTime = 0;
+int fps = 0;
+
 void redraw()
 {
     if (!programEnded || !isGameMode)
     {
-        glutPostRedisplay();
+
+        int currentTime = glutGet(GLUT_ELAPSED_TIME);
+
+        if (previousFpsTime == 0)
+        {
+            previousFpsTime = currentTime; // Initialize on first call
+            frameCount = 0;
+        }
+        else
+        {
+            int elapsedFpsTime = currentTime - previousFpsTime;
+
+            if (elapsedFpsTime > 1000)
+            {
+                fps = (frameCount * 1000.0f) / elapsedFpsTime;
+                frameCount = 0;
+                previousFpsTime = currentTime;
+            }
+        }
+
+        int timeInterval = currentTime - previousTime;
+        if (!previousTime || timeInterval > 5)
+        {
+            frameCount++;
+            glutPostRedisplay();        // Request a redraw
+            previousTime = currentTime; // Reset the timer
+        }
     }
 }
+
+void iShowSpeed(double x, double y)
+{
+    char fpsText[20];
+    sprintf(fpsText, "FPS: %d", fps);
+    iText(x, y, fpsText);
+}
+
 void animFF(void)
 {
     if (ifft == 0)
@@ -1781,7 +1798,7 @@ void mouseMoveHandlerFF(int mx, int my)
     iMouseX = mx;
     iMouseY = iScreenHeight - my;
     iiMouseDrag(iMouseX, iMouseY);
-    glFlush();
+    redraw();
 }
 
 void mousePassiveMoveHandlerFF(int x, int y)
@@ -1794,7 +1811,7 @@ void mousePassiveMoveHandlerFF(int x, int y)
     iMouseX = x;
     iMouseY = iScreenHeight - y;
     iiMouseMove(iMouseX, iMouseY);
-    glFlush();
+    redraw();
 }
 
 void mouseHandlerFF(int button, int state, int x, int y)
@@ -1807,7 +1824,7 @@ void mouseHandlerFF(int button, int state, int x, int y)
     iMouseX = x;
     iMouseY = iScreenHeight - y;
     iiMouseClick(button, state, iMouseX, iMouseY);
-    glFlush();
+    redraw();
 }
 
 void mouseWheelHandlerFF(int button, int dir, int x, int y)
@@ -1821,7 +1838,7 @@ void mouseWheelHandlerFF(int button, int dir, int x, int y)
     iMouseX = x;
     iMouseY = iScreenHeight - y;
     iiMouseWheel(dir, iMouseX, iMouseY);
-    glFlush();
+    redraw();
 }
 
 void iSetTransparency(int state)
@@ -1887,6 +1904,7 @@ void iCloseWindow()
     }
     programEnded = 1;
 }
+
 void iSetDrawCallback(void (*drawFunc)())
 {
     if (drawFunc == nullptr)
