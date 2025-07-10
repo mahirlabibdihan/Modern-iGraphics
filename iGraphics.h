@@ -1658,14 +1658,7 @@ void redraw()
 {
     if (!programEnded || !isGameMode)
     {
-        int currentTime = glutGet(GLUT_ELAPSED_TIME);
-        int timeInterval = currentTime - previousTime;
-        if (!previousTime || timeInterval > 0)
-        {
-
-            glutPostRedisplay();        // Request a redraw
-            previousTime = currentTime; // Reset the timer
-        }
+        glutPostRedisplay(); // Request a redraw
     }
 }
 
@@ -1702,7 +1695,15 @@ void animFF(void)
         ifft = 1;
         iClear();
     }
-    redraw();
+    int currentTime = glutGet(GLUT_ELAPSED_TIME);
+    int timeInterval = currentTime - previousTime;
+
+    if (!previousTime || timeInterval >= 0)
+    {
+        // printf("Redrawing at %d ms\n", timeInterval);
+        redraw();
+        previousTime = currentTime; // Reset the timer
+    }
 }
 
 /* Keyboard key state. */
