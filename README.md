@@ -12,7 +12,7 @@
 
 [iGraphics.h](https://github.com/mahirlabibdihan/Modern-iGraphics/blob/main/iGraphics.h) header file contains some drawing functions that can be used to draw basic graphical shapes in C++. These functions are implemented in OpenGL. Users of iGraphics do not need any knowledge of OpenGL to use it. Simply calling the drawing functions a user can draw any 2D shape on screen. This library also provides easy ways for animation, keyboard and mouse event handling.
 
-It was originally created by [Shahriar Nirjon](https://www.cs.unc.edu/~nirjon/) on 2009 with limited functionalities and only for Windows. This is an extended version of the original iGraphics library with support for multiple image formats, sound engine, sprite management, collision detection and advanced mouse control. The library is now **cross-platform** and works on both **Windows** and **Linux**. Updates will be added incrementally based on requests.
+It was originally created by [Shahriar Nirjon](https://www.cs.unc.edu/~nirjon/) on 2009 with limited functionalities and only for Windows. This is an extended version of the original iGraphics library with support for multiple image formats, custom fonts, sound engine, sprite management, collision detection and advanced mouse-keyboard control. The library is now **cross-platform** and works on both **Windows** and **Linux**. Updates will be added incrementally based on requests.
 
 <!-- Besides, the original library used `glut`, which is upgraded to `freeglut` in this version. -->
 
@@ -43,7 +43,7 @@ You can find executable games [here](https://github.com/mahirlabibdihan/Modern-i
 
 ## Necessary Files
 
-- Download `the Modern-iGraphics-main.zip` file from [here](https://github.com/mahirlabibdihan/Modern-iGraphics/archive/refs/heads/main.zip) and extract it.
+- Download the `Modern-iGraphics-main.zip` file from [here](https://github.com/mahirlabibdihan/Modern-iGraphics/archive/refs/heads/main.zip) and extract it.
 - Download `MINGW.zip` file from [here](https://github.com/mahirlabibdihan/Modern-iGraphics/releases/download/v0.0.1/MINGW.zip) and extract it.
 - Copy the `MINGW` folder to the extracted `Modern-iGraphics-main` folder.
 - The final folder structure should look like this:
@@ -69,12 +69,10 @@ Modern-iGraphics-main
 
 ## 🧱 Setup in Code::Blocks
 
+Change the compiler path of Code::Blocks as following:
+`Settings` → `Compiler` → Go to `Toolchain executables` tab → Change the `Compiler's installation directory` to the `MINGW` directory in the iGraphics folder. You can do that by clicking the three dots (`...`) on right. After you change the compiler, clear the `.o` files inside `obj` folder (If there is any).
+
 Open `iGraphics.cbp` in Code::Blocks. The project is already configured with all the necessary settings. You can directly run the project. By default, the main file is `iMain.cpp`. You can remove it and add a different file if you want.
-
-In some versions of Code::Blocks, you may need to change the compiler path as following:
-`Settings` → `Compiler` → Go to `Toolchain executables` tab → Change the `Compiler's installation directory` to the `MINGW` directory in the iGraphics folder. You can do that by clicking the three dots (`...`) on right.
-
-After you change the compiler, clear the `.o` files inside `obj` folder.
 
 _You can find the slides with step-by-step screenshots_ [here](https://docs.google.com/presentation/d/1VTaBzzTKQhPsGCA9_CBIUZvDUh3l6v3_gnTCPSLk_XM/edit?usp=sharing).
 
@@ -1154,10 +1152,10 @@ This library is for educational purposes and is typically used in academic or ho
 
 ## 🙏 Acknowledgements
 
-- [Shahriar Nirjon](https://github.com/nirjon) - Original iGraphics library
-- [Ashrafur Rahman Khan](https://github.com/risenfromashes) - Linux Support, Freeglut, SDL2 sound engine, Transparent Color, Mouse passive motion.
-- [Anwarul Bashar Shuaib](https://github.com/shuaibw) - Image resize, mirror, wrap, and collision detection functionality
-- [Wasif Jalal](https://github.com/wjalal) - SDL2, Game Mode
+- [Shahriar Nirjon](https://github.com/nirjon) - Original iGraphics library 
+- [Ashrafur Rahman Khan](https://github.com/risenfromashes) - Linux Support, Freeglut, SDL2 sound engine, Transparent Color, Mouse passive motion ([repository](https://github.com/risenfromashes/catch-the-egg))
+- [Anwarul Bashar Shuaib](https://github.com/shuaibw) - Image cache, resize, mirror, wrap, and pixel-perfect collision detection functionality  ([repository](https://github.com/shuaibw/iGraphics-extended/))
+- [Wasif Jalal](https://github.com/wjalal) - SDL2 sound engine, Game Mode ([repository](https://github.com/wjalal/1-1_term_project_igraphics_dxball))
 
 <!-- ## 🙏 Acknowledgements
 

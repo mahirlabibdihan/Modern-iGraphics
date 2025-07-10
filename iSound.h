@@ -1,5 +1,5 @@
 /***
- * iSound.h: v0.1.0
+ * iSound.h: v0.1.1
  * This file provides a simple sound management system using SDL2 Library.
  * It includes functions to initialize sound, play sounds, control volume,
  * pause, resume, and stop sounds.
