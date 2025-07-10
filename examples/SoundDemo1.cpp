@@ -38,12 +38,8 @@ int main(int argc, char *argv[])
 
 	// Register Callbacks
 	iSetDrawCallback(iDraw);
-	// iSetKeyboardCallback(iKeyboard);
-	// iSetSpecialKeyboardCallback(iSpecialKeyboard);
 	iSetMouseClickCallback(iMouseClick);
-	// iSetMouseMoveCallback(iMouseMove);
-	// iSetMouseDragCallback(iMouseDrag);
-	// iSetMouseWheelCallback(iMouseWheel);
+
 	iStart();
 	return 0;
 }

@@ -93,10 +93,7 @@ int main(int argc, char *argv[])
     iSetDrawCallback(iDraw);
     iSetKeyboardCallback(iKeyboard);
     iSetSpecialKeyboardCallback(iSpecialKeyboard);
-    // iSetMouseClickCallback(iMouseClick);
-    // iSetMouseMoveCallback(iMouseMove);
-    // iSetMouseDragCallback(iMouseDrag);
-    // iSetMouseWheelCallback(iMouseWheel);
+
     iStart();
     return 0;
 }

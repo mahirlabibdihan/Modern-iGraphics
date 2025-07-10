@@ -80,9 +80,9 @@ int main(int argc, char *argv[])
     iSetKeyboardCallback(iKeyboard);
     iSetSpecialKeyboardCallback(iSpecialKeyboard);
     iSetMouseClickCallback(iMouseClick);
-    // iSetMouseMoveCallback(iMouseMove);
-    // iSetMouseDragCallback(iMouseDrag);
-    // iSetMouseWheelCallback(iMouseWheel);
+    // iSetMouseMoveCallback(iMouseMove); // Optional, if you want to track mouse movement
+    // iSetMouseDragCallback(iMouseDrag); // Optional, if you want to track mouse dragging
+    // iSetMouseWheelCallback(iMouseWheel); // Optional, if you want to track mouse scrolling
     iStart();
     return 0;
 }
