@@ -1679,7 +1679,7 @@ void redraw()
         }
 
         int timeInterval = currentTime - previousTime;
-        if (!previousTime || timeInterval > 5)
+        if (!previousTime || timeInterval > 0)
         {
             frameCount++;
             glutPostRedisplay();        // Request a redraw
