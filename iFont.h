@@ -39,9 +39,9 @@ bool iInitializeFont()
 
 // Freetype: https://gnuwin32.sourceforge.net/packages/freetype.htm
 // Draw text at position (x, y) using font file `fontName`
-void iShowText(double x, double y, const char *text, const char *fontPath, int fontSize = 48)
+void iShowText(double x, double y, const char *text, const char *fontPath, int fontSize = 32)
 {
-    if (!g_ftInitialized)
+    if (!iInitializeFont())
     {
         printf("Font system not initialized.\n");
         return;

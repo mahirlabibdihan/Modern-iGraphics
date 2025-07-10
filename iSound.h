@@ -18,6 +18,8 @@
 using namespace std;
 
 Mix_Chunk *channelChunks[8];
+bool soundInitialized = false;
+
 void iSetVolume(int channel, int volumePercent)
 {
     if (channel >= 0)
@@ -86,8 +88,30 @@ void iStopAllSounds()
     }
 }
 
+void iInitializeSound()
+{
+    if (soundInitialized)
+        return;
+
+    if (SDL_Init(SDL_INIT_AUDIO) < 0)
+    {
+        printf("SDL_Init failed: %s\n", SDL_GetError());
+        return;
+    }
+    if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0)
+    {
+        printf("SDL_mixer could not initialize! Mix_Error: %s\n", Mix_GetError());
+        return;
+    }
+    Mix_ChannelFinished(channelFinishedCallback);
+
+    soundInitialized = true;
+}
+
 int iPlaySound(const char *filename, bool loop = false, int volume = 100) // If loop==true , then the audio will play again and again
 {
+    iInitializeSound(); // Ensure it's initialized before playing
+
     Mix_Chunk *sound = Mix_LoadWAV(filename);
     if (!sound)
     {
@@ -105,21 +129,6 @@ int iPlaySound(const char *filename, bool loop = false, int volume = 100) // If 
     iSetVolume(channel, volume);    // Set the volume
     channelChunks[channel] = sound; //
     return channel;
-}
-
-void iInitializeSound()
-{
-    if (SDL_Init(SDL_INIT_AUDIO) < 0)
-    {
-        printf("SDL_Init failed: %s\n", SDL_GetError());
-        return;
-    }
-    if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0)
-    {
-        printf("SDL_mixer could not initialize! Mix_Error: %s\n", Mix_GetError());
-        return;
-    }
-    Mix_ChannelFinished(channelFinishedCallback);
 }
 
 void iFreeSound()

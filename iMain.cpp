@@ -1,5 +1,6 @@
 #include "iGraphics.h"
-
+#include "iSound.h"
+#include "iFont.h"
 /*
 function iDraw() is called again and again by the system.
 */
@@ -7,7 +8,7 @@ void iDraw()
 {
     // place your drawing codes here
     iClear();
-    iText(140, 180, "Hello World");
+    iShowText(120, 180, "Hello World", "assets/fonts/arial.ttf");
 }
 
 /*
@@ -95,8 +96,8 @@ void iSpecialKeyboard(unsigned char key, int state)
 int main(int argc, char *argv[])
 {
     glutInit(&argc, argv);
-    iOpenWindow(400, 400, "iGraphics"); // Infinite Loop
-    // Add clean up code
+    iPlaySound("assets/sounds/background.wav", 1); // Play background sound
+    iOpenWindow(400, 400, "iGraphics");            // Infinite Loop
     printf("Exiting...");
     return 0;
 }
