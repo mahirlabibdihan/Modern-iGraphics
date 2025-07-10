@@ -133,19 +133,17 @@ void timerCallback(int index)
     if (!iAnimPause[index] && iAnimFunction[index])
     {
         int deltaTime = 0;
+        int currentTime = glutGet(GLUT_ELAPSED_TIME); // milliseconds since start
         if (iAnimLastCallTime[index] == 0)
         {
-            iAnimLastCallTime[index] = glutGet(GLUT_ELAPSED_TIME); // Initialize last call time
         }
         else
         {
-            int currentTime = glutGet(GLUT_ELAPSED_TIME);         // milliseconds since start
             deltaTime = (currentTime - iAnimLastCallTime[index]); // in seconds
-            iAnimLastCallTime[index] = currentTime;
         }
         iAnimFunction[index](deltaTime);
+        iAnimLastCallTime[index] = glutGet(GLUT_ELAPSED_TIME);
     }
-
     glutTimerFunc(iAnimDelays[index], timerCallback, index);
 }
 
