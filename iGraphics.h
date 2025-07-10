@@ -1658,30 +1658,11 @@ void redraw()
 {
     if (!programEnded || !isGameMode)
     {
-
         int currentTime = glutGet(GLUT_ELAPSED_TIME);
-
-        if (previousFpsTime == 0)
-        {
-            previousFpsTime = currentTime; // Initialize on first call
-            frameCount = 0;
-        }
-        else
-        {
-            int elapsedFpsTime = currentTime - previousFpsTime;
-
-            if (elapsedFpsTime > 1000)
-            {
-                fps = (frameCount * 1000.0f) / elapsedFpsTime;
-                frameCount = 0;
-                previousFpsTime = currentTime;
-            }
-        }
-
         int timeInterval = currentTime - previousTime;
         if (!previousTime || timeInterval > 0)
         {
-            frameCount++;
+
             glutPostRedisplay();        // Request a redraw
             previousTime = currentTime; // Reset the timer
         }
@@ -1690,6 +1671,25 @@ void redraw()
 
 void iShowSpeed(double x, double y)
 {
+    int currentTime = glutGet(GLUT_ELAPSED_TIME);
+    frameCount++;
+    if (previousFpsTime == 0)
+    {
+        previousFpsTime = currentTime; // Initialize on first call
+        frameCount = 0;
+    }
+    else
+    {
+        int elapsedFpsTime = currentTime - previousFpsTime;
+
+        if (elapsedFpsTime > 1000)
+        {
+            fps = (frameCount * 1000.0f) / elapsedFpsTime;
+            frameCount = 0;
+            previousFpsTime = currentTime;
+        }
+    }
+
     char fpsText[20];
     sprintf(fpsText, "FPS: %d", fps);
     iText(x, y, fpsText);
