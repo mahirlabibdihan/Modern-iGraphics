@@ -13,7 +13,7 @@ void populate_monster_images()
     }
 }
 
-void update_monster()
+void update_monster(int dt)
 {
     idle_idx = (idle_idx + 1) % 18;
 }

@@ -60,7 +60,7 @@ void loadGolem()
     golem.direction = -1; // 1 for right, -1 for left
 }
 
-void iAnim()
+void iAnim(int dt)
 {
     switch (pinkMonster.state)
     {

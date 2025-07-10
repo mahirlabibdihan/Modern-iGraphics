@@ -209,7 +209,7 @@ void iSpecialKeyboard(unsigned char key, int state)
     }
 }
 
-void movePlanets()
+void movePlanets(int dt)
 {
     int i;
 

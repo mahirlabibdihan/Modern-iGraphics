@@ -159,7 +159,7 @@ void iSpecialKeyboard(unsigned char key, int state)
     // place your codes for other keys here
 }
 
-void iAnim()
+void iAnim(int dt)
 {
     // place your codes here
     iAnimateSprite(&golem);
@@ -174,7 +174,7 @@ void iStart()
 {
     iSetTimer(50, iAnim);
     loadResources();
-    iPlaySound("assets/sounds/background.wav", true);
+    iPlaySound("assets/sounds/background.wav", true, 20);
     iOpenWindow(1366, 768, "Game Demo", 1);
     printf("Exiting...");
 }

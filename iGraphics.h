@@ -93,10 +93,11 @@ int ifft = 0;
 
 #define MAX_TIMERS 10
 
-void (*iAnimFunction[MAX_TIMERS])(void) = {0};
+void (*iAnimFunction[MAX_TIMERS])(int) = {0};
 int iAnimCount = 0;
 int iAnimDelays[MAX_TIMERS];
 int iAnimPause[MAX_TIMERS];
+int iAnimLastCallTime[MAX_TIMERS] = {0};
 
 void (*iiDraw)() = nullptr;
 void (*iiKeyboard)(unsigned char, int) = nullptr;
@@ -131,16 +132,24 @@ void timerCallback(int index)
 {
     if (!iAnimPause[index] && iAnimFunction[index])
     {
-        // int currentTime = glutGet(GLUT_ELAPSED_TIME);             // milliseconds since start
-        // int deltaTime = (currentTime - iAnimLastCallTime[index]); // in seconds
-        // iAnimLastCallTime[index] = currentTime;
-        iAnimFunction[index]();
+        int deltaTime = 0;
+        if (iAnimLastCallTime[index] == 0)
+        {
+            iAnimLastCallTime[index] = glutGet(GLUT_ELAPSED_TIME); // Initialize last call time
+        }
+        else
+        {
+            int currentTime = glutGet(GLUT_ELAPSED_TIME);         // milliseconds since start
+            deltaTime = (currentTime - iAnimLastCallTime[index]); // in seconds
+            iAnimLastCallTime[index] = currentTime;
+        }
+        iAnimFunction[index](deltaTime);
     }
 
     glutTimerFunc(iAnimDelays[index], timerCallback, index);
 }
 
-int iSetTimer(int msec, void (*f)(void))
+int iSetTimer(int msec, void (*f)(int))
 {
     if (iAnimCount >= 10)
     {

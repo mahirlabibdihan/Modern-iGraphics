@@ -29,7 +29,7 @@ void loadResources()
 	iScaleSprite(&monster, 3.0);
 }
 
-void updateMonster()
+void updateMonster(int dt)
 {
 	switch (m_state)
 	{

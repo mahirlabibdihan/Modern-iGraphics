@@ -68,7 +68,7 @@ void iKeyboard(unsigned char key, int state)
     }
 }
 
-void iAnim()
+void iAnim(int dt)
 {
     degree2 += 0.1;
     if (degree2 >= 360)
