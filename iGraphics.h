@@ -98,14 +98,14 @@ int iAnimCount = 0;
 int iAnimDelays[MAX_TIMERS];
 int iAnimPause[MAX_TIMERS];
 
-void iDraw();
-void iKeyboard(unsigned char, int);
-void iSpecialKeyboard(unsigned char, int);
-void iMouseDrag(int, int); // Renamed from iMouseMove to iMouseDrag
-void iMouseMove(int, int); // New function
-void iMouse(int button, int state, int x, int y);
-void iMouseWheel(int dir, int x, int y);
-// void iResize(int width, int height);
+void (*iiDraw)() = nullptr;
+void (*iiKeyboard)(unsigned char, int) = nullptr;
+void (*iiSpecialKeyboard)(unsigned char, int) = nullptr;
+void (*iiMouseClick)(int, int, int, int) = nullptr;
+void (*iiMouseMove)(int, int) = nullptr;
+void (*iiMouseDrag)(int, int) = nullptr;
+void (*iiMouseWheel)(int, int, int) = nullptr;
+void (*iiResize)(int, int) = nullptr;
 
 #define mmax(a, b) ((a) > (b) ? (a) : (b))
 #define mmin(a, b) ((a) < (b) ? (a) : (b))
@@ -1664,7 +1664,10 @@ void iClear()
 void displayFF(void)
 {
     // iClear();
-    iDraw();
+    if (iiDraw)
+    {
+        iiDraw();
+    }
     glutSwapBuffers();
 }
 
@@ -1697,22 +1700,34 @@ bool isKeyPressed(unsigned char key)
 
 void keyboardHandler1FF(unsigned char key, int x, int y)
 {
+    if (!iiKeyboard)
+    {
+        // printf("Warning: Keyboard functionality is not enabled.\n");
+        return;
+    }
+
     if (isKeyPressed(key))
     {
-        iKeyboard(key, GLUT_HOLD);
+        iiKeyboard(key, GLUT_HOLD);
     }
     else
     {
-        iKeyboard(key, GLUT_DOWN);
         keys[key] = true;
+        iiKeyboard(key, GLUT_DOWN);
     }
     redraw();
 }
 
 void keyboardHandlerUp1FF(unsigned char key, int x, int y)
 {
+    if (!iiKeyboard)
+    {
+        // printf("Warning: Keyboard functionality is not enabled.\n");
+        return;
+    }
+
     keys[key] = false;
-    iKeyboard(key, GLUT_UP);
+    iiKeyboard(key, GLUT_UP);
     redraw();
 }
 
@@ -1725,59 +1740,87 @@ bool isSpecialKeyPressed(int key)
 
 void keyboardHandler2FF(int key, int x, int y)
 {
+    if (!iiSpecialKeyboard)
+    {
+        // printf("Warning: Special keyboard functionality is not enabled.\n");
+        return;
+    }
     if (isSpecialKeyPressed(key))
     {
-        iSpecialKeyboard(key, GLUT_HOLD);
+        iiSpecialKeyboard(key, GLUT_HOLD);
     }
     else
     {
-        iSpecialKeyboard(key, GLUT_DOWN);
         specialKeys[key] = true; // Mark special key as pressed
+        iiSpecialKeyboard(key, GLUT_DOWN);
     }
     redraw();
 }
 
 void keyboardHandlerUp2FF(int key, int x, int y)
 {
-    iSpecialKeyboard(key, GLUT_UP);
+    if (!iiSpecialKeyboard)
+    {
+        // printf("Warning: Special keyboard functionality is not enabled.\n");
+        return;
+    }
+
     specialKeys[key] = false; // Mark special key as released
+    iiSpecialKeyboard(key, GLUT_UP);
     redraw();
 }
 
 void mouseMoveHandlerFF(int mx, int my)
 {
+    if (!iiMouseDrag)
+    {
+        // printf("Warning: Mouse drag functionality is not enabled.\n");
+        return;
+    }
+
     iMouseX = mx;
     iMouseY = iScreenHeight - my;
-    iMouseDrag(iMouseX, iMouseY);
-
+    iiMouseDrag(iMouseX, iMouseY);
     glFlush();
 }
 
 void mousePassiveMoveHandlerFF(int x, int y)
 {
+    if (!iiMouseMove)
+    {
+        // printf("Warning: Mouse move functionality is not enabled.\n");
+        return;
+    }
     iMouseX = x;
     iMouseY = iScreenHeight - y;
-    iMouseMove(iMouseX, iMouseY);
-
+    iiMouseMove(iMouseX, iMouseY);
     glFlush();
 }
 
 void mouseHandlerFF(int button, int state, int x, int y)
 {
+    if (!iiMouseClick)
+    {
+        // printf("Warning: Mouse click functionality is not enabled.\n");
+        return;
+    }
     iMouseX = x;
     iMouseY = iScreenHeight - y;
-
-    iMouse(button, state, iMouseX, iMouseY);
-
+    iiMouseClick(button, state, iMouseX, iMouseY);
     glFlush();
 }
 
 void mouseWheelHandlerFF(int button, int dir, int x, int y)
 {
+    if (!iiMouseWheel)
+    {
+        // printf("Warning: Mouse wheel functionality is not enabled.\n");
+        return;
+    }
+
     iMouseX = x;
     iMouseY = iScreenHeight - y;
-    iMouseWheel(dir, iMouseX, iMouseY);
-
+    iiMouseWheel(dir, iMouseX, iMouseY);
     glFlush();
 }
 
@@ -1806,7 +1849,15 @@ void reshapeFF(int width, int height)
     iScreenHeight = height;
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    // iResize(width, height); // Need to define iResize in main file
+
+    if (iiResize)
+    {
+        iiResize(width, height); // Need to define iiResize in main file
+    }
+    else
+    {
+        // printf("Note: You can control what happens on window resize.\n");
+    }
     glOrtho(0.0, iScreenWidth, 0.0, iScreenHeight, -1.0, 1.0);
     glViewport(0.0, 0.0, iScreenWidth, iScreenHeight);
     redraw();
@@ -1835,6 +1886,78 @@ void iCloseWindow()
         glutLeaveMainLoop();
     }
     programEnded = 1;
+}
+void iSetDrawCallback(void (*drawFunc)())
+{
+    if (drawFunc == nullptr)
+    {
+        printf("ERROR: Draw function cannot be null.\n");
+        return;
+    }
+    iiDraw = drawFunc;
+}
+void iSetKeyboardCallback(void (*keyboardFunc)(unsigned char, int))
+{
+    if (keyboardFunc == nullptr)
+    {
+        printf("ERROR: Keyboard function cannot be null.\n");
+        return;
+    }
+    iiKeyboard = keyboardFunc;
+}
+void iSetSpecialKeyboardCallback(void (*specialKeyboardFunc)(unsigned char, int))
+{
+    if (specialKeyboardFunc == nullptr)
+    {
+        printf("ERROR: Special keyboard function cannot be null.\n");
+        return;
+    }
+    iiSpecialKeyboard = specialKeyboardFunc;
+}
+void iSetMouseClickCallback(void (*mouseClickFunc)(int, int, int, int))
+{
+    if (mouseClickFunc == nullptr)
+    {
+        printf("ERROR: Mouse click function cannot be null.\n");
+        return;
+    }
+    iiMouseClick = mouseClickFunc;
+}
+void iSetMouseDragCallback(void (*mouseDragFunc)(int, int))
+{
+    if (mouseDragFunc == nullptr)
+    {
+        printf("ERROR: Mouse drag function cannot be null.\n");
+        return;
+    }
+    iiMouseDrag = mouseDragFunc;
+}
+void iSetMouseMoveCallback(void (*mouseMoveFunc)(int, int))
+{
+    if (mouseMoveFunc == nullptr)
+    {
+        printf("ERROR: Mouse move function cannot be null.\n");
+        return;
+    }
+    iiMouseMove = mouseMoveFunc;
+}
+void iSetMouseWheelCallback(void (*mouseWheelFunc)(int, int, int))
+{
+    if (mouseWheelFunc == nullptr)
+    {
+        printf("ERROR: Mouse wheel function cannot be null.\n");
+        return;
+    }
+    iiMouseWheel = mouseWheelFunc;
+}
+void iSetResizeCallback(void (*resizeFunc)(int, int))
+{
+    if (resizeFunc == nullptr)
+    {
+        printf("ERROR: Resize function cannot be null.\n");
+        return;
+    }
+    iiResize = resizeFunc;
 }
 
 void iOpenWindow(int width = 500, int height = 500, const char *title = "iGraphics", int fullscreen = 0)

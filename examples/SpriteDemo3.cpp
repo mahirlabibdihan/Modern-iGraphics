@@ -1,7 +1,3 @@
-/*
-	author: S. M. Shahriar Nirjon
-	last modified: August 8, 2008
-*/
 #include "iGraphics.h"
 
 Image frames[24];
@@ -39,49 +35,6 @@ void iDraw()
 		iFilledRectangle(0, 0, 800, 32);
 		iSetColor(0, 0, 0);
 		iTextBold(10, 10, "Press arrow keys to move the sprite", GLUT_BITMAP_TIMES_ROMAN_24);
-	}
-}
-
-/*
-function iMouseMove() is called when the user moves the mouse.
-(mx, my) is the position where the mouse pointer is.
-*/
-void iMouseMove(int mx, int my)
-{
-	// place your codes here
-}
-
-/*
-function iMouseDrag() is called when the user presses and drags the mouse.
-(mx, my) is the position where the mouse pointer is.
-*/
-void iMouseDrag(int mx, int my)
-{
-	// place your codes here
-}
-
-/*
-function iMouseWheel() is called when the user scrolls the mouse wheel.
-dir = 1 for up, -1 for down.
-*/
-void iMouseWheel(int dir, int mx, int my)
-{
-	// place your code here
-}
-
-/*
-	function iMouse() is called when the user presses/releases the mouse.
-	(mx, my) is the position where the mouse pointer is.
-*/
-void iMouse(int button, int state, int mx, int my)
-{
-	if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN)
-	{
-		// place your codes here
-	}
-	if (button == GLUT_RIGHT_BUTTON && state == GLUT_DOWN)
-	{
-		// place your codes here
 	}
 }
 
@@ -151,11 +104,25 @@ void iSpecialKeyboard(unsigned char key, int state)
 	// place your codes for other keys here
 }
 
-int main(int argc, char *argv[])
+void iStart()
 {
-	glutInit(&argc, argv);
 	loadResources();
 	iSetTimer(100, iAnim);
 	iOpenWindow(800, 800, "SpriteDemo");
+}
+
+int main(int argc, char *argv[])
+{
+	glutInit(&argc, argv);
+
+	// Register Callbacks
+	iSetDrawCallback(iDraw);
+	iSetKeyboardCallback(iKeyboard);
+	iSetSpecialKeyboardCallback(iSpecialKeyboard);
+	// iSetMouseClickCallback(iMouseClick);
+	// iSetMouseMoveCallback(iMouseMove);
+	// iSetMouseDragCallback(iMouseDrag);
+	// iSetMouseWheelCallback(iMouseWheel);
+	iStart();
 	return 0;
 }

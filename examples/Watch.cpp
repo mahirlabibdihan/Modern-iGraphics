@@ -51,55 +51,7 @@ void iDraw()
     iFilledCircle(500, 360, 20); // small
 }
 
-/*
-    function iMouseMove() is called when the user presses and drags the mouse.
-    (mx, my) is the position where the mouse pointer is.
-*/
-void iMouseDrag(int mx, int my)
-{
-    // place your codes here
-}
-
-/*
-    function iMouseMove() is called automatically when the mouse pointer is in motion
-*/
-void iMouseMove(int mx, int my)
-{
-    // place your code here
-}
-void iMouseWheel(int dir, int mx, int my)
-{
-    // place your code here
-}
-
-void iMouse(int button, int state, int mx, int my)
-{
-    if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN)
-    {
-    }
-    if (button == GLUT_RIGHT_BUTTON && state == GLUT_DOWN)
-    {
-    }
-}
-
-void iKeyboard(unsigned char key, int state)
-{
-    if (key == 'q')
-    {
-    }
-}
-
-void iSpecialKeyboard(unsigned char key, int state)
-{
-
-    if (key == GLUT_KEY_END)
-    {
-        exit(0);
-    }
-}
-
 void second()
-
 {
     sx = 250 * cos(p / 57.29);
     sy = 250 * sin(p / 57.29);
@@ -124,9 +76,8 @@ void hour()
     ph = ph - 1 / 600;
 }
 
-int main(int argc, char *argv[])
+void iStart()
 {
-    glutInit(&argc, argv);
     time_t rawtime;
     tm *ptm;
 
@@ -152,5 +103,20 @@ int main(int argc, char *argv[])
     iSetTimer(1000, minute);
     iSetTimer(1000, hour);
     iOpenWindow(1000, 720, "demo");
+}
+
+int main(int argc, char *argv[])
+{
+    glutInit(&argc, argv);
+
+    // Register Callbacks
+    iSetDrawCallback(iDraw);
+    // iSetKeyboardCallback(iKeyboard);
+    // iSetSpecialKeyboardCallback(iSpecialKeyboard);
+    // iSetMouseClickCallback(iMouseClick);
+    // iSetMouseMoveCallback(iMouseMove);
+    // iSetMouseDragCallback(iMouseDrag);
+    // iSetMouseWheelCallback(iMouseWheel);
+    iStart();
     return 0;
 }

@@ -139,35 +139,29 @@ void iDraw(void)
     iLine(960 + x2, 540 + y2, 960 + x, 540 + y);
 }
 
-void iMouse(int button, int state, int mx, int my)
-{
-}
-void iMouseDrag(int mx, int my)
-{
-}
-void iMouseMove(int mx, int my)
-{
-    // place your codes here
-}
-
-void iMouseWheel(int dir, int mx, int my)
-{
-}
-
 void iKeyboard(unsigned char key, int state)
 {
-
     if (key == 'q')
         exit(0);
-    glutPostRedisplay();
 }
 
-void iSpecialKeyboard(unsigned char key, int state)
+void iStart()
 {
+    iOpenWindow(1920, 1080, "Graph");
 }
 
 int main(int argc, char *argv[])
 {
     glutInit(&argc, argv);
-    iOpenWindow(1920, 1080, "Graph");
+
+    // Register Callbacks
+    iSetDrawCallback(iDraw);
+    iSetKeyboardCallback(iKeyboard);
+    // iSetSpecialKeyboardCallback(iSpecialKeyboard);
+    // iSetMouseClickCallback(iMouseClick);
+    // iSetMouseMoveCallback(iMouseMove);
+    // iSetMouseDragCallback(iMouseDrag);
+    // iSetMouseWheelCallback(iMouseWheel);
+    iStart();
+    return 0;
 }

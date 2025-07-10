@@ -16,6 +16,7 @@ int direction = 1; // 1 for right, -1 for left
 Image idleMonster[4], walkMonster[6], jumpMonster[8];
 Sprite monster;
 
+#define max(a, b) ((a) > (b) ? (a) : (b))
 void loadResources()
 {
 	iLoadFramesFromSheet(idleMonster, "assets/images/sprites/1 Pink_Monster/Pink_Monster_Idle_4.png", 1, 4);
@@ -56,48 +57,6 @@ void iDraw()
 	iClear();
 	iShowSprite(&monster);
 	// iShowBMP(pic_x, pic_y, "wheel.bmp");
-}
-
-/*
-function iMouseMove() is called when the user moves the mouse.
-(mx, my) is the position where the mouse pointer is.
-*/
-void iMouseMove(int mx, int my)
-{
-	// place your codes here
-}
-/*
-function iMouseDrag() is called when the user presses and drags the mouse.
-(mx, my) is the position where the mouse pointer is.
-*/
-void iMouseDrag(int mx, int my)
-{
-	// place your codes here
-}
-
-/*
-function iMouseWheel() is called when the user scrolls the mouse wheel.
-dir = 1 for up, -1 for down.
-*/
-void iMouseWheel(int dir, int mx, int my)
-{
-	// place your code here
-}
-
-/*
-	function iMouse() is called when the user presses/releases the mouse.
-	(mx, my) is the position where the mouse pointer is.
-*/
-void iMouse(int button, int state, int mx, int my)
-{
-	if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN)
-	{
-		// place your codes here
-	}
-	if (button == GLUT_RIGHT_BUTTON && state == GLUT_DOWN)
-	{
-		// place your codes here
-	}
 }
 
 /*
@@ -180,11 +139,25 @@ void iSpecialKeyboard(unsigned char key, int state)
 	// place your codes for other keys here
 }
 
-int main(int argc, char *argv[])
+void iStart()
 {
-	glutInit(&argc, argv);
 	loadResources();
 	iSetTimer(100, updateMonster);
 	iOpenWindow(500, 400, "SpriteDemo");
+}
+
+int main(int argc, char *argv[])
+{
+	glutInit(&argc, argv);
+
+	// Register Callbacks
+	iSetDrawCallback(iDraw);
+	iSetKeyboardCallback(iKeyboard);
+	iSetSpecialKeyboardCallback(iSpecialKeyboard);
+	// iSetMouseClickCallback(iMouseClick);
+	// iSetMouseMoveCallback(iMouseMove);
+	// iSetMouseDragCallback(iMouseDrag);
+	// iSetMouseWheelCallback(iMouseWheel);
+	iStart();
 	return 0;
 }

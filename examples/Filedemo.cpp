@@ -55,70 +55,36 @@ void iDraw()
 }
 
 /*
-    function iMouseDrag() is called when the user presses and drags the mouse.
-    (mx, my) is the position where the mouse pointer is.
-*/
-void iMouseDrag(int mx, int my)
-{
-    // place your codes here
-}
-
-/*
-    function iMouseMove() is called automatically when the mouse pointer is in motion
-*/
-void iMouseMove(int mx, int my)
-{
-    // place your code here
-}
-
-/*
-    function iMouse() is called when the user presses/releases the mouse.
-    (mx, my) is the position where the mouse pointer is.
-*/
-void iMouse(int button, int state, int mx, int my)
-{
-    if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN)
-    {
-    }
-    if (button == GLUT_RIGHT_BUTTON && state == GLUT_DOWN)
-    {
-    }
-}
-
-void iMouseWheel(int dir, int mx, int my)
-{
-    // place your code here
-}
-
-/*
     function iKeyboard() is called whenever the user hits a key in keyboard.
     key- holds the ASCII value of the key pressed.
 */
 void iKeyboard(unsigned char key, int state)
-{
+{ // place your codes for other keys here
+    if (state == GLUT_DOWN)
+    {
+        if (key == '\r')
+        {
+            saveName();
+            loadNames();
+            name[0] = '\0';
+        }
+        else if (key == '\b')
+        {
+            if (strlen(name) > 0)
+            {
+                name[strlen(name) - 1] = '\0';
+            }
+        }
+        else
+        {
+            if (strlen(name) < 99)
+            {
+                name[strlen(name)] = key;
+                name[strlen(name) + 1] = '\0';
+            }
+        }
+    }
 
-    // place your codes for other keys here
-    if (key == '\r')
-    {
-        saveName();
-        loadNames();
-        name[0] = '\0';
-    }
-    else if (key == '\b')
-    {
-        if (strlen(name) > 0)
-        {
-            name[strlen(name) - 1] = '\0';
-        }
-    }
-    else
-    {
-        if (strlen(name) < 99)
-        {
-            name[strlen(name)] = key;
-            name[strlen(name) + 1] = '\0';
-        }
-    }
     printf("name = %s\n", name);
 }
 
@@ -133,19 +99,31 @@ void iKeyboard(unsigned char key, int state)
 */
 void iSpecialKeyboard(unsigned char key, int state)
 {
-
     if (key == GLUT_KEY_END)
     {
         exit(0);
     }
-
     // place your codes for other keys here
+}
+
+void iStart()
+{
+    loadNames();
+    iOpenWindow(600, 400, "Mousedemo");
 }
 
 int main(int argc, char *argv[])
 {
     glutInit(&argc, argv);
-    loadNames();
-    iOpenWindow(600, 400, "Mousedemo");
+
+    // Register Callbacks
+    iSetDrawCallback(iDraw);
+    iSetKeyboardCallback(iKeyboard);
+    iSetSpecialKeyboardCallback(iSpecialKeyboard);
+    // iSetMouseClickCallback(iMouseClick);
+    // iSetMouseMoveCallback(iMouseMove);
+    // iSetMouseDragCallback(iMouseDrag);
+    // iSetMouseWheelCallback(iMouseWheel);
+    iStart();
     return 0;
 }

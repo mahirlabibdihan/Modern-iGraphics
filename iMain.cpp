@@ -1,6 +1,5 @@
 #include "iGraphics.h"
-#include "iSound.h"
-#include "iFont.h"
+
 /*
 function iDraw() is called again and again by the system.
 */
@@ -8,32 +7,14 @@ void iDraw()
 {
     // place your drawing codes here
     iClear();
-    iShowText(120, 180, "Hello World", "assets/fonts/arial.ttf");
+    iText(120, 180, "Hello World");
 }
 
 /*
-function iMouseMove() is called when the user moves the mouse.
+function iMouseClick() is called when the user presses/releases the mouse.
 (mx, my) is the position where the mouse pointer is.
 */
-void iMouseMove(int mx, int my)
-{
-    // place your codes here
-}
-
-/*
-function iMouseDrag() is called when the user presses and drags the mouse.
-(mx, my) is the position where the mouse pointer is.
-*/
-void iMouseDrag(int mx, int my)
-{
-    // place your codes here
-}
-
-/*
-function iMouse() is called when the user presses/releases the mouse.
-(mx, my) is the position where the mouse pointer is.
-*/
-void iMouse(int button, int state, int mx, int my)
+void iMouseClick(int button, int state, int mx, int my)
 {
     if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN)
     {
@@ -43,15 +24,6 @@ void iMouse(int button, int state, int mx, int my)
     {
         // place your codes here
     }
-}
-
-/*
-function iMouseWheel() is called when the user scrolls the mouse wheel.
-dir = 1 for up, -1 for down.
-*/
-void iMouseWheel(int dir, int mx, int my)
-{
-    // place your code here
 }
 
 /*
@@ -93,11 +65,24 @@ void iSpecialKeyboard(unsigned char key, int state)
     }
 }
 
+void iStart()
+{
+    // Write your initialization codes here
+    iOpenWindow(400, 400, "iGraphics");
+}
+
 int main(int argc, char *argv[])
 {
     glutInit(&argc, argv);
-    iPlaySound("assets/sounds/background.wav", 1); // Play background sound
-    iOpenWindow(400, 400, "iGraphics");            // Infinite Loop
-    printf("Exiting...");
+
+    // Register Callbacks
+    iSetDrawCallback(iDraw);
+    iSetKeyboardCallback(iKeyboard);
+    iSetSpecialKeyboardCallback(iSpecialKeyboard);
+    iSetMouseClickCallback(iMouseClick);
+    // iSetMouseMoveCallback(iMouseMove);
+    // iSetMouseDragCallback(iMouseDrag);
+    // iSetMouseWheelCallback(iMouseWheel);
+    iStart();
     return 0;
 }

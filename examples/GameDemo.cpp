@@ -64,27 +64,10 @@ void iDraw()
 }
 
 /*
-    function iMouseDrag() is called when the user presses and drags the mouse.
+    function iMouseClick() is called when the user presses/releases the mouse.
     (mx, my) is the position where the mouse pointer is.
 */
-void iMouseDrag(int mx, int my)
-{
-    // place your codes here
-}
-
-/*
-    function iMouseMove() is called automatically when the mouse pointer is in motion
-*/
-void iMouseMove(int mx, int my)
-{
-    // place your code here
-}
-
-/*
-    function iMouse() is called when the user presses/releases the mouse.
-    (mx, my) is the position where the mouse pointer is.
-*/
-void iMouse(int button, int state, int mx, int my)
+void iMouseClick(int button, int state, int mx, int my)
 {
     if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN)
     {
@@ -94,11 +77,6 @@ void iMouse(int button, int state, int mx, int my)
     {
         iMirrorSprite(&pinkMonster, VERTICAL);
     }
-}
-
-void iMouseWheel(int dir, int mx, int my)
-{
-    // place your code here
 }
 
 /*
@@ -192,14 +170,27 @@ void iAnim()
     // iUpdateSprite(&rect);
 }
 
-int main(int argc, char *argv[])
+void iStart()
 {
-    glutInit(&argc, argv);
-    iInitializeSound();
     iSetTimer(50, iAnim);
     loadResources();
     iPlaySound("assets/sounds/background.wav", true);
     iOpenWindow(1366, 768, "Game Demo", 1);
     printf("Exiting...");
+}
+
+int main(int argc, char *argv[])
+{
+    glutInit(&argc, argv);
+
+    // Register Callbacks
+    iSetDrawCallback(iDraw);
+    iSetKeyboardCallback(iKeyboard);
+    iSetSpecialKeyboardCallback(iSpecialKeyboard);
+    iSetMouseClickCallback(iMouseClick);
+    // iSetMouseMoveCallback(iMouseMove);
+    // iSetMouseDragCallback(iMouseDrag);
+    // iSetMouseWheelCallback(iMouseWheel);
+    iStart();
     return 0;
 }

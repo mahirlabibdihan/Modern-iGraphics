@@ -205,10 +205,10 @@ void iDraw()
 }
 
 /*
-function iMouse() is called when the user presses/releases the mouse.
+function iMouseClick() is called when the user presses/releases the mouse.
 (mx, my) is the position where the mouse pointer is.
 */
-void iMouse(int button, int state, int mx, int my)
+void iMouseClick(int button, int state, int mx, int my)
 {
     if(button == GLUT_LEFT_BUTTON && state == GLUT_DOWN)
     {
@@ -583,7 +583,7 @@ int main(int argc, char *argv[])
 
 ### 🖱️ Mouse Functions
 
-#### `void iMouse(int button, int state, int mx, int my)`
+#### `void iMouseClick(int button, int state, int mx, int my)`
 
 - **Description:** Called when a mouse button is pressed or released.
 - **Parameters:**

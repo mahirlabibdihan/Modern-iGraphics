@@ -8,15 +8,6 @@ void iDraw()
 }
 
 /*
-	function iMouseDrag() is called when the user presses and drags the mouse.
-	(mx, my) is the position where the mouse pointer is.
-*/
-void iMouseDrag(int mx, int my)
-{
-	// place your codes here
-}
-
-/*
 	function iMouseMove() is called automatically when the mouse pointer is in motion
 */
 void iMouseMove(int mx, int my)
@@ -26,10 +17,10 @@ void iMouseMove(int mx, int my)
 }
 
 /*
-	function iMouse() is called when the user presses/releases the mouse.
+	function iMouseClick() is called when the user presses/releases the mouse.
 	(mx, my) is the position where the mouse pointer is.
 */
-void iMouse(int button, int state, int mx, int my)
+void iMouseClick(int button, int state, int mx, int my)
 {
 	if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN)
 	{
@@ -54,16 +45,6 @@ void iMouseWheel(int dir, int mx, int my)
 }
 
 /*
-	function iKeyboard() is called whenever the user hits a key in keyboard.
-	key- holds the ASCII value of the key pressed.
-*/
-void iKeyboard(unsigned char key, int state)
-{
-
-	// place your codes for other keys here
-}
-
-/*
 	function iSpecialKeyboard() is called whenver user hits special keys like-
 	function keys, home, end, pg up, pg down, arraows etc. you have to use
 	appropriate constants to detect them. A list is:
@@ -83,9 +64,23 @@ void iSpecialKeyboard(unsigned char key, int state)
 	// place your codes for other keys here
 }
 
+void iStart()
+{
+	iOpenWindow(600, 400, "Mousedemo");
+}
+
 int main(int argc, char *argv[])
 {
 	glutInit(&argc, argv);
-	iOpenWindow(600, 400, "Mousedemo");
+
+	// Register Callbacks
+	iSetDrawCallback(iDraw);
+	// iSetKeyboardCallback(iKeyboard);
+	iSetSpecialKeyboardCallback(iSpecialKeyboard);
+	iSetMouseClickCallback(iMouseClick);
+	iSetMouseMoveCallback(iMouseMove);
+	// iSetMouseDragCallback(iMouseDrag);
+	iSetMouseWheelCallback(iMouseWheel);
+	iStart();
 	return 0;
 }
