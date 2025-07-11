@@ -1642,9 +1642,9 @@ void iDelay(int sec)
 
 void iClear()
 {
-    glClear(GL_COLOR_BUFFER_BIT);
     glMatrixMode(GL_MODELVIEW);
     glClearColor(0, 0, 0, 0);
+    glClear(GL_COLOR_BUFFER_BIT);
     // glutSwapBuffers();
 }
 
