@@ -1,5 +1,5 @@
 /***
- * iGraphics.h: v0.4.0
+ * iGraphics.h: v0.5.0
  * A simple graphics library for C++ using OpenGL and GLUT.
  * Provides functions for drawing shapes, images, and handling input events.
  * This library is designed to be easy to use for beginners and supports basic graphics operations.
@@ -8,7 +8,7 @@
  * Author: Mahir Labib Dihan
  * Email: mahirlabibdihan@gmail.com
  * GitHub: https://github.com/mahirlabibdihan
- * Date: July 5, 2025
+ * Date: July 11, 2025
  */
 
 //
@@ -1647,7 +1647,6 @@ void iClear()
     glMatrixMode(GL_MODELVIEW);
     glClearColor(0, 0, 0, 0);
     glClear(GL_COLOR_BUFFER_BIT);
-    // glutSwapBuffers();
 }
 
 // int iGetDeltaTime()

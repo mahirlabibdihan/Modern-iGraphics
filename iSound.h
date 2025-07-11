@@ -9,7 +9,7 @@
  * Author: Mahir Labib Dihan
  * Email: mahirlabibdihan@gmail.com
  * GitHub: https://github.com/mahirlabibdihan
- * Date: July 5, 2025
+ * Date: July 11, 2025
  */
 
 #include <SDL.h>
