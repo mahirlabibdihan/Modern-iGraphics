@@ -1759,7 +1759,7 @@ void keyboardHandler1FF(unsigned char key, int x, int y)
 
 void keyboardHandlerUp1FF(unsigned char key, int x, int y)
 {
-    if (!iKeyboard)
+    if (!iKeyboardUp)
     {
         // printf("Warning: Keyboard functionality is not enabled.\n");
         return;
@@ -1798,7 +1798,7 @@ void keyboardHandler2FF(int key, int x, int y)
 
 void keyboardHandlerUp2FF(int key, int x, int y)
 {
-    if (!iSpecialKeyboard)
+    if (!iSpecialKeyboardUp)
     {
         // printf("Warning: Special keyboard functionality is not enabled.\n");
         return;
