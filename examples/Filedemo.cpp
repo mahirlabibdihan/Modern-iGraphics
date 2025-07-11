@@ -58,30 +58,27 @@ void iDraw()
     function iKeyboard() is called whenever the user hits a key in keyboard.
     key- holds the ASCII value of the key pressed.
 */
-void iKeyboard(unsigned char key, int state)
+void iKeyboard(unsigned char key)
 { // place your codes for other keys here
-    if (state == GLUT_DOWN)
+    if (key == '\r')
     {
-        if (key == '\r')
+        saveName();
+        loadNames();
+        name[0] = '\0';
+    }
+    else if (key == '\b')
+    {
+        if (strlen(name) > 0)
         {
-            saveName();
-            loadNames();
-            name[0] = '\0';
+            name[strlen(name) - 1] = '\0';
         }
-        else if (key == '\b')
+    }
+    else
+    {
+        if (strlen(name) < 99)
         {
-            if (strlen(name) > 0)
-            {
-                name[strlen(name) - 1] = '\0';
-            }
-        }
-        else
-        {
-            if (strlen(name) < 99)
-            {
-                name[strlen(name)] = key;
-                name[strlen(name) + 1] = '\0';
-            }
+            name[strlen(name)] = key;
+            name[strlen(name) + 1] = '\0';
         }
     }
 
@@ -97,7 +94,7 @@ void iKeyboard(unsigned char key, int state)
     GLUT_KEY_LEFT, GLUT_KEY_UP, GLUT_KEY_RIGHT, GLUT_KEY_DOWN, GLUT_KEY_PAGE UP,
     GLUT_KEY_PAGE DOWN, GLUT_KEY_HOME, GLUT_KEY_END, GLUT_KEY_INSERT
 */
-void iSpecialKeyboard(unsigned char key, int state)
+void iSpecialKeyboard(unsigned char key)
 {
     if (key == GLUT_KEY_END)
     {

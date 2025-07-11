@@ -24,7 +24,7 @@ void iDraw()
 function iKeyboard() is called whenever the user hits a key in keyboard.
 key- holds the ASCII value of the key pressed.
 */
-void iKeyboard(unsigned char key, int state)
+void iKeyboard(unsigned char key)
 {
     switch (key)
     {

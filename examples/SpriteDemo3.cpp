@@ -42,7 +42,7 @@ void iDraw()
 	function iKeyboard() is called whenever the user hits a key in keyboard.
 	key- holds the ASCII value of the key pressed.
 */
-void iKeyboard(unsigned char key, int state)
+void iKeyboard(unsigned char key)
 {
 	if (key == 'x')
 	{
@@ -63,7 +63,7 @@ void iKeyboard(unsigned char key, int state)
 */
 
 int direction = 1;
-void iSpecialKeyboard(unsigned char key, int state)
+void iSpecialKeyboard(unsigned char key)
 {
 	if (key == GLUT_KEY_END)
 	{

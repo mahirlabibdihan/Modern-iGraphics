@@ -100,8 +100,10 @@ int iAnimPause[MAX_TIMERS];
 int iAnimLastCallTime[MAX_TIMERS] = {0};
 
 void iDraw() __attribute__((weak));
-void iKeyboard(unsigned char, int) __attribute__((weak));
-void iSpecialKeyboard(unsigned char, int) __attribute__((weak));
+void iKeyboard(unsigned char) __attribute__((weak));
+void iKeyboardUp(unsigned char) __attribute__((weak));
+void iSpecialKeyboard(unsigned char) __attribute__((weak));
+void iSpecialKeyboardUp(unsigned char) __attribute__((weak));
 void iMouseClick(int button, int state, int x, int y) __attribute__((weak));
 void iMouseMove(int, int) __attribute__((weak)); // New function
 void iMouseDrag(int, int) __attribute__((weak)); // Renamed from iMouseMove to iMouseDrag
@@ -1746,12 +1748,12 @@ void keyboardHandler1FF(unsigned char key, int x, int y)
 
     if (isKeyPressed(key))
     {
-        iKeyboard(key, GLUT_HOLD);
+        iKeyboard(key);
     }
     else
     {
         keys[key] = true;
-        iKeyboard(key, GLUT_DOWN);
+        iKeyboard(key);
     }
     redraw();
 }
@@ -1765,7 +1767,7 @@ void keyboardHandlerUp1FF(unsigned char key, int x, int y)
     }
 
     keys[key] = false;
-    iKeyboard(key, GLUT_UP);
+    iKeyboardUp(key);
     redraw();
 }
 
@@ -1785,12 +1787,12 @@ void keyboardHandler2FF(int key, int x, int y)
     }
     if (isSpecialKeyPressed(key))
     {
-        iSpecialKeyboard(key, GLUT_HOLD);
+        iSpecialKeyboard(key);
     }
     else
     {
         specialKeys[key] = true; // Mark special key as pressed
-        iSpecialKeyboard(key, GLUT_DOWN);
+        iSpecialKeyboard(key);
     }
     redraw();
 }
@@ -1804,7 +1806,7 @@ void keyboardHandlerUp2FF(int key, int x, int y)
     }
 
     specialKeys[key] = false; // Mark special key as released
-    iSpecialKeyboard(key, GLUT_UP);
+    iSpecialKeyboardUp(key);
     redraw();
 }
 

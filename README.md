@@ -250,7 +250,7 @@ void iMouseWheel(int dir, int mx, int my)
 function iKeyboard() is called whenever the user hits a key in keyboard.
 key- holds the ASCII value of the key pressed.
 */
-void iKeyboard(unsigned char key, int state)
+void iKeyboard(unsigned char key)
 {
     switch (key)
     {
@@ -273,7 +273,7 @@ GLUT_KEY_F7, GLUT_KEY_F8, GLUT_KEY_F9, GLUT_KEY_F10, GLUT_KEY_F11,
 GLUT_KEY_F12, GLUT_KEY_LEFT, GLUT_KEY_UP, GLUT_KEY_RIGHT, GLUT_KEY_DOWN,
 GLUT_KEY_PAGE_UP, GLUT_KEY_PAGE_DOWN, GLUT_KEY_HOME, GLUT_KEY_END,
 GLUT_KEY_INSERT */
-void iSpecialKeyboard(unsigned char key, int state)
+void iSpecialKeyboard(unsigned char key)
 {
     switch (key)
     {
@@ -319,7 +319,7 @@ int main(int argc, char *argv[])
 - **Parameters:** None
 - **Example:**
   ```cpp
-  void iKeyboard(unsigned char key, int state)
+  void iKeyboard(unsigned char key)
   {
       switch (key)
       {
@@ -631,7 +631,7 @@ int main(int argc, char *argv[])
 
 ### ⌨️ Keyboard Functions
 
-#### `void iKeyboard(unsigned char key, int state)`
+#### `void iKeyboard(unsigned char key)`
 
 - **Description:** Called when a key is pressed or released or held down.
 - **Parameters:**
@@ -642,7 +642,7 @@ int main(int argc, char *argv[])
     - `GLUT_HOLD`: Key held down.
 - **Note:** _This function should be defined in the main file._
 
-#### `void iSpecialKeyboard(unsigned char key, int state)`
+#### `void iSpecialKeyboard(unsigned char key)`
 
 - **Description:** Called when a special key is pressed or released or held down.
 - **Parameters:**
