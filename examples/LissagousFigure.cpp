@@ -145,7 +145,7 @@ void iKeyboard(unsigned char key, int state)
         exit(0);
 }
 
-int main()
+int main(int argc, char *argv[])
 {
     iOpenWindow(1920, 1080, "Graph");
     return 0;

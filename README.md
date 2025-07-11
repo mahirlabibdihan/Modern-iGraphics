@@ -286,7 +286,7 @@ void iSpecialKeyboard(unsigned char key, int state)
     }
 }
 
-int main()
+int main(int argc, char *argv[])
 {
     // Initialization code before opening the window
     iOpenWindow(400, 400, "iGraphics");
@@ -550,7 +550,7 @@ int main()
       //code of the task that will be repeated.
   }
 
-  int main()
+  int main(int argc, char *argv[])
   {
       ...
       int t = iSetTimer(100, func); // //call it inside main() before iOpenWindow();
@@ -695,14 +695,6 @@ int main()
   ```cpp
   #include "iSound.h" // Include the sound header
   ...
-  int main()
-  {
-      glutInit(&argc, argv);
-      iInitializeSound(); // Need to initialize sound engine
-      iOpenWindow(600, 250, "Sound Demo");
-      return 0;
-  }
-  ...
   int channel = iPlaySound("background.wav", true, 80);
   ```
 
@@ -726,7 +718,7 @@ int main()
 
 #### `void iStopSound(int channel)`
 
-- **Description:** Stops the sound specified by `channel`.
+- **Description:** Stops the sound specified by `channel`. Frees the channel for other sounds.
 - **Parameters:** `channel` of the sound.
 - **Example:**
   ```cpp
@@ -735,7 +727,7 @@ int main()
 
 #### `void iStopAllSounds()`
 
-- **Description:** Stops all currently playing sounds.
+- **Description:** Stops all currently playing sounds. Frees all channels.
 
 #### `void iSetVolume(int channel, int volume)`
 
@@ -774,14 +766,6 @@ Custom font rendering is supported using TrueType fonts. `freetype` library is u
 
   ```cpp
   #include "iFont.h" // Include the font header
-  ...
-  int main()
-  {
-      glutInit(&argc, argv);
-      iInitializeFont(); // Need to initialize freeType library
-      iOpenWindow(600, 250, "Text Demo");
-      return 0;
-  }
   ...
   iShowText(50, 60, "This is a text", "assets/fonts/arial.ttf", 48);
   ```

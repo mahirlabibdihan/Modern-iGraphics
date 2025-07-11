@@ -21,7 +21,7 @@ void iDraw()
     iShowText(220, 120, "Hello OpenGL!", "assets/fonts/Sixtyfour-Regular-VariableFont_BLED,SCAN.ttf", 48);
 }
 
-int main()
+int main(int argc, char *argv[])
 {
     iOpenWindow(800, 500, "Text Demo");
     return 0;

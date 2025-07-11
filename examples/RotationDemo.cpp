@@ -82,7 +82,7 @@ void iAnim(int dt)
     }
 }
 
-int main()
+int main(int argc, char *argv[])
 {
     iSetTimer(10, iAnim); // Set a timer to call iAnim every 100 milliseconds
     loadResources();

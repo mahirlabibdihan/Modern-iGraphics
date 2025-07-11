@@ -1,6 +1,6 @@
 #include "iGraphics.h"
 
-int main()
+int main(int argc, char *argv[])
 {
     iOpenWindow(400, 400, "iGraphics");
     return 0;

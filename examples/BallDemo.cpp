@@ -87,7 +87,7 @@ void randomizeBallPosition()
     ball_y = rand() % (iScreenHeight - 2 * ball_radius) + ball_radius;
 }
 
-int main()
+int main(int argc, char *argv[])
 {
     iSetTimer(20, ballChange);
     // iSetTimer(2000, randomizeBallPosition);

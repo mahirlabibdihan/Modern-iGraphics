@@ -1,6 +1,5 @@
 #include "iGraphics.h"
 #include <iostream>
-#include "iSound.h"
 using namespace std;
 
 int bgSoundIdx = -1;
@@ -27,7 +26,7 @@ void iMouseClick(int button, int state, int mx, int my)
 	}
 }
 
-int main()
+int main(int argc, char *argv[])
 {
 	iOpenWindow(600, 250, "Sound Demo");
 	return 0;

@@ -115,7 +115,7 @@ void iSpecialKeyboard(unsigned char key, int state)
     // place your codes for other keys here
 }
 
-int main()
+int main(int argc, char *argv[])
 {
     pic_x = 0;
     pic_y = 0;

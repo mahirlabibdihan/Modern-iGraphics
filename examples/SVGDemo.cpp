@@ -40,7 +40,7 @@ void iKeyboard(unsigned char key, int state)
     }
 }
 
-int main()
+int main(int argc, char *argv[])
 {
     loadResources(); // Load resources before initializing graphics
     iOpenWindow(1000, 800, "SVG Demo");

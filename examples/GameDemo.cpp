@@ -176,7 +176,7 @@ void iAnim(int dt)
     // iUpdateSprite(&rect);
 }
 
-int main()
+int main(int argc, char *argv[])
 {
     iSetTimer(50, iAnim);
     loadResources();

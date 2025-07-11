@@ -76,7 +76,7 @@ void hour(int dt)
     ph = ph - 1 / 600;
 }
 
-int main()
+int main(int argc, char *argv[])
 {
     time_t rawtime;
     tm *ptm;

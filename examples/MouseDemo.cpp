@@ -63,7 +63,7 @@ void iSpecialKeyboard(unsigned char key, int state)
 	// place your codes for other keys here
 }
 
-int main()
+int main(int argc, char *argv[])
 {
 	iOpenWindow(600, 400, "Mousedemo");
 	return 0;
