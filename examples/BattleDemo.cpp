@@ -189,23 +189,11 @@ void iSpecialKeyboard(unsigned char key, int state)
     // place your codes for other keys here
 }
 
-void iStart()
+int main()
 {
     iSetTimer(100, iAnim);
     loadPinkMonster();
     loadGolem();
     iOpenWindow(800, 400, "BattleDemo");
-}
-
-int main(int argc, char *argv[])
-{
-    glutInit(&argc, argv);
-
-    // Register Callbacks
-    iSetDrawCallback(iDraw);
-    iSetKeyboardCallback(iKeyboard);
-    iSetSpecialKeyboardCallback(iSpecialKeyboard);
-
-    iStart();
     return 0;
 }

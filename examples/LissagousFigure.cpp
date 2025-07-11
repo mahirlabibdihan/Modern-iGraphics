@@ -145,19 +145,8 @@ void iKeyboard(unsigned char key, int state)
         exit(0);
 }
 
-void iStart()
+int main()
 {
     iOpenWindow(1920, 1080, "Graph");
-}
-
-int main(int argc, char *argv[])
-{
-    glutInit(&argc, argv);
-
-    // Register Callbacks
-    iSetDrawCallback(iDraw);
-    iSetKeyboardCallback(iKeyboard);
-
-    iStart();
     return 0;
 }

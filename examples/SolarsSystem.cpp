@@ -225,7 +225,7 @@ void movePlanets(int dt)
     }
 }
 
-void iStart()
+int main()
 {
     const int CX_MAX = 1366;
     const int CY_MAX = 768;
@@ -241,17 +241,5 @@ void iStart()
 
     iSetTimer(20, movePlanets);
     iOpenWindow(CX_MAX, CY_MAX, "Solar system!");
-}
-
-int main(int argc, char *argv[])
-{
-    glutInit(&argc, argv);
-
-    // Register Callbacks
-    iSetDrawCallback(iDraw);
-    iSetKeyboardCallback(iKeyboard);
-    iSetSpecialKeyboardCallback(iSpecialKeyboard);
-
-    iStart();
     return 0;
 }

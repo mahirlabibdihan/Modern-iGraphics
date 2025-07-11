@@ -87,23 +87,10 @@ void randomizeBallPosition()
     ball_y = rand() % (iScreenHeight - 2 * ball_radius) + ball_radius;
 }
 
-void iStart()
+int main()
 {
-    // Write your initialization codes here
     iSetTimer(20, ballChange);
     // iSetTimer(2000, randomizeBallPosition);
     iOpenWindow(400, 400, "Ball Demo");
-}
-
-int main(int argc, char *argv[])
-{
-    glutInit(&argc, argv);
-
-    // Register Callbacks
-    iSetDrawCallback(iDraw);
-    iSetKeyboardCallback(iKeyboard);
-    iSetSpecialKeyboardCallback(iSpecialKeyboard);
-
-    iStart();
     return 0;
 }

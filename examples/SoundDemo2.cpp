@@ -80,22 +80,9 @@ void iSpecialKeyboard(unsigned char key, int state)
 	}
 }
 
-void iStart()
+int main()
 {
 	bgSoundIdx = iPlaySound("assets/sounds/bgm1.mp3", true, 50);
 	iOpenWindow(600, 250, "Sound Demo");
-}
-
-int main(int argc, char *argv[])
-{
-	glutInit(&argc, argv);
-
-	// Register Callbacks
-	iSetDrawCallback(iDraw);
-	iSetKeyboardCallback(iKeyboard);
-	iSetSpecialKeyboardCallback(iSpecialKeyboard);
-	iSetMouseClickCallback(iMouseClick);
-
-	iStart();
 	return 0;
 }

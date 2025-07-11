@@ -76,24 +76,12 @@ void iSpecialKeyboard(unsigned char key, int state)
     // place your codes for other keys here
 }
 
-void iStart()
+int main()
 {
     pic_x = 0;
     pic_y = 0;
     populate_monster_images();
     iSetTimer(100, update_monster);
     iOpenWindow(900, 900, "SpriteDemo");
-}
-
-int main(int argc, char *argv[])
-{
-    glutInit(&argc, argv);
-
-    // Register Callbacks
-    iSetDrawCallback(iDraw);
-    iSetKeyboardCallback(iKeyboard);
-    iSetSpecialKeyboardCallback(iSpecialKeyboard);
-
-    iStart();
     return 0;
 }

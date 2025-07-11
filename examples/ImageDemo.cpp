@@ -54,20 +54,9 @@ void iSpecialKeyboard(unsigned char key, int state)
 	// place your codes for other keys here
 }
 
-void iStart()
+int main()
 {
 	loadResources();
 	iOpenWindow(900, 900, "ImageDemp");
-}
-
-int main(int argc, char *argv[])
-{
-	glutInit(&argc, argv);
-
-	// Register Callbacks
-	iSetDrawCallback(iDraw);
-	iSetSpecialKeyboardCallback(iSpecialKeyboard);
-
-	iStart();
 	return 0;
 }

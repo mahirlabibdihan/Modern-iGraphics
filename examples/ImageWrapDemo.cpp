@@ -63,21 +63,9 @@ void iSpecialKeyboard(unsigned char key, int state)
 	// place your codes for other keys here
 }
 
-void iStart()
+int main()
 {
 	loadResources();
 	iOpenWindow(900, 450, "ImageWrapDemo");
-}
-
-int main(int argc, char *argv[])
-{
-	glutInit(&argc, argv);
-
-	// Register Callbacks
-	iSetDrawCallback(iDraw);
-	iSetSpecialKeyboardCallback(iSpecialKeyboard);
-	iSetMouseClickCallback(iMouseClick);
-
-	iStart();
 	return 0;
 }

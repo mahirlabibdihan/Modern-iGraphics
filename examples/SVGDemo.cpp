@@ -40,20 +40,9 @@ void iKeyboard(unsigned char key, int state)
     }
 }
 
-void iStart()
+int main()
 {
     loadResources(); // Load resources before initializing graphics
     iOpenWindow(1000, 800, "SVG Demo");
-}
-
-int main(int argc, char *argv[])
-{
-    glutInit(&argc, argv);
-
-    // Register Callbacks
-    iSetDrawCallback(iDraw);
-    iSetKeyboardCallback(iKeyboard);
-
-    iStart();
     return 0;
 }

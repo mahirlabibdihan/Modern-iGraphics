@@ -40,7 +40,6 @@ void iMouseWheel(int dir, int mx, int my)
 	{
 		printf("Mouse wheel moved down\n");
 	}
-
 	return;
 }
 
@@ -64,22 +63,8 @@ void iSpecialKeyboard(unsigned char key, int state)
 	// place your codes for other keys here
 }
 
-void iStart()
+int main()
 {
 	iOpenWindow(600, 400, "Mousedemo");
-}
-
-int main(int argc, char *argv[])
-{
-	glutInit(&argc, argv);
-
-	// Register Callbacks
-	iSetDrawCallback(iDraw);
-	iSetSpecialKeyboardCallback(iSpecialKeyboard);
-	iSetMouseClickCallback(iMouseClick);
-	iSetMouseMoveCallback(iMouseMove);
-	iSetMouseWheelCallback(iMouseWheel);
-
-	iStart();
 	return 0;
 }

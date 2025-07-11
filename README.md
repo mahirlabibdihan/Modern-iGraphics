@@ -286,9 +286,8 @@ void iSpecialKeyboard(unsigned char key, int state)
     }
 }
 
-int main(int argc, char *argv[])
+int main()
 {
-    glutInit(&argc, argv);
     // Initialization code before opening the window
     iOpenWindow(400, 400, "iGraphics");
     // Execution will continue from here once iCloseWindow() is called.
@@ -551,7 +550,7 @@ int main(int argc, char *argv[])
       //code of the task that will be repeated.
   }
 
-  int main(int argc, char *argv[])
+  int main()
   {
       ...
       int t = iSetTimer(100, func); // //call it inside main() before iOpenWindow();
@@ -696,7 +695,7 @@ int main(int argc, char *argv[])
   ```cpp
   #include "iSound.h" // Include the sound header
   ...
-  int main(int argc, char *argv[])
+  int main()
   {
       glutInit(&argc, argv);
       iInitializeSound(); // Need to initialize sound engine
@@ -776,7 +775,7 @@ Custom font rendering is supported using TrueType fonts. `freetype` library is u
   ```cpp
   #include "iFont.h" // Include the font header
   ...
-  int main(int argc, char *argv[])
+  int main()
   {
       glutInit(&argc, argv);
       iInitializeFont(); // Need to initialize freeType library
@@ -1152,9 +1151,9 @@ This library is for educational purposes and is typically used in academic or ho
 
 ## 🙏 Acknowledgements
 
-- [Shahriar Nirjon](https://github.com/nirjon) - Original iGraphics library 
+- [Shahriar Nirjon](https://github.com/nirjon) - Original iGraphics library
 - [Ashrafur Rahman Khan](https://github.com/risenfromashes) - Linux Support, Freeglut, SDL2 sound engine, Transparent Color, Mouse passive motion ([repository](https://github.com/risenfromashes/catch-the-egg))
-- [Anwarul Bashar Shuaib](https://github.com/shuaibw) - Image cache, resize, mirror, wrap, and pixel-perfect collision detection functionality  ([repository](https://github.com/shuaibw/iGraphics-extended/))
+- [Anwarul Bashar Shuaib](https://github.com/shuaibw) - Image cache, resize, mirror, wrap, and pixel-perfect collision detection functionality ([repository](https://github.com/shuaibw/iGraphics-extended/))
 - [Wasif Jalal](https://github.com/wjalal) - SDL2 sound engine, Game Mode ([repository](https://github.com/wjalal/1-1_term_project_igraphics_dxball))
 
 <!-- ## 🙏 Acknowledgements

@@ -99,14 +99,14 @@ int iAnimDelays[MAX_TIMERS];
 int iAnimPause[MAX_TIMERS];
 int iAnimLastCallTime[MAX_TIMERS] = {0};
 
-void (*iiDraw)() = nullptr;
-void (*iiKeyboard)(unsigned char, int) = nullptr;
-void (*iiSpecialKeyboard)(unsigned char, int) = nullptr;
-void (*iiMouseClick)(int, int, int, int) = nullptr;
-void (*iiMouseMove)(int, int) = nullptr;
-void (*iiMouseDrag)(int, int) = nullptr;
-void (*iiMouseWheel)(int, int, int) = nullptr;
-void (*iiResize)(int, int) = nullptr;
+void iDraw() __attribute__((weak));
+void iKeyboard(unsigned char, int) __attribute__((weak));
+void iSpecialKeyboard(unsigned char, int) __attribute__((weak));
+void iMouseClick(int button, int state, int x, int y) __attribute__((weak));
+void iMouseMove(int, int) __attribute__((weak)); // New function
+void iMouseDrag(int, int) __attribute__((weak)); // Renamed from iMouseMove to iMouseDrag
+void iMouseWheel(int dir, int x, int y) __attribute__((weak));
+void iResize(int width, int height) __attribute__((weak));
 
 #define mmax(a, b) ((a) > (b) ? (a) : (b))
 #define mmin(a, b) ((a) < (b) ? (a) : (b))
@@ -127,6 +127,17 @@ void (*iiResize)(int, int) = nullptr;
 #endif
 
 #endif
+
+void iInitGlut()
+{
+    if (!glutGet(GLUT_INIT_STATE))
+    {
+        int n = 1;
+        char *p[1];
+        p[0] = (char *)malloc(8);
+        glutInit(&n, p);
+    }
+}
 
 void timerCallback(int index)
 {
@@ -151,6 +162,7 @@ void timerCallback(int index)
 
 int iSetTimer(int msec, void (*f)(int))
 {
+    iInitGlut();
     if (iAnimCount >= 10)
     {
         printf("Error: Maximum number of timers reached.\n");
@@ -1635,7 +1647,7 @@ void iClear()
     glClear(GL_COLOR_BUFFER_BIT);
     glMatrixMode(GL_MODELVIEW);
     glClearColor(0, 0, 0, 0);
-    glFlush();
+    // glutSwapBuffers();
 }
 
 // int iGetDeltaTime()
@@ -1649,14 +1661,15 @@ void iClear()
 //     old_t = t;
 //     return deltaTime;
 // }
+
 void displayFF(void)
 {
     // iClear();
-    if (iiDraw)
+    if (iDraw)
     {
-        iiDraw();
+        iDraw();
+        glutSwapBuffers();
     }
-    glutSwapBuffers();
 }
 
 int frameCount = 0;
@@ -1727,7 +1740,7 @@ bool isKeyPressed(unsigned char key)
 
 void keyboardHandler1FF(unsigned char key, int x, int y)
 {
-    if (!iiKeyboard)
+    if (!iKeyboard)
     {
         // printf("Warning: Keyboard functionality is not enabled.\n");
         return;
@@ -1735,26 +1748,26 @@ void keyboardHandler1FF(unsigned char key, int x, int y)
 
     if (isKeyPressed(key))
     {
-        iiKeyboard(key, GLUT_HOLD);
+        iKeyboard(key, GLUT_HOLD);
     }
     else
     {
         keys[key] = true;
-        iiKeyboard(key, GLUT_DOWN);
+        iKeyboard(key, GLUT_DOWN);
     }
     redraw();
 }
 
 void keyboardHandlerUp1FF(unsigned char key, int x, int y)
 {
-    if (!iiKeyboard)
+    if (!iKeyboard)
     {
         // printf("Warning: Keyboard functionality is not enabled.\n");
         return;
     }
 
     keys[key] = false;
-    iiKeyboard(key, GLUT_UP);
+    iKeyboard(key, GLUT_UP);
     redraw();
 }
 
@@ -1767,39 +1780,39 @@ bool isSpecialKeyPressed(int key)
 
 void keyboardHandler2FF(int key, int x, int y)
 {
-    if (!iiSpecialKeyboard)
+    if (!iSpecialKeyboard)
     {
         // printf("Warning: Special keyboard functionality is not enabled.\n");
         return;
     }
     if (isSpecialKeyPressed(key))
     {
-        iiSpecialKeyboard(key, GLUT_HOLD);
+        iSpecialKeyboard(key, GLUT_HOLD);
     }
     else
     {
         specialKeys[key] = true; // Mark special key as pressed
-        iiSpecialKeyboard(key, GLUT_DOWN);
+        iSpecialKeyboard(key, GLUT_DOWN);
     }
     redraw();
 }
 
 void keyboardHandlerUp2FF(int key, int x, int y)
 {
-    if (!iiSpecialKeyboard)
+    if (!iSpecialKeyboard)
     {
         // printf("Warning: Special keyboard functionality is not enabled.\n");
         return;
     }
 
     specialKeys[key] = false; // Mark special key as released
-    iiSpecialKeyboard(key, GLUT_UP);
+    iSpecialKeyboard(key, GLUT_UP);
     redraw();
 }
 
 void mouseMoveHandlerFF(int mx, int my)
 {
-    if (!iiMouseDrag)
+    if (!iMouseDrag)
     {
         // printf("Warning: Mouse drag functionality is not enabled.\n");
         return;
@@ -1807,39 +1820,39 @@ void mouseMoveHandlerFF(int mx, int my)
 
     iMouseX = mx;
     iMouseY = iScreenHeight - my;
-    iiMouseDrag(iMouseX, iMouseY);
+    iMouseDrag(iMouseX, iMouseY);
     redraw();
 }
 
 void mousePassiveMoveHandlerFF(int x, int y)
 {
-    if (!iiMouseMove)
+    if (!iMouseMove)
     {
         // printf("Warning: Mouse move functionality is not enabled.\n");
         return;
     }
     iMouseX = x;
     iMouseY = iScreenHeight - y;
-    iiMouseMove(iMouseX, iMouseY);
+    iMouseMove(iMouseX, iMouseY);
     redraw();
 }
 
 void mouseHandlerFF(int button, int state, int x, int y)
 {
-    if (!iiMouseClick)
+    if (!iMouseClick)
     {
         // printf("Warning: Mouse click functionality is not enabled.\n");
         return;
     }
     iMouseX = x;
     iMouseY = iScreenHeight - y;
-    iiMouseClick(button, state, iMouseX, iMouseY);
+    iMouseClick(button, state, iMouseX, iMouseY);
     redraw();
 }
 
 void mouseWheelHandlerFF(int button, int dir, int x, int y)
 {
-    if (!iiMouseWheel)
+    if (!iMouseWheel)
     {
         // printf("Warning: Mouse wheel functionality is not enabled.\n");
         return;
@@ -1847,7 +1860,7 @@ void mouseWheelHandlerFF(int button, int dir, int x, int y)
 
     iMouseX = x;
     iMouseY = iScreenHeight - y;
-    iiMouseWheel(dir, iMouseX, iMouseY);
+    iMouseWheel(dir, iMouseX, iMouseY);
     redraw();
 }
 
@@ -1859,7 +1872,8 @@ void iSetTransparency(int state)
 void iToggleFullscreen()
 {
     if (isFullScreen)
-        glutReshapeWindow(iSmallScreenWidth, iSmallScreenHeight);
+        // glutReshapeWindow(iSmallScreenWidth, iSmallScreenHeight);
+        glutLeaveFullScreen();
     else
         glutFullScreen();
     isFullScreen = !isFullScreen;
@@ -1877,9 +1891,9 @@ void reshapeFF(int width, int height)
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
 
-    if (iiResize)
+    if (iResize)
     {
-        iiResize(width, height); // Need to define iiResize in main file
+        iResize(width, height); // Need to define iResize in main file
     }
     else
     {
@@ -1902,133 +1916,8 @@ void iShowCursor()
     glutSetCursor(GLUT_CURSOR_INHERIT);
 }
 
-void iCloseWindow()
+void iInit()
 {
-    if (isGameMode)
-    {
-        glutLeaveGameMode();
-    }
-    else
-    {
-        glutLeaveMainLoop();
-    }
-    programEnded = 1;
-}
-
-void iSetDrawCallback(void (*drawFunc)())
-{
-    if (drawFunc == nullptr)
-    {
-        printf("ERROR: Draw function cannot be null.\n");
-        return;
-    }
-    iiDraw = drawFunc;
-}
-void iSetKeyboardCallback(void (*keyboardFunc)(unsigned char, int))
-{
-    if (keyboardFunc == nullptr)
-    {
-        printf("ERROR: Keyboard function cannot be null.\n");
-        return;
-    }
-    iiKeyboard = keyboardFunc;
-}
-void iSetSpecialKeyboardCallback(void (*specialKeyboardFunc)(unsigned char, int))
-{
-    if (specialKeyboardFunc == nullptr)
-    {
-        printf("ERROR: Special keyboard function cannot be null.\n");
-        return;
-    }
-    iiSpecialKeyboard = specialKeyboardFunc;
-}
-void iSetMouseClickCallback(void (*mouseClickFunc)(int, int, int, int))
-{
-    if (mouseClickFunc == nullptr)
-    {
-        printf("ERROR: Mouse click function cannot be null.\n");
-        return;
-    }
-    iiMouseClick = mouseClickFunc;
-}
-void iSetMouseDragCallback(void (*mouseDragFunc)(int, int))
-{
-    if (mouseDragFunc == nullptr)
-    {
-        printf("ERROR: Mouse drag function cannot be null.\n");
-        return;
-    }
-    iiMouseDrag = mouseDragFunc;
-}
-void iSetMouseMoveCallback(void (*mouseMoveFunc)(int, int))
-{
-    if (mouseMoveFunc == nullptr)
-    {
-        printf("ERROR: Mouse move function cannot be null.\n");
-        return;
-    }
-    iiMouseMove = mouseMoveFunc;
-}
-void iSetMouseWheelCallback(void (*mouseWheelFunc)(int, int, int))
-{
-    if (mouseWheelFunc == nullptr)
-    {
-        printf("ERROR: Mouse wheel function cannot be null.\n");
-        return;
-    }
-    iiMouseWheel = mouseWheelFunc;
-}
-void iSetResizeCallback(void (*resizeFunc)(int, int))
-{
-    if (resizeFunc == nullptr)
-    {
-        printf("ERROR: Resize function cannot be null.\n");
-        return;
-    }
-    iiResize = resizeFunc;
-}
-
-void iOpenWindow(int width = 500, int height = 500, const char *title = "iGraphics", int fullscreen = 0)
-{
-    // Verify GLUT was initialized
-    if (!glutGet(GLUT_INIT_STATE))
-    {
-        printf("ERROR: GLUT not initialized. Call glutInit() first.\n");
-        return;
-    }
-    iSmallScreenHeight = iScreenHeight = height;
-    iSmallScreenWidth = iScreenWidth = width;
-    iWindowTitle = title;
-
-    glutSetOption(GLUT_MULTISAMPLE, 8);
-    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_ALPHA | GLUT_MULTISAMPLE);
-    glEnable(GLUT_MULTISAMPLE);
-
-    if (fullscreen)
-    {
-        char gameModeStr[20];
-        sprintf(gameModeStr, "%dx%d", width, height);
-        glutGameModeString(gameModeStr); // Supports: 640×480 800×600 1024×768 1280×720 1366x768
-        if (glutGameModeGet(GLUT_GAME_MODE_POSSIBLE))
-        {
-            isGameMode = 1;
-            glutEnterGameMode();
-        }
-        else
-        {
-            printf("ERROR: Game Mode not possible with %s\n", gameModeStr);
-            // Fallback to normal window
-            glutInitWindowSize(width, height);
-            glutInitWindowPosition(10, 10);
-            glutCreateWindow(title);
-        }
-    }
-    else
-    {
-        glutInitWindowSize(width, height);
-        glutInitWindowPosition(10, 10);
-        glutCreateWindow(title);
-    }
 
     // Basic OpenGL setup
     glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
@@ -2036,7 +1925,7 @@ void iOpenWindow(int width = 500, int height = 500, const char *title = "iGraphi
     // Set up viewport and orthographic projection
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    glOrtho(0.0, width, 0.0, height, -1.0, 1.0);
+    glOrtho(0.0, iScreenWidth, 0.0, iScreenHeight, -1.0, 1.0);
 
     iClear();
 
@@ -2075,5 +1964,61 @@ void iOpenWindow(int width = 500, int height = 500, const char *title = "iGraphi
 
     // glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
     glutSetOption(GLUT_ACTION_ON_WINDOW_CLOSE, GLUT_ACTION_CONTINUE_EXECUTION);
+}
+
+void iCloseWindow()
+{
+    if (isGameMode)
+    {
+        glutLeaveGameMode();
+    }
+    else
+    {
+        glutLeaveMainLoop();
+    }
+    programEnded = 1;
+}
+
+void iOpenWindow(int width = 500, int height = 500, const char *title = "iGraphics", int fullscreen = 0)
+{
+    // Ensure GLUT was initialized
+    iInitGlut();
+
+    iSmallScreenHeight = iScreenHeight = height;
+    iSmallScreenWidth = iScreenWidth = width;
+    iWindowTitle = title;
+
+    glutSetOption(GLUT_MULTISAMPLE, 8);
+    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_ALPHA | GLUT_MULTISAMPLE);
+    glEnable(GLUT_MULTISAMPLE);
+
+    if (fullscreen)
+    {
+        char gameModeStr[20];
+        sprintf(gameModeStr, "%dx%d", width, height);
+        glutGameModeString(gameModeStr); // Supports: 640×480 800×600 1024×768 1280×720 1366x768
+        if (glutGameModeGet(GLUT_GAME_MODE_POSSIBLE))
+        {
+            isFullScreen = 1;
+            glutEnterGameMode();
+        }
+        else
+        {
+            printf("ERROR: Game Mode not possible with %s\n", gameModeStr);
+            // Fallback to normal window
+            glutInitWindowSize(iScreenWidth, iScreenHeight);
+            glutInitWindowPosition(10, 10);
+
+            glutCreateWindow(title);
+        }
+    }
+    else
+    {
+        glutInitWindowSize(iScreenWidth, iScreenHeight);
+        glutInitWindowPosition(10, 10);
+
+        glutCreateWindow(title);
+    }
+    iInit();
     glutMainLoop();
 }

@@ -27,19 +27,8 @@ void iMouseClick(int button, int state, int mx, int my)
 	}
 }
 
-void iStart()
+int main()
 {
 	iOpenWindow(600, 250, "Sound Demo");
-}
-
-int main(int argc, char *argv[])
-{
-	glutInit(&argc, argv);
-
-	// Register Callbacks
-	iSetDrawCallback(iDraw);
-	iSetMouseClickCallback(iMouseClick);
-
-	iStart();
 	return 0;
 }

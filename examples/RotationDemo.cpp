@@ -82,21 +82,10 @@ void iAnim(int dt)
     }
 }
 
-void iStart()
+int main()
 {
     iSetTimer(10, iAnim); // Set a timer to call iAnim every 100 milliseconds
     loadResources();
     iOpenWindow(1000, 400, "demooo");
-}
-
-int main(int argc, char *argv[])
-{
-    glutInit(&argc, argv);
-
-    // Register Callbacks
-    iSetDrawCallback(iDraw);
-    iSetKeyboardCallback(iKeyboard);
-
-    iStart();
     return 0;
 }

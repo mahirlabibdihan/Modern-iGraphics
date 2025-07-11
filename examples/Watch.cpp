@@ -76,7 +76,7 @@ void hour(int dt)
     ph = ph - 1 / 600;
 }
 
-void iStart()
+int main()
 {
     time_t rawtime;
     tm *ptm;
@@ -103,15 +103,5 @@ void iStart()
     iSetTimer(1000, minute);
     iSetTimer(1000, hour);
     iOpenWindow(1000, 720, "demo");
-}
-
-int main(int argc, char *argv[])
-{
-    glutInit(&argc, argv);
-
-    // Register Callbacks
-    iSetDrawCallback(iDraw);
-
-    iStart();
     return 0;
 }

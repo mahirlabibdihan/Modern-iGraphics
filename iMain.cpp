@@ -1,5 +1,11 @@
 #include "iGraphics.h"
 
+int main()
+{
+    iOpenWindow(400, 400, "iGraphics");
+    return 0;
+}
+
 /*
 function iDraw() is called again and again by the system.
 */
@@ -8,22 +14,6 @@ void iDraw()
     // place your drawing codes here
     iClear();
     iText(120, 180, "Hello World");
-}
-
-/*
-function iMouseClick() is called when the user presses/releases the mouse.
-(mx, my) is the position where the mouse pointer is.
-*/
-void iMouseClick(int button, int state, int mx, int my)
-{
-    if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN)
-    {
-        // place your codes here
-    }
-    if (button == GLUT_RIGHT_BUTTON && state == GLUT_DOWN)
-    {
-        // place your codes here
-    }
 }
 
 /*
@@ -65,24 +55,27 @@ void iSpecialKeyboard(unsigned char key, int state)
     }
 }
 
-void iStart()
+/*
+function iMouseClick() is called when the user presses/releases the mouse.
+(mx, my) is the position where the mouse pointer is.
+*/
+void iMouseClick(int button, int state, int mx, int my)
 {
-    // Write your initialization codes here
-    iOpenWindow(400, 400, "iGraphics");
+    if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN)
+    {
+        // place your codes here
+    }
+    if (button == GLUT_RIGHT_BUTTON && state == GLUT_DOWN)
+    {
+        // place your codes here
+    }
 }
 
-int main(int argc, char *argv[])
+/*
+function iMouseMove() is called when the user moves the mouse.
+(mx, my) is the position where the mouse pointer is.
+*/
+void iMouseMove(int mx, int my)
 {
-    glutInit(&argc, argv);
-
-    // Register Callbacks
-    iSetDrawCallback(iDraw);
-    iSetKeyboardCallback(iKeyboard);
-    iSetSpecialKeyboardCallback(iSpecialKeyboard);
-    iSetMouseClickCallback(iMouseClick);
-    // iSetMouseMoveCallback(iMouseMove); // Optional, if you want to track mouse movement
-    // iSetMouseDragCallback(iMouseDrag); // Optional, if you want to track mouse dragging
-    // iSetMouseWheelCallback(iMouseWheel); // Optional, if you want to track mouse scrolling
-    iStart();
-    return 0;
+    // place your codes here
 }

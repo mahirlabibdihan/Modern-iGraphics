@@ -87,13 +87,19 @@ void iKeyboard(unsigned char key, int state)
 {
 
     // place your codes for other keys here
-    switch (key)
+    if (state == GLUT_DOWN)
     {
-    case 'q':
-        iCloseWindow();
-        break;
-    default:
-        break;
+        switch (key)
+        {
+        case 'q':
+            iCloseWindow();
+            break;
+        case '\r':
+            iToggleFullscreen();
+            break;
+        default:
+            break;
+        }
     }
 }
 
@@ -170,25 +176,12 @@ void iAnim(int dt)
     // iUpdateSprite(&rect);
 }
 
-void iStart()
+int main()
 {
     iSetTimer(50, iAnim);
     loadResources();
     iPlaySound("assets/sounds/background.wav", true, 20);
-    iOpenWindow(1366, 768, "Game Demo", 1);
+    iOpenWindow(1366, 768, "Game Demo", 0);
     printf("Exiting...");
-}
-
-int main(int argc, char *argv[])
-{
-    glutInit(&argc, argv);
-
-    // Register Callbacks
-    iSetDrawCallback(iDraw);
-    iSetKeyboardCallback(iKeyboard);
-    iSetSpecialKeyboardCallback(iSpecialKeyboard);
-    iSetMouseClickCallback(iMouseClick);
-
-    iStart();
     return 0;
 }

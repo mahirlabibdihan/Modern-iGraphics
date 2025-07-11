@@ -1,4 +1,9 @@
 #include "iGraphics.h"
+#ifdef _WIN32
+#define CALLBACK_FUNC __declspec(dllexport)
+#else
+#define CALLBACK_FUNC __attribute__((visibility("default")))
+#endif
 
 int width = 1280, height = 720;
 double originX = width / 2.0, originY = height / 2.0;
@@ -42,19 +47,8 @@ void iSpecialKeyboard(unsigned char key, int state)
     // place your codes for other keys here
 }
 
-void iStart()
+int main()
 {
     iOpenWindow(width, height, "DrawDemo");
-}
-
-int main(int argc, char *argv[])
-{
-    glutInit(&argc, argv);
-
-    // Register Callbacks
-    iSetDrawCallback(iDraw);
-    iSetSpecialKeyboardCallback(iSpecialKeyboard);
-
-    iStart();
     return 0;
 }
