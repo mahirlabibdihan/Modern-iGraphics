@@ -195,6 +195,14 @@ Users of `iGraphics` only have to edit, compile and run [iMain.cpp](https://gith
 ```cpp
 #include "iGraphics.h"
 
+int main(int argc, char *argv[])
+{
+    // Initialization code before opening the window
+    iOpenWindow(400, 400, "iGraphics");
+    // Execution will continue from here once iCloseWindow() is called.
+    return 0;
+}
+
 /*
 function iDraw() is called again and again by the system.
 */
@@ -227,23 +235,6 @@ function iMouseMove() is called when the user moves the mouse.
 void iMouseMove(int mx, int my)
 {
     //place your codes here
-}
-/*
-function iMouseDrag() is called when the user presses and drags the mouse.
-(mx, my) is the position where the mouse pointer is.
-*/
-void iMouseDrag(int mx, int my)
-{
-    //place your codes here
-}
-
-/*
-function iMouseWheel() is called when the user scrolls the mouse wheel.
-dir = 1 for up, -1 for down.
-*/
-void iMouseWheel(int dir, int mx, int my)
-{
-    // place your code here
 }
 
 /*
@@ -284,14 +275,6 @@ void iSpecialKeyboard(unsigned char key)
     default:
         break;
     }
-}
-
-int main(int argc, char *argv[])
-{
-    // Initialization code before opening the window
-    iOpenWindow(400, 400, "iGraphics");
-    // Execution will continue from here once iCloseWindow() is called.
-    return 0;
 }
 ```
 
@@ -633,24 +616,30 @@ int main(int argc, char *argv[])
 
 #### `void iKeyboard(unsigned char key)`
 
-- **Description:** Called when a key is pressed or released or held down.
+- **Description:** Called when a key is pressed.
 - **Parameters:**
   - `key`: ASCII value of the key pressed.
-  - `state`: State of the key
-    - `GLUT_DOWN`: Key pressed.
-    - `GLUT_UP`: Key released.
-    - `GLUT_HOLD`: Key held down.
 - **Note:** _This function should be defined in the main file._
 
 #### `void iSpecialKeyboard(unsigned char key)`
 
-- **Description:** Called when a special key is pressed or released or held down.
+- **Description:** Called when a special key is pressed.
 - **Parameters:**
   - `key`: Special key value (e.g., `GLUT_KEY_LEFT`, `GLUT_KEY_RIGHT`, etc.).
-  - `state`: State of the key
-    - `GLUT_DOWN`: Key pressed.
-    - `GLUT_UP`: Key released.
-    - `GLUT_HOLD`: Key held down.
+- **Note:** _This function should be defined in the main file._
+
+#### `void iKeyboardUp(unsigned char key)`
+
+- **Description:** Called when a key is released.
+- **Parameters:**
+- `key`: ASCII value of the key released.
+- **Note:** _This function should be defined in the main file._
+
+#### `void iSpecialKeyboardUp(unsigned char key)`
+
+- **Description:** Called when a special key is released.
+- **Parameters:**
+- `key`: Special key value (e.g., `GLUT_KEY_LEFT`, `GLUT_KEY_RIGHT`, etc.).
 - **Note:** _This function should be defined in the main file._
 
 #### `bool isKeyPressed(unsigned char key)`
