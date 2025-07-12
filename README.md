@@ -2,12 +2,17 @@
 <h1> Modern iGraphics Library</h1>
 <!-- <h2> A C++ Graphics Library for Beginners</h2> -->
 </div>
+<!-- 
+[![GitHub Repo](https://img.shields.io/badge/GitHub-Repo-black?logo=github)](https://github.com/mahirlabibdihan/Modern-iGraphics) -->
 
 <!-- [![GitHub stars](https://img.shields.io/github/stars/mahirlabibdihan/Modern-iGraphics.svg?style=for-the-badge)](https://github.com/mahirlabibdihan/Modern-iGraphics/stargazers)
 
 [![GitHub forks](https://img.shields.io/github/forks/mahirlabibdihan/Modern-iGraphics.svg?style=for-the-badge)](https://github.com/mahirlabibdihan/Modern-iGraphics/fork) -->
 
 <p align="center">
+    <a href="https://github.com/mahirlabibdihan/Modern-iGraphics">
+      <img src="https://img.shields.io/badge/GitHub-Repo-black?logo=github&&style=for-the-badge" alt="GitHub repo"/>
+    </a>
     <a href="https://github.com/mahirlabibdihan/Modern-iGraphics/stargazers">
       <img src="https://img.shields.io/github/stars/mahirlabibdihan/Modern-iGraphics.svg?style=for-the-badge" alt="GitHub stars"/>
     </a>
@@ -15,10 +20,10 @@
       <img src="https://img.shields.io/github/forks/mahirlabibdihan/Modern-iGraphics.svg?style=for-the-badge" alt="GitHub forks"/>
     </a>
      <a href="https://github.com/mahirlabibdihan/Modern-iGraphics/releases/tag/v0.5.0">
-     <img src="https://img.shields.io/github/v/release/mahirlabibdihan/Modern-iGraphics?style=for-the-badge" alt="Latest Release"/>
-     </a>
-     <a href="https://github.com/mahirlabibdihan/Modern-iGraphics/releases/tag/v0.5.0">
      <img src="https://img.shields.io/github/last-commit/mahirlabibdihan/Modern-iGraphics?style=for-the-badge" alt="Last Commit"/>
+     </a>
+    <a href="https://github.com/mahirlabibdihan/Modern-iGraphics/releases/tag/v0.5.0">
+     <img src="https://img.shields.io/github/v/release/mahirlabibdihan/Modern-iGraphics?style=for-the-badge" alt="Latest Release"/>
      </a>
 
 </p>
