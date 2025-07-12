@@ -63,18 +63,18 @@ typedef struct
 
 typedef struct
 {
-    int x, y;
-    Image *frames; // Array of individual frame images
-    int currentFrame;
-    int totalFrames;
-    unsigned char *collisionMask;
+    int x = 0, y = 0;
+    Image *frames = nullptr; // Array of individual frame images
+    int currentFrame = -1;
+    int totalFrames = -1;
+    unsigned char *collisionMask = nullptr;
     // int ignoreColor;
 
     // Tracking transformation
-    float scale;
-    bool flipHorizontal, flipVertical;
-    float rotation;                         // in radians
-    float rotationCenterX, rotationCenterY; // Center of rotation relative to the sprite's top-left corner
+    float scale = 1.0f;
+    bool flipHorizontal = false, flipVertical = false;
+    float rotation = 0.0f;                                // in radians
+    float rotationCenterX = 0.0f, rotationCenterY = 0.0f; // Center of rotation relative to the sprite's top-left corner
 } Sprite;
 
 enum MirrorState
