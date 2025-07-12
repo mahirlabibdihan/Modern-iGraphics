@@ -22,7 +22,7 @@
 
 </p>
 
----
+<!-- --- -->
 
 <!-- Banner Image -->
 
@@ -38,8 +38,6 @@
 <!-- [![GitHub stars](https://img.shields.io/github/stars/mahirlabibdihan/Modern-iGraphics.svg?style=for-the-badge)](https://github.com/mahirlabibdihan/Modern-iGraphics/stargazers)
 
 [![GitHub forks](https://img.shields.io/github/forks/mahirlabibdihan/Modern-iGraphics.svg?style=for-the-badge)](https://github.com/mahirlabibdihan/Modern-iGraphics/fork) -->
-
-
 
 <!-- <a href="https://github.com/mahirlabibdihan/Modern-iGraphics">💻 Code</a>
     <a href="https://mahirlabibdihan.github.io/Modern-iGraphics">🏠 Homepage</a> -->
