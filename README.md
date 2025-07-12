@@ -10,7 +10,7 @@
 
 ---
 
-[iGraphics.h](https://github.com/mahirlabibdihan/Modern-iGraphics/blob/main/iGraphics.h) header file contains some drawing functions that can be used to draw basic graphical shapes in C++. These functions are implemented in OpenGL. Users of iGraphics do not need any knowledge of OpenGL to use it. Simply calling the drawing functions a user can draw any 2D shape on screen. This library also provides easy ways for animation, keyboard and mouse event handling.
+[iGraphics.h](https://igraphics2d.blogspot.com/p/igraphics-documentation.html) header file contains some drawing functions that can be used to draw basic graphical shapes in C++. These functions are implemented in OpenGL. Users of iGraphics do not need any knowledge of OpenGL to use it. Simply calling the drawing functions a user can draw any 2D shape on screen. This library also provides easy ways for animation, keyboard and mouse event handling.
 
 It was originally created by [Shahriar Nirjon](https://www.cs.unc.edu/~nirjon/) on 2009 with limited functionalities and only for Windows. This is an extended version of the original iGraphics library with support for multiple image formats, custom fonts, sound engine, sprite management, collision detection and advanced mouse-keyboard control. The library is now **cross-platform** and works on both **Windows** and **Linux**. Updates will be added incrementally based on requests.
 
