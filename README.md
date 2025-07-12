@@ -1,6 +1,6 @@
 <div align="center">
 <h1> Modern iGraphics Library</h1>
-<!-- <h2> A C++ Graphics Library for Beginners</h2> -->
+<h2> 🎮 A Comprehensive C++ Graphics Library for Beginners</h2>
 </div>
 
 <p align="center">
@@ -155,6 +155,36 @@ sudo apt install libsdl2-dev libsdl2-mixer-dev
 sudo apt install libfreetype6-dev
 ./runner.sh examples/BallDemo.cpp
 ```
+
+---
+
+## 🚀 Quick Start
+
+### 🛠️ Project Creation Tools
+
+For quick project setup, use the provided project creation scripts:
+
+**Windows:**
+
+```bash
+.\create_project.bat MyGameName
+```
+
+**Linux/Unix:**
+
+```bash
+./create_project.sh MyGameName
+```
+
+These scripts will automatically generate a complete starter template with:
+
+- ✅ All necessary iGraphics function stubs
+- ✅ Example drawing code (text + red circle)
+- ✅ Mouse and keyboard handlers
+- ✅ Animation timer setup (commented)
+- ✅ Comprehensive comments and documentation
+
+---
 
 <!-- Release Guideline -->
 
@@ -520,7 +550,22 @@ int main(int argc, char *argv[])
 #### `void iSetLineWidth(float width)`
 
 - **Description:** Sets the width of lines to be drawn.
-- **Parameters:** `width`
+- **Parameters:** `width` - Line width in pixels.
+- **Example:**
+  ```cpp
+  iSetLineWidth(3.0); // Set line width to 3 pixels
+  iLine(0, 0, 100, 100); // Draw a thick line
+  ```
+
+#### `void iShowSpeed(double x, double y)`
+
+- **Description:** Displays the current FPS (Frames Per Second) at specified coordinates.
+- **Parameters:**
+  - `x`, `y`: Coordinates where FPS will be displayed.
+- **Example:**
+  ```cpp
+  iShowSpeed(10, 10); // Show FPS counter at top-left corner
+  ```
 
 #### `void iText(double x, double y, char *str, void* font=GLUT_BITMAP_8_BY_13)`
 
@@ -725,8 +770,9 @@ int main(int argc, char *argv[])
   - `filename`: Path to the sound file.
   - `loop`: `true` for continuous play, `false` for one-time play.
   - `volume`: Volume level (0-100).
-- **Returns:** Channel where the sound is played.
-- **Note:** You cann't play more than 8 sounds at a time.
+- **Returns:** Channel where the sound is played (-1 if failed).
+- **Note:** You can't play more than 8 sounds simultaneously.
+- **Supported Formats:** WAV, MP3, OGG, FLAC, and more.
 - **Example:**
 
   ```cpp
@@ -923,6 +969,17 @@ Custom font rendering is supported using TrueType fonts. `freetype` library is u
   iWrapImage(&img, -50); // Wrap the image by 50 pixels to the left
   iWrapImage(&img, 0, 30); // Wrap the image by 30 pixels down
   iWrapImage(&img, 0, -30); // Wrap the image by 30 pixels up
+  ```
+
+#### `void iIgnorePixels(Image* img, int ignoreColor=-1)`
+
+- **Description:** Makes specific colored pixels transparent in the image.
+- **Parameters:**
+  - `img`: Pointer to the loaded `Image` structure.
+  - `ignoreColor`: Color to ignore in 0xRRGGBB format (e.g., 0xFF0000 for red).
+- **Example:**
+  ```cpp
+  iIgnorePixels(&img, 0xFFFFFF); // Make white pixels transparent
   ```
 
 #### `void iFreeImage(Image* img)`
