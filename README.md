@@ -11,7 +11,7 @@
     <a href="https://github.com/mahirlabibdihan/Modern-iGraphics/stargazers">
       <img src="https://img.shields.io/github/stars/mahirlabibdihan/Modern-iGraphics.svg?style=for-the-badge" alt="GitHub stars"/>
     </a>
-    <a href="https://github.com/mahirlabibdihan/Modern-iGraphics/fork">
+    <a href="https://github.com/mahirlabibdihan/Modern-iGraphics/network/members">
       <img src="https://img.shields.io/github/forks/mahirlabibdihan/Modern-iGraphics.svg?style=for-the-badge" alt="GitHub forks"/>
     </a>
      <a href="https://github.com/mahirlabibdihan/Modern-iGraphics/releases/tag/v0.5.0">
