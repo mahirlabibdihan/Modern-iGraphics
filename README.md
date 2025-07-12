@@ -1,12 +1,30 @@
 <div align="center">
-<h1> Modern iGraphics Library (v0.5.0)</h1>
+<h1> Modern iGraphics Library</h1>
 <!-- <h2> A C++ Graphics Library for Beginners</h2> -->
 </div>
 
+<!-- [![GitHub stars](https://img.shields.io/github/stars/mahirlabibdihan/Modern-iGraphics.svg?style=for-the-badge)](https://github.com/mahirlabibdihan/Modern-iGraphics/stargazers)
+
+[![GitHub forks](https://img.shields.io/github/forks/mahirlabibdihan/Modern-iGraphics.svg?style=for-the-badge)](https://github.com/mahirlabibdihan/Modern-iGraphics/fork) -->
+
 <p align="center">
-    <a href="https://github.com/mahirlabibdihan/Modern-iGraphics">💻 Code</a> •
-    <a href="https://mahirlabibdihan.github.io/Modern-iGraphics">🏠 Homepage</a>
+    <a href="https://github.com/mahirlabibdihan/Modern-iGraphics/stargazers">
+      <img src="https://img.shields.io/github/stars/mahirlabibdihan/Modern-iGraphics.svg?style=for-the-badge" alt="GitHub stars"/>
+    </a>
+    <a href="https://github.com/mahirlabibdihan/Modern-iGraphics/fork">
+      <img src="https://img.shields.io/github/forks/mahirlabibdihan/Modern-iGraphics.svg?style=for-the-badge" alt="GitHub forks"/>
+    </a>
+     <a href="https://github.com/mahirlabibdihan/Modern-iGraphics/releases/tag/v0.5.0">
+     <img src="https://img.shields.io/github/v/release/mahirlabibdihan/Modern-iGraphics?style=for-the-badge" alt="GitHub forks"/>
+     </a>
+     <a href="https://github.com/mahirlabibdihan/Modern-iGraphics/releases/tag/v0.5.0">
+     <img src="https://img.shields.io/github/last-commit/mahirlabibdihan/Modern-iGraphics?style=for-the-badge" alt="GitHub forks"/>
+     </a>
+
 </p>
+
+<!-- <a href="https://github.com/mahirlabibdihan/Modern-iGraphics">💻 Code</a>
+    <a href="https://mahirlabibdihan.github.io/Modern-iGraphics">🏠 Homepage</a> -->
 
 ---
 
