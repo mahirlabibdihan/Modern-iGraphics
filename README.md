@@ -14,6 +14,26 @@
 
 It was originally created by [Shahriar Nirjon](https://www.cs.unc.edu/~nirjon/) on 2009 with limited functionalities and only for Windows. This is an extended version of the original iGraphics library with support for multiple image formats, custom fonts, sound engine, sprite management, collision detection and advanced mouse-keyboard control. The library is now **cross-platform** and works on both **Windows** and **Linux**. Updates will be added incrementally based on requests.
 
+## 🧱 Original iGraphics vs. ⚙️ Modern iGraphics
+
+<div align="center">
+
+| **Feature**                | **Original iGraphics (2009)** | **Modern iGraphics (2025)**       |
+| -------------------------- | ----------------------------- | --------------------------------- |
+| **Cross-Platform Support** | ❌ Windows only               | ✅ Windows & Linux                |
+| **Image Formats**          | ❌ BMP only                   | ✅ Multiple formats               |
+| **Audio Formats**          | ❌ WAV only                   | ✅ Multiple formats               |
+| **Font Support**           | ❌ Limited bitmap fonts       | ✅ Custom TTF fonts               |
+| **Sound Integration**      | ❌ Single Channel             | ✅ Multi-Channel                  |
+| **Input Handling**         | ❌ Basic                      | ✅ Enhanced controls              |
+| **Transparency Support**   | ❌ Not available              | ✅ Full RGBA color support        |
+| **Image Manipulation**     | ❌ No transformations         | ✅ Rotate/Scale/Flip/Wrap         |
+| **Image rendering**        | ❌ Slow                       | ✅ Fast (Texture-based + Caching) |
+| **Sprite Management**      | ❌ Manual implementation      | ✅ Built-in sprite system         |
+| **Collision Detection**    | ❌ Not available              | ✅ Pixel-perfect collision        |
+| **Fullscreen Mode**        | ❌ Not available              | ✅ Game Mode                      |
+
+</div>
 <!-- Besides, the original library used `glut`, which is upgraded to `freeglut` in this version. -->
 
 ---
