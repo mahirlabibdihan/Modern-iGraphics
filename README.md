@@ -19,7 +19,7 @@ It was originally created by [Shahriar Nirjon](https://www.cs.unc.edu/~nirjon/) 
 <div align="center">
 
 | **Feature**                | **Original iGraphics (2009)** | **Modern iGraphics (2025)**       |
-| -------------------------- | ----------------------------- | --------------------------------- |
+| :------------------------- | :---------------------------- | :-------------------------------- |
 | **Cross-Platform Support** | ❌ Windows only               | ✅ Windows & Linux                |
 | **Image Formats**          | ❌ BMP only                   | ✅ Multiple formats               |
 | **Audio Formats**          | ❌ WAV only                   | ✅ Multiple formats               |
