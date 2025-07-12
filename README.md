@@ -2,7 +2,18 @@
 <h1> Modern iGraphics Library</h1>
 <!-- <h2> A C++ Graphics Library for Beginners</h2> -->
 </div>
-<!-- 
+
+---
+
+<!-- Banner Image -->
+
+<div align="center">
+    <img src="banner.svg" alt="iGraphics Banner" width="600">
+</div>
+
+---
+
+<!--
 [![GitHub Repo](https://img.shields.io/badge/GitHub-Repo-black?logo=github)](https://github.com/mahirlabibdihan/Modern-iGraphics) -->
 
 <!-- [![GitHub stars](https://img.shields.io/github/stars/mahirlabibdihan/Modern-iGraphics.svg?style=for-the-badge)](https://github.com/mahirlabibdihan/Modern-iGraphics/stargazers)
@@ -58,14 +69,6 @@ It was originally created by [Shahriar Nirjon](https://www.cs.unc.edu/~nirjon/) 
 
 <!-- </div> -->
 <!-- Besides, the original library used `glut`, which is upgraded to `freeglut` in this version. -->
-
----
-
-<!-- Banner Image -->
-
-<div align="center">
-    <img src="banner.svg" alt="iGraphics Banner" width="600">
-</div>
 
 ---
 
