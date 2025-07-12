@@ -16,7 +16,7 @@ It was originally created by [Shahriar Nirjon](https://www.cs.unc.edu/~nirjon/) 
 
 ## 🧱 Original iGraphics vs. ⚙️ Modern iGraphics
 
-<div align="center">
+<!-- <div align="center"> -->
 
 | **Feature**                | **Original iGraphics (2009)** | **Modern iGraphics (2025)**       |
 | :------------------------- | :---------------------------- | :-------------------------------- |
@@ -33,7 +33,7 @@ It was originally created by [Shahriar Nirjon](https://www.cs.unc.edu/~nirjon/) 
 | **Collision Detection**    | ❌ Not available              | ✅ Pixel-perfect collision        |
 | **Fullscreen Mode**        | ❌ Not available              | ✅ Game Mode                      |
 
-</div>
+<!-- </div> -->
 <!-- Besides, the original library used `glut`, which is upgraded to `freeglut` in this version. -->
 
 ---
