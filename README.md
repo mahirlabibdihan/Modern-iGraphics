@@ -1,5 +1,5 @@
 <div align="center">
-<h1> Modern iGraphics Library</h1>
+<h1> Modern iGraphics Library (v0.5.0)</h1>
 <!-- <h2> A C++ Graphics Library for Beginners</h2> -->
 </div>
 
@@ -195,14 +195,6 @@ Users of `iGraphics` only have to edit, compile and run [iMain.cpp](https://gith
 ```cpp
 #include "iGraphics.h"
 
-int main(int argc, char *argv[])
-{
-    // Initialization code before opening the window
-    iOpenWindow(400, 400, "iGraphics");
-    // Execution will continue from here once iCloseWindow() is called.
-    return 0;
-}
-
 /*
 function iDraw() is called again and again by the system.
 */
@@ -275,6 +267,14 @@ void iSpecialKeyboard(unsigned char key)
     default:
         break;
     }
+}
+
+int main(int argc, char *argv[])
+{
+    // Initialization code before opening the window
+    iOpenWindow(400, 400, "iGraphics");
+    // Execution will continue from here once iCloseWindow() is called.
+    return 0;
 }
 ```
 
@@ -1122,10 +1122,31 @@ Online sprite cutter: [https://ezgif.com/sprite-cutter](https://ezgif.com/sprite
 
 This library is for educational purposes and is typically used in academic or hobbyist OpenGL projects.
 
+<!-- My contribution -->
+
+## 🧠 My Contribution
+
+- **Documentation:** Documented iGraphics with updated features gathered from various iGraphics projects mentioned in the acknowledgements.
+- **Cross-Platform:** Added support for Linux. Previously, it was only supported on Windows.
+- **Custom Font**: Added support for TrueType fonts using `freetype` library.
+- **Rotation**: Added image and sprite rotation. The challenge in sprite rotation was that, collision detection should still work after rotation.
+- **Image**: Using `stb_image` library, added support for loading images in various formats (BMP, PNG, JPG, GIF, etc). Previously, only BMP format was supported. Also, using `Nano SVG`, added support for loading SVG images.
+- **Texture**: Used texture for image and sprite rendering, which allows for better performance and flexibility. Previously, images were rendered using `glDrawPixels`, which is less efficient. One major benefit is that, previously we couldn't draw images with negative `x` or `y` coordinates, but now we can draw images at any position on the screen. Also, rotation of images was possible because of this change.
+- **Keyboard**: Added support for keyboard key release detection. Also, now, we can check if a key is pressed or not using `isKeyPressed` and `isSpecialKeyPressed` functions. This enables parallel key detection, which was not possible before.
+- **Mouse**: Added support for mouse passive motion and mouse wheel scrolling. Also, now we can show or hide the mouse cursor using `iShowCursor` and `iHideCursor` functions.
+- **Sprite**: Added functions to easily work with sprites, including loading frames from folders and sprite sheets (Previously, needed to use a online sprite cutter), animating sprites.
+- **Image Wrap**: Now image wrapping is possible in all four directions (left, right, up, down) using `iWrapImage`. Previously, only in the right direction was possible.
+- **Closing Window**: Added `iCloseWindow` function to close the current window. No such function was available previously. Had to use `exit(0)` to close the window, which is not a good practice.
+- **Sound**: Added sound playback functionality using `SDL2` library. Now, we can play sounds, pause, resume, and stop them. Also, added volume control for sounds. Specially, parallel sound playback is now possible, which was not possible before. Previously, windows specific `PlaySound` function was used, which was not cross-platform.
+- **Timer**: Used `glutTimerFunc` for timer functionality. Previously, windows specific `SetTimer` function was used, which was not cross-platform.
+- **Scaling**: Added support for scaling anything (drawings, images, text) using `iScale` and `iUnscale` functions.
+- **Callbacks**: Made iGraphics function callbacks (e.g., `iDraw`, `iMouseClick`, `iKeyboard`) optional, so that users can choose to implement only the functions they need.
+- **Naming**: Renamed some functions and parameters for better clarity and consistency. For example, `iOpenWindow` instead of `iInitialize`, `iMouseDrag` instead of `iMouseMove`, `iMouseClick` instead of `iMouse`, `iShowImage` instead of `iShowBMP`, etc. This makes the API more intuitive and easier to use.
+
 ## 🙏 Acknowledgements
 
 - [Shahriar Nirjon](https://github.com/nirjon) - Original iGraphics library
-- [Ashrafur Rahman Khan](https://github.com/risenfromashes) - Linux Support, Freeglut, SDL2 sound engine, Transparent Color, Mouse passive motion ([repository](https://github.com/risenfromashes/catch-the-egg))
+- [Ashrafur Rahman Khan](https://github.com/risenfromashes) - Linux Support, Freeglut, SDL2 sound engine, Transparent Color, Mouse passive motion and Mouse wheel ([repository](https://github.com/risenfromashes/catch-the-egg))
 - [Anwarul Bashar Shuaib](https://github.com/shuaibw) - Image cache, resize, mirror, wrap, and pixel-perfect collision detection functionality ([repository](https://github.com/shuaibw/iGraphics-extended/))
 - [Wasif Jalal](https://github.com/wjalal) - SDL2 sound engine, Game Mode ([repository](https://github.com/wjalal/1-1_term_project_igraphics_dxball))
 
