@@ -19,10 +19,10 @@
     <a href="https://github.com/mahirlabibdihan/Modern-iGraphics/network/members">
       <img src="https://img.shields.io/github/forks/mahirlabibdihan/Modern-iGraphics.svg?style=for-the-badge" alt="GitHub forks"/>
     </a>
-     <a href="https://github.com/mahirlabibdihan/Modern-iGraphics/releases/tag/v0.5.0">
+     <a href="https://github.com/mahirlabibdihan/Modern-iGraphics/commits/main/">
      <img src="https://img.shields.io/github/last-commit/mahirlabibdihan/Modern-iGraphics?style=for-the-badge" alt="Last Commit"/>
      </a>
-    <a href="https://github.com/mahirlabibdihan/Modern-iGraphics/releases/tag/v0.5.0">
+    <a href="https://github.com/mahirlabibdihan/Modern-iGraphics/releases/latest">
      <img src="https://img.shields.io/github/v/release/mahirlabibdihan/Modern-iGraphics?style=for-the-badge" alt="Latest Release"/>
      </a>
 
