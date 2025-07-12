@@ -971,7 +971,7 @@ Custom font rendering is supported using TrueType fonts. `freetype` library is u
   iWrapImage(&img, 0, -30); // Wrap the image by 30 pixels up
   ```
 
-#### `void iIgnorePixels(Image* img, int ignoreColor=-1)`
+#### `void iIgnorePixels(Image* img, int ignoreColor)`
 
 - **Description:** Makes specific colored pixels transparent in the image.
 - **Parameters:**
