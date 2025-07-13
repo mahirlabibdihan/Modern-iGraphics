@@ -13,6 +13,8 @@ void iDraw()
 {
 	// place your drawing codes here
 	//  load background.jpg using stb_image
+	if (!isFullScreen)
+		iToggleFullscreen();
 	iClear();
 	iShowLoadedImage(0, 0, &bg);
 	iWrapImage(&bg, speed);
@@ -35,7 +37,7 @@ void iMouseClick(int button, int state, int mx, int my)
 }
 
 /*
-	function iSpecialKeyboard() is called whenver user hits special keys like-
+	function iSpecialKeyPress() is called whenver user hits special keys like-
 	function keys, home, end, pg up, pg down, arraows etc. you have to use
 	appropriate constants to detect them. A list is:
 	GLUT_KEY_F1, GLUT_KEY_F2, GLUT_KEY_F3, GLUT_KEY_F4, GLUT_KEY_F5, GLUT_KEY_F6,
@@ -43,7 +45,7 @@ void iMouseClick(int button, int state, int mx, int my)
 	GLUT_KEY_LEFT, GLUT_KEY_UP, GLUT_KEY_RIGHT, GLUT_KEY_DOWN, GLUT_KEY_PAGE UP,
 	GLUT_KEY_PAGE DOWN, GLUT_KEY_HOME, GLUT_KEY_END, GLUT_KEY_INSERT
 */
-void iSpecialKeyboard(unsigned char key)
+void iSpecialKeyPress(unsigned char key)
 {
 
 	if (key == GLUT_KEY_END)

@@ -139,7 +139,7 @@ void iDraw(void)
     iLine(960 + x2, 540 + y2, 960 + x, 540 + y);
 }
 
-void iKeyboard(unsigned char key)
+void iKeyPress(unsigned char key)
 {
     if (key == 'q')
         exit(0);

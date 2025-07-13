@@ -87,10 +87,10 @@ void iMouseMove(int mx, int my)
 }
 
 /*
- * iKeyboard() is called when a regular key is pressed.
+ * iKeyPress() is called when a regular key is pressed.
  * key: ASCII value of the key
  */
-void iKeyboard(unsigned char key)
+void iKeyPress(unsigned char key)
 {
     switch (key)
     {
@@ -112,11 +112,11 @@ void iKeyboard(unsigned char key)
 }
 
 /*
- * iSpecialKeyboard() is called when special keys are pressed.
+ * iSpecialKeyPress() is called when special keys are pressed.
  * Available keys: GLUT_KEY_UP, GLUT_KEY_DOWN, GLUT_KEY_LEFT, GLUT_KEY_RIGHT,
  * GLUT_KEY_F1-F12, GLUT_KEY_HOME, GLUT_KEY_END, etc.
  */
-void iSpecialKeyboard(unsigned char key)
+void iSpecialKeyPress(unsigned char key)
 {
     switch (key)
     {

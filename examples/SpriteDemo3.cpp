@@ -39,10 +39,10 @@ void iDraw()
 }
 
 /*
-	function iKeyboard() is called whenever the user hits a key in keyboard.
+	function iKeyPress() is called whenever the user hits a key in keyboard.
 	key- holds the ASCII value of the key pressed.
 */
-void iKeyboard(unsigned char key)
+void iKeyPress(unsigned char key)
 {
 	if (key == 'x')
 	{
@@ -53,7 +53,7 @@ void iKeyboard(unsigned char key)
 }
 
 /*
-	function iSpecialKeyboard() is called whenver user hits special keys like-
+	function iSpecialKeyPress() is called whenver user hits special keys like-
 	function keys, home, end, pg up, pg down, arraows etc. you have to use
 	appropriate constants to detect them. A list is:
 	GLUT_KEY_F1, GLUT_KEY_F2, GLUT_KEY_F3, GLUT_KEY_F4, GLUT_KEY_F5, GLUT_KEY_F6,
@@ -63,7 +63,7 @@ void iKeyboard(unsigned char key)
 */
 
 int direction = 1;
-void iSpecialKeyboard(unsigned char key)
+void iSpecialKeyPress(unsigned char key)
 {
 	if (key == GLUT_KEY_END)
 	{

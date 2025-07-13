@@ -100,10 +100,10 @@ int iAnimPause[MAX_TIMERS];
 int iAnimLastCallTime[MAX_TIMERS] = {0};
 
 void iDraw() __attribute__((weak));
-void iKeyboard(unsigned char) __attribute__((weak));
-void iKeyboardUp(unsigned char) __attribute__((weak));
-void iSpecialKeyboard(unsigned char) __attribute__((weak));
-void iSpecialKeyboardUp(unsigned char) __attribute__((weak));
+void iKeyPress(unsigned char) __attribute__((weak));
+void iKeyRelease(unsigned char) __attribute__((weak));
+void iSpecialKeyPress(unsigned char) __attribute__((weak));
+void iSpecialKeyRelease(unsigned char) __attribute__((weak));
 void iMouseClick(int button, int state, int x, int y) __attribute__((weak));
 void iMouseMove(int, int) __attribute__((weak)); // New function
 void iMouseDrag(int, int) __attribute__((weak)); // Renamed from iMouseMove to iMouseDrag
@@ -1739,7 +1739,7 @@ bool isKeyPressed(unsigned char key)
 
 void keyboardHandler1FF(unsigned char key, int x, int y)
 {
-    if (!iKeyboard)
+    if (!iKeyPress)
     {
         // printf("Warning: Keyboard functionality is not enabled.\n");
         return;
@@ -1747,26 +1747,26 @@ void keyboardHandler1FF(unsigned char key, int x, int y)
 
     if (isKeyPressed(key))
     {
-        iKeyboard(key);
+        iKeyPress(key);
     }
     else
     {
         keys[key] = true;
-        iKeyboard(key);
+        iKeyPress(key);
     }
     redraw();
 }
 
 void keyboardHandlerUp1FF(unsigned char key, int x, int y)
 {
-    if (!iKeyboardUp)
+    if (!iKeyRelease)
     {
         // printf("Warning: Keyboard functionality is not enabled.\n");
         return;
     }
 
     keys[key] = false;
-    iKeyboardUp(key);
+    iKeyRelease(key);
     redraw();
 }
 
@@ -1779,33 +1779,33 @@ bool isSpecialKeyPressed(int key)
 
 void keyboardHandler2FF(int key, int x, int y)
 {
-    if (!iSpecialKeyboard)
+    if (!iSpecialKeyPress)
     {
         // printf("Warning: Special keyboard functionality is not enabled.\n");
         return;
     }
     if (isSpecialKeyPressed(key))
     {
-        iSpecialKeyboard(key);
+        iSpecialKeyPress(key);
     }
     else
     {
         specialKeys[key] = true; // Mark special key as pressed
-        iSpecialKeyboard(key);
+        iSpecialKeyPress(key);
     }
     redraw();
 }
 
 void keyboardHandlerUp2FF(int key, int x, int y)
 {
-    if (!iSpecialKeyboardUp)
+    if (!iSpecialKeyRelease)
     {
         // printf("Warning: Special keyboard functionality is not enabled.\n");
         return;
     }
 
     specialKeys[key] = false; // Mark special key as released
-    iSpecialKeyboardUp(key);
+    iSpecialKeyRelease(key);
     redraw();
 }
 

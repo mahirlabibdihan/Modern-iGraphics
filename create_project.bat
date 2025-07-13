@@ -89,10 +89,10 @@ echo     // Mouse move code here
 echo }
 echo.
 echo /*
-echo  * iKeyboard^(^) is called when a regular key is pressed.
+echo  * iKeyPress^(^) is called when a regular key is pressed.
 echo  * key: ASCII value of the key
 echo  */
-echo void iKeyboard^(unsigned char key^)
+echo void iKeyPress^(unsigned char key^)
 echo {
 echo     switch ^(key^)
 echo     {
@@ -114,11 +114,11 @@ echo     }
 echo }
 echo.
 echo /*
-echo  * iSpecialKeyboard^(^) is called when special keys are pressed.
+echo  * iSpecialKeyPress^(^) is called when special keys are pressed.
 echo  * Available keys: GLUT_KEY_UP, GLUT_KEY_DOWN, GLUT_KEY_LEFT, GLUT_KEY_RIGHT,
 echo  * GLUT_KEY_F1-F12, GLUT_KEY_HOME, GLUT_KEY_END, etc.
 echo  */
-echo void iSpecialKeyboard^(unsigned char key^)
+echo void iSpecialKeyPress^(unsigned char key^)
 echo {
 echo     switch ^(key^)
 echo     {

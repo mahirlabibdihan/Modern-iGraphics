@@ -307,10 +307,10 @@ void iMouseMove(int mx, int my)
 }
 
 /*
-function iKeyboard() is called whenever the user hits a key in keyboard.
+function iKeyPress() is called whenever the user hits a key in keyboard.
 key- holds the ASCII value of the key pressed.
 */
-void iKeyboard(unsigned char key)
+void iKeyPress(unsigned char key)
 {
     switch (key)
     {
@@ -325,7 +325,7 @@ void iKeyboard(unsigned char key)
 }
 
 /*
-function iSpecialKeyboard() is called whenver user hits special keys likefunction
+function iSpecialKeyPress() is called whenver user hits special keys likefunction
 keys, home, end, pg up, pg down, arraows etc. you have to use
 appropriate constants to detect them. A list is:
 GLUT_KEY_F1, GLUT_KEY_F2, GLUT_KEY_F3, GLUT_KEY_F4, GLUT_KEY_F5, GLUT_KEY_F6,
@@ -333,7 +333,7 @@ GLUT_KEY_F7, GLUT_KEY_F8, GLUT_KEY_F9, GLUT_KEY_F10, GLUT_KEY_F11,
 GLUT_KEY_F12, GLUT_KEY_LEFT, GLUT_KEY_UP, GLUT_KEY_RIGHT, GLUT_KEY_DOWN,
 GLUT_KEY_PAGE_UP, GLUT_KEY_PAGE_DOWN, GLUT_KEY_HOME, GLUT_KEY_END,
 GLUT_KEY_INSERT */
-void iSpecialKeyboard(unsigned char key)
+void iSpecialKeyPress(unsigned char key)
 {
     switch (key)
     {
@@ -379,7 +379,7 @@ int main(int argc, char *argv[])
 - **Parameters:** None
 - **Example:**
   ```cpp
-  void iKeyboard(unsigned char key)
+  void iKeyPress(unsigned char key)
   {
       switch (key)
       {
@@ -706,28 +706,28 @@ int main(int argc, char *argv[])
 
 ### ⌨️ Keyboard Functions
 
-#### `void iKeyboard(unsigned char key)`
+#### `void iKeyPress(unsigned char key)`
 
 - **Description:** Called when a key is pressed.
 - **Parameters:**
   - `key`: ASCII value of the key pressed.
 - **Note:** _This function should be defined in the main file._
 
-#### `void iSpecialKeyboard(unsigned char key)`
+#### `void iSpecialKeyPress(unsigned char key)`
 
 - **Description:** Called when a special key is pressed.
 - **Parameters:**
   - `key`: Special key value (e.g., `GLUT_KEY_LEFT`, `GLUT_KEY_RIGHT`, etc.).
 - **Note:** _This function should be defined in the main file._
 
-#### `void iKeyboardUp(unsigned char key)`
+#### `void iKeyRelease(unsigned char key)`
 
 - **Description:** Called when a key is released.
 - **Parameters:**
 - `key`: ASCII value of the key released.
 - **Note:** _This function should be defined in the main file._
 
-#### `void iSpecialKeyboardUp(unsigned char key)`
+#### `void iSpecialKeyRelease(unsigned char key)`
 
 - **Description:** Called when a special key is released.
 - **Parameters:**
@@ -1244,7 +1244,7 @@ This library is for educational purposes and is typically used in academic or ho
 - **Sound**: Added sound playback functionality using `SDL2` library. Now, we can play sounds, pause, resume, and stop them. Also, added volume control for sounds. Specially, parallel sound playback is now possible, which was not possible before. Previously, windows specific `PlaySound` function was used, which was not cross-platform.
 - **Timer**: Used `glutTimerFunc` for timer functionality. Previously, windows specific `SetTimer` function was used, which was not cross-platform.
 - **Scaling**: Added support for scaling anything (drawings, images, text) using `iScale` and `iUnscale` functions.
-- **Callbacks**: Made iGraphics function callbacks (e.g., `iDraw`, `iMouseClick`, `iKeyboard`) optional, so that users can choose to implement only the functions they need.
+- **Callbacks**: Made iGraphics function callbacks (e.g., `iDraw`, `iMouseClick`, `iKeyPress`) optional, so that users can choose to implement only the functions they need.
 - **Naming**: Renamed some functions and parameters for better clarity and consistency. For example, `iOpenWindow` instead of `iInitialize`, `iMouseDrag` instead of `iMouseMove`, `iMouseClick` instead of `iMouse`, `iShowImage` instead of `iShowBMP`, etc. This makes the API more intuitive and easier to use.
 
 ## 🙏 Acknowledgements
