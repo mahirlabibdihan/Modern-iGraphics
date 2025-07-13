@@ -2107,3 +2107,8 @@ void iOpenWindow(int width = 500, int height = 500, const char *title = "iGraphi
     iInit();
     glutMainLoop();
 }
+
+void iInitialize(int width = 500, int height = 500, const char *title = "iGraphics")
+{
+    iOpenWindow(width, height, title, 0);
+}
