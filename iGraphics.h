@@ -1870,12 +1870,15 @@ void iSetTransparency(int state)
 
 void iToggleFullscreen()
 {
-    if (isFullScreen)
-        // glutReshapeWindow(iSmallScreenWidth, iSmallScreenHeight);
-        glutLeaveFullScreen();
-    else
-        glutFullScreen();
-    isFullScreen = !isFullScreen;
+    if (!isGameMode)
+    {
+        if (isFullScreen)
+            // glutReshapeWindow(iSmallScreenWidth, iSmallScreenHeight);
+            glutLeaveFullScreen();
+        else
+            glutFullScreen();
+        isFullScreen = !isFullScreen;
+    }
 }
 
 void iSetTransparentColor(int r, int g, int b, double a)
@@ -1965,11 +1968,12 @@ void iInit()
     glutSetOption(GLUT_ACTION_ON_WINDOW_CLOSE, GLUT_ACTION_CONTINUE_EXECUTION);
 }
 
-void iCloseWindow()
+void iExitMainLoop()
 {
     if (isGameMode)
     {
-        glutLeaveGameMode();
+        // glutLeaveGameMode();
+        glutLeaveMainLoop();
     }
     else
     {
@@ -1978,6 +1982,88 @@ void iCloseWindow()
     programEnded = 1;
 }
 
+void iCloseWindow()
+{
+    if (isGameMode)
+    {
+        // glutLeaveGameMode();
+        glutLeaveMainLoop();
+    }
+    else
+    {
+        glutLeaveMainLoop();
+    }
+    programEnded = 1;
+}
+
+#define W649_X_H480 "640x480"
+#define W800_X_H600 "800x600"
+#define W1024_X_H768 "1024x768"
+#define W1280_X_H720 "1280x720"
+#define W1366_X_H768 "1366x768"
+
+void iWindowedMode(int width = 500, int height = 500, const char *title = "iGraphics", int fullscreen = 0)
+{
+    iInitGlut();
+
+    iSmallScreenHeight = iScreenHeight = height;
+    iSmallScreenWidth = iScreenWidth = width;
+    iWindowTitle = title;
+
+    glutSetOption(GLUT_MULTISAMPLE, 8);
+    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_ALPHA | GLUT_MULTISAMPLE);
+    glEnable(GLUT_MULTISAMPLE);
+
+    glutInitWindowSize(iScreenWidth, iScreenHeight);
+    glutInitWindowPosition(10, 10);
+
+    glutCreateWindow(title);
+
+    isGameMode = 0; // Not in game mode
+    iInit();
+    if (fullscreen)
+    {
+        glutFullScreen();
+        isFullScreen = 1;
+    }
+    // glutMainLoop();
+}
+
+int iGameMode(const char *gameModeStr = W800_X_H600)
+{
+    // Ensure GLUT was initialized
+    iInitGlut();
+
+    glutSetOption(GLUT_MULTISAMPLE, 8);
+    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_ALPHA | GLUT_MULTISAMPLE);
+    glEnable(GLUT_MULTISAMPLE);
+
+    if (isGameMode)
+    {
+        printf("ERROR: Game Mode already active.\n");
+        return 0;
+    }
+
+    // Set the game mode string
+    glutGameModeString(gameModeStr);
+    if (glutGameModeGet(GLUT_GAME_MODE_POSSIBLE))
+    {
+        glutEnterGameMode();
+        isGameMode = 1;
+    }
+    else
+    {
+        printf("ERROR: Game Mode not possible with %s\n", gameModeStr);
+        return 0; // Game mode not possible
+    }
+
+    iInit();
+    // glutMainLoop();
+}
+void iStartMainLoop()
+{
+    glutMainLoop();
+}
 void iOpenWindow(int width = 500, int height = 500, const char *title = "iGraphics", int fullscreen = 0)
 {
     // Ensure GLUT was initialized

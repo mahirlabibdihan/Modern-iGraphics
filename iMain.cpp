@@ -2,7 +2,10 @@
 
 int main(int argc, char *argv[])
 {
-    iOpenWindow(400, 400, "iGraphics");
+    // iGameMode(W800_X_H600);
+    iWindowedMode(800, 600, "iGraphics Example");
+    iStartMainLoop();
+    printf("Exiting main loop...\n");
     return 0;
 }
 
@@ -25,7 +28,7 @@ void iKeyPress(unsigned char key)
     switch (key)
     {
     case 'q':
-        iCloseWindow();
+        iExitMainLoop();
         break;
     // place your codes for other keys here
     default:
