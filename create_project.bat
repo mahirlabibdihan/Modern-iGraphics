@@ -164,9 +164,11 @@ echo.
 echo     // Set up animation timer ^(optional^)
 echo     // iSetTimer^(16, iAnimation^); // ~60 FPS
 echo.
-echo     // Open the graphics window
-echo     iOpenWindow^(screenWidth, screenHeight, "%filename%"^);
+echo     // Set the screen dimensions
+echo     iWindowedMode^(screenWidth, screenHeight, "%filename%"^);
 echo.
+echo     // Enter into the main loop
+echo.    iStartMainLoop^(^);
 echo     return 0;
 echo }
 ) > "%output_file%"
