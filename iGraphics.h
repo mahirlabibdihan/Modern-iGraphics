@@ -100,9 +100,11 @@ int iAnimPause[MAX_TIMERS];
 int iAnimLastCallTime[MAX_TIMERS] = {0};
 
 void iDraw() __attribute__((weak));
+void iKeyboard(unsigned char, int) __attribute__((weak)); // Deprecated: Use iKeyPress instead
 void iKeyPress(unsigned char) __attribute__((weak));
 void iKeyRelease(unsigned char) __attribute__((weak));
 void iSpecialKeyPress(unsigned char) __attribute__((weak));
+void iSpecialKeyboard(unsigned char, int) __attribute__((weak));
 void iSpecialKeyRelease(unsigned char) __attribute__((weak));
 void iMouseClick(int button, int state, int x, int y) __attribute__((weak));
 void iMouseMove(int, int) __attribute__((weak)); // New function
@@ -1739,20 +1741,34 @@ bool isKeyPressed(unsigned char key)
 
 void keyboardHandler1FF(unsigned char key, int x, int y)
 {
-    if (!iKeyPress)
+    if (iKeyPress)
+    {
+        if (isKeyPressed(key))
+        {
+            iKeyPress(key);
+        }
+        else
+        {
+            keys[key] = true;
+            iKeyPress(key);
+        }
+    }
+    else if (iKeyboard) // Deprecated
+    {
+        if (isKeyPressed(key))
+        {
+            iKeyboard(key, GLUT_HOLD); // Call with hold state
+        }
+        else
+        {
+            keys[key] = true; // Mark key as pressed
+            iKeyboard(key, GLUT_DOWN);
+        }
+        }
+    else
     {
         // printf("Warning: Keyboard functionality is not enabled.\n");
         return;
-    }
-
-    if (isKeyPressed(key))
-    {
-        iKeyPress(key);
-    }
-    else
-    {
-        keys[key] = true;
-        iKeyPress(key);
     }
     redraw();
 }
@@ -1779,19 +1795,34 @@ bool isSpecialKeyPressed(int key)
 
 void keyboardHandler2FF(int key, int x, int y)
 {
-    if (!iSpecialKeyPress)
+    if (iSpecialKeyPress)
     {
-        // printf("Warning: Special keyboard functionality is not enabled.\n");
-        return;
+        if (isSpecialKeyPressed(key))
+        {
+            iSpecialKeyPress(key);
+        }
+        else
+        {
+            specialKeys[key] = true; // Mark special key as pressed
+            iSpecialKeyPress(key);
+        }
     }
-    if (isSpecialKeyPressed(key))
+    else if (iSpecialKeyboard) // Deprecated
     {
-        iSpecialKeyPress(key);
+        if (isSpecialKeyPressed(key))
+        {
+            iSpecialKeyboard(key, GLUT_HOLD); // Call with hold state
+        }
+        else
+        {
+            specialKeys[key] = true; // Mark special key as pressed
+            iSpecialKeyboard(key, GLUT_DOWN);
+        }
     }
     else
     {
-        specialKeys[key] = true; // Mark special key as pressed
-        iSpecialKeyPress(key);
+        // printf("Warning: Special keyboard functionality is not enabled.\n");
+        return;
     }
     redraw();
 }
