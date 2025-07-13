@@ -147,7 +147,7 @@ echo  * Animation timer function.
 echo  * This function is called repeatedly for animations.
 echo  * dt: time difference in milliseconds since last call
 echo  */
-echo void iAnimation^(int dt^)
+echo void iAnimation^(^)
 echo {
 echo     // Animation code here
 echo     // For example: update positions, change colors, etc.

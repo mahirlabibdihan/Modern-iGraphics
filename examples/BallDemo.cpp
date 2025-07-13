@@ -57,7 +57,7 @@ void iSpecialKeyPress(unsigned char key)
     // place your codes for other keys here
 }
 
-void ballChange(int dt)
+void ballChange()
 {
     ball_x += dx;
     ball_y += dy;

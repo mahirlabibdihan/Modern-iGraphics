@@ -145,7 +145,7 @@ void iSpecialKeyPress(unsigned char key)
  * This function is called repeatedly for animations.
  * dt: time difference in milliseconds since last call
  */
-void iAnimation(int dt)
+void iAnimation()
 {
     // Animation code here
     // For example: update positions, change colors, etc.

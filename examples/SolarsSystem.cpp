@@ -209,7 +209,7 @@ void iSpecialKeyPress(unsigned char key)
     }
 }
 
-void movePlanets(int dt)
+void movePlanets()
 {
     int i;
 

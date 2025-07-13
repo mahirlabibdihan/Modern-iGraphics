@@ -11,7 +11,7 @@ void loadResources()
 	iSetSpritePosition(&sprite, -200, -110);
 }
 
-void iAnim(int dt)
+void iAnim()
 {
 	iAnimateSprite(&sprite);
 }

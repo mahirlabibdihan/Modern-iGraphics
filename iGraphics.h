@@ -93,12 +93,6 @@ int ifft = 0;
 
 #define MAX_TIMERS 10
 
-void (*iAnimFunction[MAX_TIMERS])(int) = {0};
-int iAnimCount = 0;
-int iAnimDelays[MAX_TIMERS];
-int iAnimPause[MAX_TIMERS];
-int iAnimLastCallTime[MAX_TIMERS] = {0};
-
 void iDraw() __attribute__((weak));
 void iKeyboard(unsigned char, int) __attribute__((weak)); // Deprecated: Use iKeyPress instead
 void iKeyPress(unsigned char) __attribute__((weak));
@@ -144,6 +138,14 @@ void iInitGlut()
     }
 }
 
+void (*iAnimFunction[MAX_TIMERS])() = {0};
+void (*iAnimAdvancedFunction[MAX_TIMERS])(int) = {0};
+int iAnimCount = 0;
+int iAnimDelays[MAX_TIMERS];
+int iAnimPause[MAX_TIMERS];
+int isAdvanceTimer[MAX_TIMERS] = {0};
+int iAnimLastCallTime[MAX_TIMERS] = {0};
+
 void timerCallback(int index)
 {
     if (!iAnimPause[index] && iAnimFunction[index])
@@ -157,13 +159,39 @@ void timerCallback(int index)
         {
             deltaTime = (currentTime - iAnimLastCallTime[index]); // in seconds
         }
-        iAnimFunction[index](deltaTime);
+        if (isAdvanceTimer[index])
+        {
+            iAnimAdvancedFunction[index](deltaTime);
+        }
+        else
+        {
+            iAnimFunction[index]();
+        }
         iAnimLastCallTime[index] = glutGet(GLUT_ELAPSED_TIME);
     }
     glutTimerFunc(iAnimDelays[index], timerCallback, index);
 }
 
-int iSetTimer(int msec, void (*f)(int))
+int iSetAdvancedTimer(int msec, void (*f)(int))
+{
+    iInitGlut();
+    if (iAnimCount >= MAX_TIMERS)
+    {
+        printf("Error: Maximum number of timers reached.\n");
+        return -1;
+    }
+
+    int index = iAnimCount++;
+    iAnimAdvancedFunction[index] = f;
+    iAnimDelays[index] = msec;
+    iAnimPause[index] = 0;
+    isAdvanceTimer[index] = 1;
+
+    glutTimerFunc(msec, timerCallback, index);
+    return index;
+}
+
+int iSetTimer(int msec, void (*f)())
 {
     iInitGlut();
     if (iAnimCount >= 10)

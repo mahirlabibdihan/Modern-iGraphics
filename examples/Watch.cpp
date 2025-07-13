@@ -51,7 +51,7 @@ void iDraw()
     iFilledCircle(500, 360, 20); // small
 }
 
-void second(int dt)
+void second()
 {
     sx = 250 * cos(p / 57.29);
     sy = 250 * sin(p / 57.29);
@@ -59,7 +59,7 @@ void second(int dt)
     y = 360 + sy;
     p = p - 6;
 }
-void minute(int dt)
+void minute()
 {
     mx = 220 * cos(pm / 57.29);
     my = 220 * sin(pm / 57.29);
@@ -67,7 +67,7 @@ void minute(int dt)
     ym = 360 + my;
     pm = pm - .1;
 }
-void hour(int dt)
+void hour()
 {
     hx = 200 * cos(ph / 57.29);
     hy = 200 * sin(ph / 57.29);
@@ -95,9 +95,9 @@ int main(int argc, char *argv[])
 
     p = (15 - S) * 6.0 + 6 + 270 + 90;
 
-    second(0);
-    minute(0);
-    hour(0);
+    second();
+    minute();
+    hour();
 
     iSetTimer(1000, second);
     iSetTimer(1000, minute);

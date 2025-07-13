@@ -68,7 +68,7 @@ void iKeyPress(unsigned char key)
     }
 }
 
-void iAnim(int dt)
+void iAnim()
 {
     degree2 += 0.1;
     if (degree2 >= 360)

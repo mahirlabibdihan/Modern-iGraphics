@@ -32,7 +32,7 @@ void populate_monster_images()
     monster_image = monster_idle[0];
 }
 
-void update_monster(int dt)
+void update_monster()
 {
     switch (m_state)
     {

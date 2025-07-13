@@ -163,7 +163,7 @@ void iSpecialKeyPress(unsigned char key)
     // place your codes for other keys here
 }
 
-void iAnim(int dt)
+void iAnim()
 {
     // place your codes here
     iAnimateSprite(&golem);
