@@ -106,6 +106,7 @@ void iKeyRelease(unsigned char) __attribute__((weak));
 void iSpecialKeyPress(unsigned char) __attribute__((weak));
 void iSpecialKeyboard(unsigned char, int) __attribute__((weak));
 void iSpecialKeyRelease(unsigned char) __attribute__((weak));
+void iMouse(int button, int state, int x, int y) __attribute__((weak));
 void iMouseClick(int button, int state, int x, int y) __attribute__((weak));
 void iMouseMove(int, int) __attribute__((weak)); // New function
 void iMouseDrag(int, int) __attribute__((weak)); // Renamed from iMouseMove to iMouseDrag
@@ -1764,7 +1765,7 @@ void keyboardHandler1FF(unsigned char key, int x, int y)
             keys[key] = true; // Mark key as pressed
             iKeyboard(key, GLUT_DOWN);
         }
-        }
+    }
     else
     {
         // printf("Warning: Keyboard functionality is not enabled.\n");
@@ -1869,14 +1870,23 @@ void mousePassiveMoveHandlerFF(int x, int y)
 
 void mouseHandlerFF(int button, int state, int x, int y)
 {
-    if (!iMouseClick)
+    if (iMouseClick)
     {
-        // printf("Warning: Mouse click functionality is not enabled.\n");
+        iMouseX = x;
+        iMouseY = iScreenHeight - y;
+        iMouseClick(button, state, iMouseX, iMouseY);
+    }
+    else if (iMouse)
+    {
+        iMouseX = x;
+        iMouseY = iScreenHeight - y;
+        iMouse(button, state, iMouseX, iMouseY);
+    }
+    else
+    {
+        // printf("Warning: Mouse functionality is not enabled.\n");
         return;
     }
-    iMouseX = x;
-    iMouseY = iScreenHeight - y;
-    iMouseClick(button, state, iMouseX, iMouseY);
     redraw();
 }
 
