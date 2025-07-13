@@ -67,7 +67,6 @@ It was originally created by [Shahriar Nirjon](https://www.cs.unc.edu/~nirjon/) 
 | **Image rendering**        | ❌ Slow                       | ✅ Fast (Texture-based + Caching) |
 | **Sprite Management**      | ❌ Manual implementation      | ✅ Built-in sprite system         |
 | **Collision Detection**    | ❌ Not available              | ✅ Pixel-perfect collision        |
-| **Fullscreen Mode**        | ❌ Not available              | ✅ Game Mode                      |
 
 <!-- </div> -->
 <!-- Besides, the original library used `glut`, which is upgraded to `freeglut` in this version. -->
