@@ -1208,9 +1208,21 @@ Online sprite cutter: [https://ezgif.com/sprite-cutter](https://ezgif.com/sprite
 
 ### 🧰 Miscellaneous
 
-#### `void iToggleFullscreen()`
+#### `void iEnterFullscreen()`
 
-- **Description:** Toggles between fullscreen and windowed mode. You can check the current mode using `isFullscreen` variable.
+- **Description:** Enters fullscreen mode.
+- **Example:**
+  ```cpp
+  iEnterFullscreen(); // Enter fullscreen mode
+  ```
+
+#### `void iLeaveFullscreen()`
+
+- **Description:** Exits fullscreen mode and returns to windowed mode.
+- **Example:**
+- ```cpp
+  iLeaveFullscreen(); // Exit fullscreen mode
+  ```
 
 ---
 
