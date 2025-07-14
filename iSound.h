@@ -108,7 +108,7 @@ void iInitializeSound()
     soundInitialized = true;
 }
 
-int iPlaySound(const char *filename, bool loop = false, int volume = 100) // If loop==true , then the audio will play again and again
+int iPlaySound(const char *filename, int loop = false, int volume = 100) // If loop==true , then the audio will play again and again
 {
     iInitializeSound(); // Ensure it's initialized before playing
 
