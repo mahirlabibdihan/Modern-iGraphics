@@ -375,9 +375,9 @@ bool iLoadImage2(Image *img, const char filename[], int ignoreColor = -1)
     return true;
 }
 
-bool iLoadImage(Image *img, const char filename[])
+int iLoadImage(Image *img, const char filename[])
 {
-    iLoadImage2(img, filename, -1);
+    return iLoadImage2(img, filename, -1);
 }
 
 void iFreeTexture(Image *img)
@@ -1763,7 +1763,7 @@ void animFF(void)
 
 bool keys[256] = {false};
 
-bool isKeyPressed(unsigned char key)
+int isKeyPressed(unsigned char key)
 {
     return keys[key];
 }
@@ -1817,7 +1817,7 @@ void keyboardHandlerUp1FF(unsigned char key, int x, int y)
 
 bool specialKeys[109] = {false};
 
-bool isSpecialKeyPressed(int key)
+int isSpecialKeyPressed(int key)
 {
     return specialKeys[key];
 }
@@ -1950,6 +1950,46 @@ void iToggleFullscreen()
     }
 }
 
+void iEnterFullscreen()
+{
+    if (isGameMode)
+    {
+        printf("Warning: Cannot toggle fullscreen in game mode.\n");
+        return;
+    }
+
+    if (!isFullScreen)
+    {
+        glutFullScreen();
+        isFullScreen = 1;
+        // printf("Entered fullscreen mode.\n");
+    }
+    else
+    {
+        // printf("Warning: Already in fullscreen mode.\n");
+    }
+}
+
+void iLeaveFullscreen()
+{
+    if (isGameMode)
+    {
+        printf("Warning: Cannot toggle fullscreen in game mode.\n");
+        return;
+    }
+
+    if (isFullScreen)
+    {
+        glutLeaveFullScreen();
+        isFullScreen = 0;
+        // printf("Left fullscreen mode.\n");
+    }
+    else
+    {
+        // printf("Already in windowed mode.\n");
+    }
+}
+
 void iSetTransparentColor(int r, int g, int b, double a)
 {
     glColor4f(r / 255.0, g / 255.0, b / 255.0, a);
@@ -2071,7 +2111,7 @@ void iCloseWindow()
 #define W1280_X_H720 "1280x720"
 #define W1366_X_H768 "1366x768"
 
-void iWindowedMode(int width = 500, int height = 500, const char *title = "iGraphics", int fullscreen = 0)
+void iWindowedMode(int width = 500, int height = 500, const char *title = "iGraphics")
 {
     iInitGlut();
 
@@ -2090,15 +2130,9 @@ void iWindowedMode(int width = 500, int height = 500, const char *title = "iGrap
 
     isGameMode = 0; // Not in game mode
     iInit();
-    if (fullscreen)
-    {
-        glutFullScreen();
-        isFullScreen = 1;
-    }
-    // glutMainLoop();
 }
 
-int iGameMode(const char *gameModeStr = W800_X_H600)
+void iGameMode(const char *gameModeStr = W800_X_H600)
 {
     // Ensure GLUT was initialized
     iInitGlut();
@@ -2110,7 +2144,7 @@ int iGameMode(const char *gameModeStr = W800_X_H600)
     if (isGameMode)
     {
         printf("ERROR: Game Mode already active.\n");
-        return 0;
+        return;
     }
 
     // Set the game mode string
@@ -2123,7 +2157,7 @@ int iGameMode(const char *gameModeStr = W800_X_H600)
     else
     {
         printf("ERROR: Game Mode not possible with %s\n", gameModeStr);
-        return 0; // Game mode not possible
+        return; // Game mode not possible
     }
 
     iInit();
