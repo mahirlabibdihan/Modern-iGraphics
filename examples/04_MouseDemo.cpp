@@ -2,8 +2,8 @@
 
 // If program runs properly, it should create a window with the title "iGraphics" and dimensions 800x600. The background should be white.
 int ball_x = 200, ball_y = 200;
-
 int mouse_x = 0, mouse_y = 0;
+int scroll_y = 350;
 void iDraw()
 {
     // Clear the screen
@@ -17,6 +17,11 @@ void iDraw()
     char buffer[100];
     sprintf(buffer, "(%d, %d)", mouse_x, mouse_y);
     iText(mouse_x + 10, mouse_y + 10, buffer);
+
+    iSetColor(150, 150, 150);
+    iFilledRectangle(380, scroll_y, 20, 50);
+    iSetColor(250, 250, 250);
+    iLine(380, 0, 380, iScreenHeight);
 }
 
 void iMouseClick(int button, int state, int mx, int my)
@@ -48,15 +53,23 @@ void iMouseDrag(int mx, int my)
 
 void iMouseWheel(int dir, int x, int y)
 {
-    if (dir > 0) // Scroll up
+    if (dir < 0) // Scroll up
     {
         // ball_x += 5;
-        ball_y += 5;
+        if (scroll_y > 0)
+        {
+            ball_y += 5;
+            scroll_y -= 5; // Move camera up
+        }
     }
     else // Scroll down
     {
         // ball_x -= 5;
-        ball_y -= 5;
+        if (scroll_y < iScreenHeight - 50)
+        {
+            scroll_y += 5; // Move camera down
+            ball_y -= 5;
+        }
     }
 }
 

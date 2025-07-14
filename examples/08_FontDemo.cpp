@@ -21,8 +21,17 @@ void iDraw()
     iShowText(220, 120, "Hello OpenGL!", "assets/fonts/Sixtyfour-Regular-VariableFont_BLED,SCAN.ttf", 48);
 }
 
+void iKeyPress(unsigned char key)
+{
+    if (key == 'q')
+    {
+        iExitMainLoop();
+    }
+}
+
 int main(int argc, char *argv[])
 {
-    iOpenWindow(800, 500, "Text Demo");
+    iWindowedMode(800, 500, "Font Demo");
+    iStartMainLoop();
     return 0;
 }

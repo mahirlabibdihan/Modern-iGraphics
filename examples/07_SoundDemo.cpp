@@ -82,7 +82,8 @@ void iSpecialKeyPress(unsigned char key)
 
 int main(int argc, char *argv[])
 {
-	bgSoundIdx = iPlaySound("assets/sounds/bgm1.mp3", true, 50);
-	iOpenWindow(600, 250, "Sound Demo");
+	bgSoundIdx = iPlaySound("assets/sounds/bgm1.mp3", 1, 50);
+	iWindowedMode(600, 250, "Sound Demo");
+	iStartMainLoop();
 	return 0;
 }
