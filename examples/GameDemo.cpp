@@ -16,13 +16,13 @@ void loadResources()
     clock_t start = clock(); // Start timing
 
     iLoadFramesFromSheet(pinkMonsterFrames, "assets/images/sprites/1 Pink_Monster/Pink_Monster_Idle_4.png", 1, 4);
-    // iInitSprite(&pinkMonster);
+
     iChangeSpriteFrames(&pinkMonster, pinkMonsterFrames, 4);
     iSetSpritePosition(&pinkMonster, 300, 250);
     iScaleSprite(&pinkMonster, 3.0);
 
     iLoadFramesFromFolder(golemFrames, "assets/images/sprites/Golem_2/Walking");
-    // iInitSprite(&golem);
+
     iChangeSpriteFrames(&golem, golemFrames, 24);
     iSetSpritePosition(&golem, 300, 200);
     iScaleSprite(&golem, 0.5);
@@ -32,7 +32,7 @@ void loadResources()
 
     iLoadImage(&rectFrame, "assets/images/rect.png");
     iIgnorePixels(&rectFrame, 0xFFFFFF); // Ignore white color for transparency
-    // iInitSprite(&rect);
+
     iChangeSpriteFrames(&rect, &rectFrame, 1);
     iSetSpritePosition(&rect, -100, -50);
     iScaleSprite(&rect, 2);

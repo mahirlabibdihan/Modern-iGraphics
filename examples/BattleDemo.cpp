@@ -1,7 +1,3 @@
-/*
-    author: S. M. Shahriar Nirjon
-    last modified: August 8, 2008
-*/
 #include "iGraphics.h"
 
 typedef enum

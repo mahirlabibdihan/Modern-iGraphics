@@ -1,9 +1,4 @@
 #include "iGraphics.h"
-#ifdef _WIN32
-#define CALLBACK_FUNC __declspec(dllexport)
-#else
-#define CALLBACK_FUNC __attribute__((visibility("default")))
-#endif
 
 int width = 1280, height = 720;
 double originX = width / 2.0, originY = height / 2.0;

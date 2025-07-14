@@ -1,7 +1,3 @@
-/*
-	author: S. M. Shahriar Nirjon
-	last modified: August 8, 2008
-*/
 #include "iGraphics.h"
 enum
 {
@@ -23,7 +19,6 @@ void loadResources()
 	iLoadFramesFromSheet(walkMonster, "assets/images/sprites/1 Pink_Monster/Pink_Monster_Walk_6.png", 1, 6);
 	iLoadFramesFromSheet(jumpMonster, "assets/images/sprites/1 Pink_Monster/Pink_Monster_Jump_8.png", 1, 8);
 
-	iInitSprite(&monster);
 	iChangeSpriteFrames(&monster, idleMonster, 4);
 	iSetSpritePosition(&monster, 20, 0);
 	iScaleSprite(&monster, 3.0);
@@ -143,6 +138,7 @@ int main(int argc, char *argv[])
 {
 	loadResources();
 	iSetTimer(100, updateMonster);
-	iOpenWindow(500, 400, "SpriteDemo");
+	iWindowedMode(500, 400, "SpriteDemo");
+	iStartMainLoop();
 	return 0;
 }

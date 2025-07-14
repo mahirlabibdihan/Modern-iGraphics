@@ -5,7 +5,6 @@ Sprite sprite;
 
 void loadResources()
 {
-	iInitSprite(&sprite);
 	iLoadFramesFromFolder(frames, "assets/images/sprites/Golem_2/Walking");
 	iChangeSpriteFrames(&sprite, frames, 24);
 	iSetSpritePosition(&sprite, -200, -110);
