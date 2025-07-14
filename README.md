@@ -734,11 +734,11 @@ int main(int argc, char *argv[])
 - `key`: Special key value (e.g., `GLUT_KEY_LEFT`, `GLUT_KEY_RIGHT`, etc.).
 - **Note:** _This function should be defined in the main file._
 
-#### `bool isKeyPressed(unsigned char key)`
+#### `int isKeyPressed(unsigned char key)`
 
 - **Description:** Checks if a key is being pressed (Not yet released).
 - **Parameters:** `key` to check.
-- **Returns:** `true` if pressed, `false` otherwise.
+- **Returns:** `1` if pressed, `0` otherwise.
 - **Example:**
   ```cpp
   if (isKeyPressed('a')) {
@@ -746,11 +746,11 @@ int main(int argc, char *argv[])
   }
   ```
 
-#### `bool isSpecialKeyPressed(unsigned char key)`
+#### `int isSpecialKeyPressed(unsigned char key)`
 
 - **Description:** Checks if a special key is being pressed (Not yet released).
 - **Parameters:** `key` to check.
-- **Returns:** `true` if pressed, `false` otherwise.
+- **Returns:** `1` if pressed, `0` otherwise.
 - **Example:**
   ```cpp
   if (isSpecialKeyPressed(GLUT_KEY_LEFT)) {
@@ -762,7 +762,7 @@ int main(int argc, char *argv[])
 
 `iGraphics` was originally designed for graphical applications, but it has been extended to support sound playback using the `SDL2` library. The sound functions are available in `iSound.h` and are shown below:
 
-#### `int iPlaySound(const char *filename, bool loop = false, int volume = 100)`
+#### `int iPlaySound(const char *filename, int loop = 0, int volume = 100)`
 
 - **Description:** Plays a sound from file with optional looping and volume control.
 - **Parameters:**
@@ -867,7 +867,7 @@ Custom font rendering is supported using TrueType fonts. `freetype` library is u
   iShowImage(100, 200, "image.png");
   ```
 
-#### `bool iLoadImage(Image* img, const char filename[])`
+#### `int iLoadImage(Image* img, const char filename[])`
 
 - **Description:** Loads an image from file. Supports multiple image formats (BMP, PNG, JPG, GIF) with the help of the stb_image library.
 
