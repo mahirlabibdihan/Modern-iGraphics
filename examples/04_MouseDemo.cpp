@@ -1,6 +1,5 @@
 #include "iGraphics.h"
 
-// If program runs properly, it should create a window with the title "iGraphics" and dimensions 800x600. The background should be white.
 int ball_x = 200, ball_y = 200;
 int mouse_x = 0, mouse_y = 0;
 int scroll_y = 350;
