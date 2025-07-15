@@ -1240,7 +1240,7 @@ This library is for educational purposes and is typically used in academic or ho
 
 <!-- My contribution -->
 
-## 🧠 My Contribution
+<!-- ## 🧠 My Contribution
 
 - **Documentation:** Documented iGraphics with updated features gathered from various iGraphics projects mentioned in the acknowledgements.
 - **Cross-Platform:** Added support for Linux. Previously, it was only supported on Windows.
@@ -1257,7 +1257,7 @@ This library is for educational purposes and is typically used in academic or ho
 - **Timer**: Used `glutTimerFunc` for timer functionality. Previously, windows specific `SetTimer` function was used, which was not cross-platform.
 - **Scaling**: Added support for scaling anything (drawings, images, text) using `iScale` and `iUnscale` functions.
 - **Callbacks**: Made iGraphics function callbacks (e.g., `iDraw`, `iMouseClick`, `iKeyPress`) optional, so that users can choose to implement only the functions they need.
-- **Naming**: Renamed some functions and parameters for better clarity and consistency. For example, `iOpenWindow` instead of `iInitialize`, `iMouseDrag` instead of `iMouseMove`, `iMouseClick` instead of `iMouse`, `iShowImage` instead of `iShowBMP`, etc. This makes the API more intuitive and easier to use.
+- **Naming**: Renamed some functions and parameters for better clarity and consistency. For example, `iOpenWindow` instead of `iInitialize`, `iMouseDrag` instead of `iMouseMove`, `iMouseClick` instead of `iMouse`, `iShowImage` instead of `iShowBMP`, etc. This makes the API more intuitive and easier to use. -->
 
 ## 🙏 Acknowledgements
 
