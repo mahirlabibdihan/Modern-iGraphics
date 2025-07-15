@@ -1804,7 +1804,7 @@ void animFF(void)
         ifft = 1;
         iClear();
     }
-    if (needsRedraw)
+    // if (needsRedraw)
     {
         redraw();
         needsRedraw = false;
