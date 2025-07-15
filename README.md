@@ -1220,7 +1220,7 @@ Online sprite cutter: [https://ezgif.com/sprite-cutter](https://ezgif.com/sprite
 
 - **Description:** Exits fullscreen mode and returns to windowed mode.
 - **Example:**
-- ```cpp
+  ```cpp
   iLeaveFullscreen(); // Exit fullscreen mode
   ```
 
