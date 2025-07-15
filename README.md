@@ -1200,7 +1200,7 @@ Online sprite cutter: [https://ezgif.com/sprite-cutter](https://ezgif.com/sprite
   - `s1`: Pointer to the `Sprite` structure.
   - **Returns:** Number of visible pixels in the sprite.
 - **Example:**
-- ```cpp
+  ```cpp
   Sprite s1;
   ...
   int visiblePixels = iGetVisiblePixelsCount(&s1);
