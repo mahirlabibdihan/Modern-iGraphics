@@ -23,6 +23,7 @@
 #include <tuple>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string>
 #ifdef _WIN32
 #include <windows.h>
 #else
@@ -32,8 +33,10 @@
 
 #include "freeglut.h"
 #include <time.h>
+#include <unordered_map>
 #include <math.h>
 #include <dirent.h>
+#include <list>
 #include <sys/stat.h>
 // #include "glaux.h"
 #define STB_IMAGE_IMPLEMENTATION
@@ -146,6 +149,10 @@ int iAnimPause[MAX_TIMERS];
 int isAdvanceTimer[MAX_TIMERS] = {0};
 int iAnimLastCallTime[MAX_TIMERS] = {0};
 
+static bool needsRedraw = false;
+
+void markDirty() { needsRedraw = true; }
+
 void timerCallback(int index)
 {
     if (!iAnimPause[index] && iAnimFunction[index])
@@ -167,6 +174,7 @@ void timerCallback(int index)
         {
             iAnimFunction[index]();
         }
+        markDirty();
         iAnimLastCallTime[index] = glutGet(GLUT_ELAPSED_TIME);
     }
     glutTimerFunc(iAnimDelays[index], timerCallback, index);
@@ -391,7 +399,11 @@ void iFreeTexture(Image *img)
 void iFreeImage(Image *img)
 {
     iFreeTexture(img);
-    stbi_image_free(img->data);
+    if (img->data)
+    {
+        stbi_image_free(img->data);
+        img->data = nullptr;
+    }
 }
 
 void iLine(double x1, double y1, double x2, double y2)
@@ -534,16 +546,61 @@ void iShowLoadedImage(int x, int y, Image *img)
     iShowLoadedImage2(x, y, img);
 }
 
+struct CacheEntry
+{
+    Image image;
+    std::list<std::string>::iterator listIt;
+};
+static std::unordered_map<std::string, CacheEntry> imageCache;
+static std::list<std::string> lruList; // Most recently used at front
+static const size_t MAX_CACHE_SIZE = 50;
+
 void iShowImage2(int x, int y, const char *filename, int ignoreColor = -1)
 {
+    std::string key = std::string(filename);
+
+    auto it = imageCache.find(key);
+    if (it != imageCache.end())
+    {
+        // Move to front of LRU list (most recently used)
+        lruList.erase(it->second.listIt);
+        lruList.push_front(key);
+        it->second.listIt = lruList.begin();
+
+        // Use cached image
+        iShowTexture2(x, y, &it->second.image, -1, -1, NO_MIRROR);
+        return;
+    }
+
     Image img;
+    printf("Loading image: %s\n", filename);
     if (!iLoadImage2(&img, filename, ignoreColor))
     {
         printf("ERROR: Failed to load image: %s\n", filename);
         return;
     }
+
+    // Add to cache (with size limit)
+    if (imageCache.size() >= MAX_CACHE_SIZE)
+    {
+        std::string lru = lruList.back();
+        lruList.pop_back();
+
+        auto lruIt = imageCache.find(lru);
+        if (lruIt != imageCache.end())
+        {
+            iFreeImage(&lruIt->second.image);
+            imageCache.erase(lruIt);
+        }
+    }
+
+    lruList.push_front(key);
+    CacheEntry entry;
+    entry.listIt = lruList.begin();
+    entry.image = std::move(img);
+    imageCache[key] = std::move(entry);
+
     iShowTexture2(x, y, &img, -1, -1, NO_MIRROR);
-    iFreeImage(&img);
 }
 
 void iShowImage(int x, int y, const char *filename)
@@ -1747,14 +1804,10 @@ void animFF(void)
         ifft = 1;
         iClear();
     }
-    int currentTime = glutGet(GLUT_ELAPSED_TIME);
-    int timeInterval = currentTime - previousTime;
-
-    if (!previousTime || timeInterval >= 0)
+    if (needsRedraw)
     {
-        // printf("Redrawing at %d ms\n", timeInterval);
         redraw();
-        previousTime = currentTime; // Reset the timer
+        needsRedraw = false;
     }
 }
 
