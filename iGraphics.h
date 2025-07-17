@@ -573,7 +573,7 @@ void iShowImage2(int x, int y, const char *filename, int ignoreColor = -1)
     }
 
     Image img;
-    printf("Loading image: %s\n", filename);
+    // printf("Loading image: %s\n", filename);
     if (!iLoadImage2(&img, filename, ignoreColor))
     {
         printf("ERROR: Failed to load image: %s\n", filename);
