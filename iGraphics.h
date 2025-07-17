@@ -50,6 +50,8 @@
 #define NANOSVGRAST_IMPLEMENTATION
 #include "nanosvgrast.h"
 
+using namespace std;
+
 static int transparent = 1;
 static int isFullScreen = 0;
 static int isGameMode = 0;
@@ -549,15 +551,15 @@ void iShowLoadedImage(int x, int y, Image *img)
 struct CacheEntry
 {
     Image image;
-    std::list<std::string>::iterator listIt;
+    list<string>::iterator listIt;
 };
-static std::unordered_map<std::string, CacheEntry> imageCache;
-static std::list<std::string> lruList; // Most recently used at front
+static unordered_map<string, CacheEntry> imageCache;
+static list<string> lruList; // Most recently used at front
 static const size_t MAX_CACHE_SIZE = 50;
 
 void iShowImage2(int x, int y, const char *filename, int ignoreColor = -1)
 {
-    std::string key = std::string(filename);
+    string key = string(filename);
 
     auto it = imageCache.find(key);
     if (it != imageCache.end())
@@ -583,7 +585,7 @@ void iShowImage2(int x, int y, const char *filename, int ignoreColor = -1)
     // Add to cache (with size limit)
     if (imageCache.size() >= MAX_CACHE_SIZE)
     {
-        std::string lru = lruList.back();
+        string lru = lruList.back();
         lruList.pop_back();
 
         auto lruIt = imageCache.find(lru);
@@ -597,8 +599,8 @@ void iShowImage2(int x, int y, const char *filename, int ignoreColor = -1)
     lruList.push_front(key);
     CacheEntry entry;
     entry.listIt = lruList.begin();
-    entry.image = std::move(img);
-    imageCache[key] = std::move(entry);
+    entry.image = img;
+    imageCache[key] = entry;
 
     iShowTexture2(x, y, &img, -1, -1, NO_MIRROR);
 }
@@ -1804,7 +1806,7 @@ void animFF(void)
         ifft = 1;
         iClear();
     }
-    if (needsRedraw)
+    // if (needsRedraw)
     {
         redraw();
         needsRedraw = false;
@@ -1857,15 +1859,23 @@ void keyboardHandler1FF(unsigned char key, int x, int y)
 
 void keyboardHandlerUp1FF(unsigned char key, int x, int y)
 {
-    if (!iKeyRelease)
+    if (iKeyRelease)
+    {
+        keys[key] = false;
+        iKeyRelease(key);
+        redraw();
+    }
+    else if (iKeyboard)
+    {
+        keys[key] = false;
+        iKeyboard(key, GLUT_UP);
+        redraw();
+    }
+    else
     {
         // printf("Warning: Keyboard functionality is not enabled.\n");
         return;
     }
-
-    keys[key] = false;
-    iKeyRelease(key);
-    redraw();
 }
 
 bool specialKeys[109] = {false};
@@ -1911,15 +1921,23 @@ void keyboardHandler2FF(int key, int x, int y)
 
 void keyboardHandlerUp2FF(int key, int x, int y)
 {
-    if (!iSpecialKeyRelease)
+    if (iSpecialKeyRelease)
+    {
+        specialKeys[key] = false; // Mark special key as released
+        iSpecialKeyRelease(key);
+        redraw();
+    }
+    else if (iSpecialKeyboard)
+    {
+        specialKeys[key] = false; // Mark special key as released
+        iSpecialKeyboard(key, GLUT_UP);
+        redraw();
+    }
+    else
     {
         // printf("Warning: Special keyboard functionality is not enabled.\n");
         return;
     }
-
-    specialKeys[key] = false; // Mark special key as released
-    iSpecialKeyRelease(key);
-    redraw();
 }
 
 void mouseMoveHandlerFF(int mx, int my)
