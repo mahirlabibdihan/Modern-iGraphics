@@ -50,8 +50,6 @@
 #define NANOSVGRAST_IMPLEMENTATION
 #include "nanosvgrast.h"
 
-using namespace std;
-
 static int transparent = 1;
 static int isFullScreen = 0;
 static int isGameMode = 0;
@@ -551,15 +549,15 @@ void iShowLoadedImage(int x, int y, Image *img)
 struct CacheEntry
 {
     Image image;
-    list<string>::iterator listIt;
+    std::list<std::string>::iterator listIt;
 };
-static unordered_map<string, CacheEntry> imageCache;
-static list<string> lruList; // Most recently used at front
+static std::unordered_map<std::string, CacheEntry> imageCache;
+static std::list<std::string> lruList; // Most recently used at front
 static const size_t MAX_CACHE_SIZE = 50;
 
 void iShowImage2(int x, int y, const char *filename, int ignoreColor = -1)
 {
-    string key = string(filename);
+    std::string key = std::string(filename);
 
     auto it = imageCache.find(key);
     if (it != imageCache.end())
@@ -585,7 +583,7 @@ void iShowImage2(int x, int y, const char *filename, int ignoreColor = -1)
     // Add to cache (with size limit)
     if (imageCache.size() >= MAX_CACHE_SIZE)
     {
-        string lru = lruList.back();
+        std::string lru = lruList.back();
         lruList.pop_back();
 
         auto lruIt = imageCache.find(lru);
