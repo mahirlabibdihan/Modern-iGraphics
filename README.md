@@ -155,7 +155,7 @@ sudo apt install libfreetype6-dev
 ./runner.sh examples/BallDemo.cpp
 ```
 
-- **MSYS2**
+- **MSYS2-MINGW64**
   
 ```bash
 pacman -S mingw-w64-x86_64-SDL2 mingw-w64-x86_64-SDL2_mixer
