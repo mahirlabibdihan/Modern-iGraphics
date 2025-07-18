@@ -54,19 +54,19 @@ It was originally created by [Shahriar Nirjon](https://www.cs.unc.edu/~nirjon/) 
 
 <!-- <div align="center"> -->
 
-| **Feature**                | **Original iGraphics (2009)** | **Modern iGraphics (2025)**       |
-| :------------------------- | :---------------------------- | :-------------------------------- |
-| **Cross-Platform Support** | ❌ Windows only               | ✅ Windows & Linux                |
-| **Image Formats**          | ❌ BMP only                   | ✅ Multiple formats               |
-| **Audio Formats**          | ❌ WAV only                   | ✅ Multiple formats               |
-| **Font Support**           | ❌ Limited bitmap fonts       | ✅ Custom TTF fonts               |
-| **Sound Integration**      | ❌ Single Channel             | ✅ Multi-Channel                  |
-| **Input Handling**         | ❌ Basic                      | ✅ Enhanced controls              |
-| **Transparency Support**   | ❌ Not available              | ✅ Full RGBA color support        |
-| **Image Manipulation**     | ❌ No transformations         | ✅ Rotate/Scale/Flip/Wrap         |
-| **Image rendering**        | ❌ Slow                       | ✅ Fast (Texture-based + Caching) |
-| **Sprite Management**      | ❌ Manual implementation      | ✅ Built-in sprite system         |
-| **Collision Detection**    | ❌ Not available              | ✅ Pixel-perfect collision        |
+| **Feature**                | **Original iGraphics (2009)** | **Modern iGraphics (2025)**      |
+| :------------------------- | :---------------------------- | :------------------------------- |
+| **Cross-Platform Support** | ❌ Windows only                | ✅ Windows & Linux                |
+| **Image Formats**          | ❌ BMP only                    | ✅ Multiple formats               |
+| **Audio Formats**          | ❌ WAV only                    | ✅ Multiple formats               |
+| **Font Support**           | ❌ Limited bitmap fonts        | ✅ Custom TTF fonts               |
+| **Sound Integration**      | ❌ Single Channel              | ✅ Multi-Channel                  |
+| **Input Handling**         | ❌ Basic                       | ✅ Enhanced controls              |
+| **Transparency Support**   | ❌ Not available               | ✅ Full RGBA color support        |
+| **Image Manipulation**     | ❌ No transformations          | ✅ Rotate/Scale/Flip/Wrap         |
+| **Image rendering**        | ❌ Slow                        | ✅ Fast (Texture-based + Caching) |
+| **Sprite Management**      | ❌ Manual implementation       | ✅ Built-in sprite system         |
+| **Collision Detection**    | ❌ Not available               | ✅ Pixel-perfect collision        |
 
 <!-- </div> -->
 <!-- Besides, the original library used `glut`, which is upgraded to `freeglut` in this version. -->
@@ -155,6 +155,14 @@ sudo apt install libfreetype6-dev
 ./runner.sh examples/BallDemo.cpp
 ```
 
+- **MSYS2**
+  
+```bash
+pacman -S mingw-w64-x86_64-SDL2 mingw-w64-x86_64-SDL2_mixer
+pacman -S mingw-w64-x86_64-freeglut mingw-w64-x86_64-gcc
+pacman -S mingw-w64-x86_64-freetype
+./runner.sh examples/BallDemo.cpp
+```
 ---
 
 ## 🚀 Quick Start
