@@ -21,7 +21,7 @@ if not exist "obj" (
 )
 :: Compile the source file to an object file (with irrKlang include path)
 
-g++.exe -w -fexceptions -g -I. -IOpenGL\\include -IOpenGL\\include\\SDL2 -IOpenGL\\include\\Freetype -c "%SOURCE_FILE%" -o obj\\opengl.o
+MINGW\\bin\\g++.exe -w -fexceptions -g -I. -IOpenGL\\include -IOpenGL\\include\\SDL2 -IOpenGL\\include\\Freetype -c "%SOURCE_FILE%" -o obj\\opengl.o
 
 if %ERRORLEVEL% neq 0 (
    echo Compilation failed.
@@ -30,7 +30,7 @@ if %ERRORLEVEL% neq 0 (
 
 echo Compiling %SOURCE_FILE% to object file...
 
-g++.exe -static-libgcc -static-libstdc++ -L.\\OpenGL\\lib -o bin\\opengl.exe obj\\opengl.o -lmingw32 -lSDL2main -lSDL2 -lSDL2_mixer -lOPENGL32 -lfreeglut -lwinmm -lfreetype
+MINGW\\bin\\g++.exe -static-libgcc -static-libstdc++ -L.\\OpenGL\\lib -o bin\\opengl.exe obj\\opengl.o -lmingw32 -lSDL2main -lSDL2 -lSDL2_mixer -lOPENGL32 -lfreeglut -lwinmm -lfreetype
 
 if %ERRORLEVEL% neq 0 (
     echo Linking failed.
