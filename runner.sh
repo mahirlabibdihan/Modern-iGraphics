@@ -25,7 +25,7 @@ then
 
     ./bin/opengl
 else
-    g++ -w -fexceptions -g -I. -IOpenGL/include -IOpenGL/include/SDL2 "$SOURCE_FILE" -o bin/opengl.exe -static-libgcc -static-libstdc++ -lmingw32 -lSDL2main -lSDL2 -lSDL2_mixer -lOpenGL32 -lfreeglut -lfreetype
+    g++ -w -fexceptions -g -I. -IOpenGL/include -IOpenGL/include/SDL2 -IOpenGL/include/Freetype "$SOURCE_FILE" -o bin/opengl.exe -static-libgcc -static-libstdc++ -lmingw32 -lSDL2main -lSDL2 -lSDL2_mixer -lOpenGL32 -lfreeglut -lfreetype
     echo "Finished building."
     ./bin/opengl.exe
 fi
