@@ -1,12 +1,12 @@
 #include "iGraphics.h"
 
-Image frames[24];
+FrameSet frames;
 Sprite sprite;
 
 void loadResources()
 {
-	iLoadFramesFromFolder(frames, "assets/images/sprites/Golem_2/Walking");
-	iChangeSpriteFrames(&sprite, frames, 24);
+	iLoadFramesFromFolder(&frames, "assets/images/sprites/Golem_2/Walking");
+	iChangeSpriteFrames(&sprite, &frames);
 	iSetSpritePosition(&sprite, -200, -110);
 }
 
