@@ -1047,7 +1047,7 @@ Custom font rendering is supported using TrueType fonts. `freetype` library is u
 Free sprite resources: [https://craftpix.net/freebies/](https://craftpix.net/freebies/)\\
 Online sprite cutter: [https://ezgif.com/sprite-cutter](https://ezgif.com/sprite-cutter)
 
-#### `void iInitSprite(Sprite *s)`
+<!-- #### `void iInitSprite(Sprite *s)`
 
 - **Description:** Initializes a sprite structure.
 - **Parameters:**
@@ -1059,62 +1059,78 @@ Online sprite cutter: [https://ezgif.com/sprite-cutter](https://ezgif.com/sprite
   Sprite s;
   iInitSprite(&s); // Initialize sprite and ignore white color
   ```
-- **Sprite Structure**
+- 
+  ``` -->
+
+#### Structure Definitions
+
+**FrameSet Structure**
+  ```cpp
+  typedef struct
+  {
+      Image *frames;
+      int count;
+  } FrameSet;
+  ```
+
+**Sprite Structure**
   ```cpp
   typedef struct
   {
       int x, y;
+      FrameSet frameSet;
       int currentFrame;
       ....
   } Sprite;
   ```
 
-#### `void iLoadFramesFromFolder(Image *frames, const char *folderPath)`
+#### `int iLoadFramesFromFolder(FrameSet *frames, const char *folderPath)`
 
 - **Description:** Loads frames from a folder containing multiple images.
 - **Parameters:**
 
-  - `frames`: Pointer to an array of `Image` structures.
+  - `frames`: Pointer to a `FrameSet` structure.
   - `folderPath`: Path to the folder containing images.
 
+- **Returns:** Number of frames loaded. -1 if failed to load any images.
 - **Example:**
   ```cpp
-  Image frames[10];
-  iLoadFramesFromFolder(frames, "sprites/"); // Load images from a folder and ignore no color
+  FrameSet frames;
+  iLoadFramesFromFolder(&frames, "sprites/"); // Load images from "sprites/" folder
   ```
 
-#### `void iLoadFramesFromSheet(Image *frames, const char *filename, int rows, int cols)`
+#### `int iLoadFramesFromSheet(FrameSet *frames, const char *filename, int rows, int cols)`
 
-- **Description:** Loads frames from a sprite sheet.
+- **Description:** Loads frames from a sprite sheet. 
 - **Parameters:**
 
-  - `frames`: Pointer to an array of `Image` structures.
+  - `frames`: Pointer to a `FrameSet` structure.
   - `filename`: Path to the sprite sheet image.
   - `rows`: Number of rows in the sprite sheet.
   - `cols`: Number of columns in the sprite sheet.
+   
+- **Returns:** Number of frames loaded. -1 if failed to load the sprite sheet.
 
 - **Example:**
   ```cpp
-  Image frames[16];
-  iLoadFramesFromSheet(frames, "spritesheet.png", 4, 4); // Load images frames a sprite sheet with 4 rows and 4 columns
+  FrameSet frames;
+  iLoadFramesFromSheet(&frames, "spritesheet.png", 4, 4); // Load images frames a sprite sheet with 4 rows and 4 columns
   ```
 
-#### `void iChangeSpriteFrames(Sprite *s, const Image *frames, int totalFrames)`
+#### `void iChangeSpriteFrames(Sprite *s, const FrameSet* frames)`
 
 - **Description:** Changes the frames of a sprite.
 - **Parameters:**
 
   - `s`: Pointer to a `Sprite` structure.
-  - `frames`: Array of `Image` structures representing the new frames.
-  - `totalFrames`: Number of frames in the array.
+  - `frames`: Pointer to a `FrameSet` structure representing the new frames.
 
 - **Example:**
   ```cpp
-  Image frames[10];
-  iLoadFramesFromFolder(frames,"sprites/"); // Load images from a folder
+  FrameSet frames;
+  iLoadFramesFromFolder(&frames, "sprites/"); // Load images from a folder
   Sprite s;
-  iInitSprite(&s); // Initialize sprite
-  iChangeSpriteFrames(&s, frames, 4); // Change the frames of the sprite
+  iChangeSpriteFrames(&s, &frames);
   ```
 
 #### `void iSetSpritePosition(Sprite* s, int x, int y)`

@@ -61,18 +61,22 @@ typedef struct
     int width, height, channels;
     GLuint textureId; // OpenGL texture ID
     // image type svg and non-svg
-    bool isSVG; // true if the image is SVG, false if it's a raster image
+    bool isSVG = false; // true if the image is SVG, false if it's a raster image
 } Image;
 
 typedef struct
 {
+    Image *frames = nullptr; // Array of frames
+    int count = 0;
+} FrameSet;
+
+typedef struct
+{
     int x = 0, y = 0;
-    Image *frames = nullptr; // Array of individual frame images
+    FrameSet frameSet;
     int currentFrame = -1;
-    int totalFrames = -1;
     unsigned char *collisionMask = nullptr;
     // int ignoreColor;
-
     // Tracking transformation
     float scale = 1.0f;
     bool flipHorizontal = false, flipVertical = false;
@@ -404,6 +408,20 @@ void iFreeImage(Image *img)
         stbi_image_free(img->data);
         img->data = nullptr;
     }
+}
+
+void iFreeFrameSet(FrameSet *fs)
+{
+    if (fs->frames)
+    {
+        for (int i = 0; i < fs->count; ++i)
+        {
+            iFreeImage(&fs->frames[i]);
+        }
+        delete[] fs->frames;
+        fs->frames = nullptr;
+    }
+    fs->count = 0;
 }
 
 void iLine(double x1, double y1, double x2, double y2)
@@ -792,11 +810,11 @@ void iMirrorImage(Image *img, MirrorState state)
 // ignorecolor = hex color code 0xRRGGBB
 void iUpdateCollisionMask(Sprite *s)
 {
-    if (!s || !s->frames)
+    if (!s || !s->frameSet.frames)
     {
         return;
     }
-    Image *frame = &s->frames[s->currentFrame];
+    Image *frame = &s->frameSet.frames[s->currentFrame];
     int width = frame->width;
     int height = frame->height;
     int channels = frame->channels;
@@ -824,10 +842,10 @@ void iUpdateCollisionMask(Sprite *s)
 
 int iCheckImageSpriteCollision(int x1, int y1, Image *img, Sprite *s)
 {
-    if (!img || !s || !s->frames || s->currentFrame < 0 || s->currentFrame >= s->totalFrames)
+    if (!img || !s || !s->frameSet.frames || s->currentFrame < 0 || s->currentFrame >= s->frameSet.count)
         return 0; // Invalid image or sprite
 
-    Image *frame = &s->frames[s->currentFrame];
+    Image *frame = &s->frameSet.frames[s->currentFrame];
     int x2 = s->x;
     int y2 = s->y;
 
@@ -926,11 +944,11 @@ int iCheckImageCollision(int x1, int y1, Image *img1, int x2, int y2, Image *img
 int iCheckCollision(Sprite *s1, Sprite *s2)
 {
     // Early exit if invalid sprites or missing frames/masks
-    if (!s1 || !s2 || !s1->frames || !s2->frames || !s1->collisionMask || !s2->collisionMask)
+    if (!s1 || !s2 || !s1->frameSet.frames || !s2->frameSet.frames || !s1->collisionMask || !s2->collisionMask)
         return 0;
 
-    Image *frame1 = &s1->frames[s1->currentFrame];
-    Image *frame2 = &s2->frames[s2->currentFrame];
+    Image *frame1 = &s1->frameSet.frames[s1->currentFrame];
+    Image *frame2 = &s2->frameSet.frames[s2->currentFrame];
     int w1 = frame1->width, h1 = frame1->height;
     int w2 = frame2->width, h2 = frame2->height;
 
@@ -1122,10 +1140,10 @@ void iRotateSprite(Sprite *s, double x, double y, double degree)
 
 void iAnimateSprite(Sprite *sprite)
 {
-    if (!sprite || sprite->totalFrames <= 1 || !sprite->frames)
+    if (!sprite || sprite->frameSet.count <= 1 || !sprite->frameSet.frames)
         return;
 
-    sprite->currentFrame = (sprite->currentFrame + 1) % sprite->totalFrames;
+    sprite->currentFrame = (sprite->currentFrame + 1) % sprite->frameSet.count;
     iUpdateCollisionMask(sprite);
 }
 
@@ -1153,7 +1171,7 @@ void iAllocateTexture(Image *img)
     img->textureId = texId;
 }
 
-void iLoadFramesFromSheet2(Image *frames, const char *filename, int rows, int cols, int ignoreColor = -1)
+int iLoadFramesFromSheet2(FrameSet *frameSet, const char *filename, int rows, int cols, int ignoreColor = -1)
 {
     // Load the sprite sheet image
     Image tmp;
@@ -1164,7 +1182,8 @@ void iLoadFramesFromSheet2(Image *frames, const char *filename, int rows, int co
     int totalFrames = cols * rows;
 
     // Allocate memory for the individual frames
-    // frames = new Image[totalFrames];
+    frameSet->frames = (Image *)malloc(sizeof(Image) * totalFrames);
+    frameSet->count = totalFrames;
 
     // Loop to extract each frame
     for (int i = 0; i < totalFrames; ++i)
@@ -1173,11 +1192,13 @@ void iLoadFramesFromSheet2(Image *frames, const char *filename, int rows, int co
         int row = i / cols;
 
         // Create an Image structure for each frame
-        Image *frame = &frames[i];
+        Image *frame = &frameSet->frames[i];
+        frame->textureId = 0; // Initialize texture ID
         frame->width = frameWidth;
         frame->height = frameHeight;
         frame->channels = tmp.channels;
         frame->data = new unsigned char[frameWidth * frameHeight * frame->channels];
+        frame->isSVG = false; // Assuming frames are not SVGs
 
         for (int y = 0; y < frameHeight; ++y)
         {
@@ -1199,23 +1220,24 @@ void iLoadFramesFromSheet2(Image *frames, const char *filename, int rows, int co
     }
 
     delete[] tmp.data;
+    return totalFrames;
 }
 
-void iLoadFramesFromSheet(Image *frames, const char *filename, int rows, int cols)
+int iLoadFramesFromSheet(FrameSet *frameSet, const char *filename, int rows, int cols)
 {
-    iLoadFramesFromSheet2(frames, filename, rows, cols);
+    return iLoadFramesFromSheet2(frameSet, filename, rows, cols);
 }
 
 #define MAX_FILES 1024
 #define MAX_FILENAME_LEN 512
 
-void iLoadFramesFromFolder2(Image *frames, const char *folderPath, int ignoreColor = -1)
+int iLoadFramesFromFolder2(FrameSet *frameSet, const char *folderPath, int ignoreColor = -1)
 {
     DIR *dir = opendir(folderPath);
     if (dir == nullptr)
     {
         fprintf(stderr, "ERROR: Failed to open directory: %s\n", folderPath);
-        return;
+        return -1;
     }
 
     char *filenames[MAX_FILES];
@@ -1247,19 +1269,29 @@ void iLoadFramesFromFolder2(Image *frames, const char *folderPath, int ignoreCol
 
     qsort(filenames, count, sizeof(char *), compareFilenames);
 
+    frameSet->frames = (Image *)malloc(sizeof(Image) * count);
+    frameSet->count = count;
+    if (frameSet->frames == NULL)
+    {
+        fprintf(stderr, "ERROR: Memory allocation failed\n");
+        for (int i = 0; i < count; ++i)
+            free(filenames[i]);
+        return -1;
+    }
     // Load images in sorted order
     for (int i = 0; i < count; ++i)
     {
         char fullPath[MAX_FILENAME_LEN];
         snprintf(fullPath, sizeof(fullPath), "%s/%s", folderPath, filenames[i]);
-        iLoadImage2(&frames[i], fullPath, ignoreColor);
+        iLoadImage2(&frameSet->frames[i], fullPath, ignoreColor);
         free(filenames[i]); // free allocated memory
     }
+    return count; // Return the number of frames loaded
 }
 
-void iLoadFramesFromFolder(Image *frames, const char *folderPath)
+int iLoadFramesFromFolder(FrameSet *frameSet, const char *folderPath)
 {
-    iLoadFramesFromFolder2(frames, folderPath);
+    return iLoadFramesFromFolder2(frameSet, folderPath);
 }
 
 void iInitSprite(Sprite *s)
@@ -1272,8 +1304,6 @@ void iInitSprite(Sprite *s)
 
     // Assign the pre-loaded frames to the sprite
     s->currentFrame = -1;
-    s->frames = nullptr;       // Directly assign frames
-    s->totalFrames = -1;       // Set the number of frames
     s->scale = 1.0f;           // Initialize scale
     s->flipHorizontal = false; // Initialize flip state
     s->flipVertical = false;   // Initialize flip state
@@ -1311,9 +1341,9 @@ void iScaleSprite(Sprite *s, double scale)
         return;
 
     s->scale *= scale;
-    for (int i = 0; i < s->totalFrames; ++i)
+    for (int i = 0; i < s->frameSet.count; ++i)
     {
-        Image *frame = &s->frames[i];
+        Image *frame = &s->frameSet.frames[i];
         iScaleImage(frame, scale);
     }
 
@@ -1323,10 +1353,10 @@ void iScaleSprite(Sprite *s, double scale)
 int iGetVisiblePixelsCount(Sprite *s)
 {
     // Use sprite collision mask to count visible pixels
-    if (!s || !s->collisionMask || !s->frames)
+    if (!s || !s->collisionMask || !s->frameSet.frames)
         return 0;
 
-    Image *frame = &s->frames[s->currentFrame];
+    Image *frame = &s->frameSet.frames[s->currentFrame];
     int width = frame->width;
     int height = frame->height;
     int visibleCount = 0;
@@ -1345,33 +1375,29 @@ int iGetVisiblePixelsCount(Sprite *s)
     return visibleCount;
 }
 
-void iChangeSpriteFrames(Sprite *s, const Image *frames, int totalFrames)
+void iChangeSpriteFrames(Sprite *s, const FrameSet *frameSet)
 {
-    if (s->frames != nullptr)
+    if (s->frameSet.frames != nullptr)
     {
-        for (int i = 0; i < s->totalFrames; ++i)
-        {
-            iFreeImage(&s->frames[i]);
-        }
-        delete[] s->frames;
+        iFreeFrameSet(&s->frameSet);
     }
 
-    s->frames = new Image[totalFrames];
+    s->frameSet.frames = new Image[frameSet->count];
+    s->frameSet.count = frameSet->count;
 
-    for (int i = 0; i < totalFrames; ++i)
+    for (int i = 0; i < frameSet->count; ++i)
     {
         // printf("PASSED %d\n", i);
-        deepCopyImage(frames[i], &s->frames[i]);
+        deepCopyImage(frameSet->frames[i], &s->frameSet.frames[i]);
     }
 
     s->currentFrame = 0;
-    s->totalFrames = totalFrames;
     s->collisionMask = nullptr;
 
     // Apply transformations to each frame
-    for (int i = 0; i < s->totalFrames; ++i)
+    for (int i = 0; i < s->frameSet.count; ++i)
     {
-        Image *frame = &s->frames[i];
+        Image *frame = &s->frameSet.frames[i];
         iScaleImage(frame, s->scale);
         if (s->flipHorizontal)
             iMirrorImage(frame, HORIZONTAL);
@@ -1437,7 +1463,7 @@ void iUnScale()
 
 void iShowSprite(const Sprite *s)
 {
-    if (!s || !s->frames)
+    if (!s || !s->frameSet.frames || s->frameSet.count == 0 || s->currentFrame < 0)
     {
         return;
     }
@@ -1445,15 +1471,15 @@ void iShowSprite(const Sprite *s)
         s->rotationCenterX,
         s->rotationCenterY,
         s->rotation);
-    iShowTexture2(s->x, s->y, &s->frames[s->currentFrame]);
+    iShowTexture2(s->x, s->y, &s->frameSet.frames[s->currentFrame]);
     iUnRotate();
 }
 
 void iResizeSprite(Sprite *s, int width, int height)
 {
-    for (int i = 0; i < s->totalFrames; ++i)
+    for (int i = 0; i < s->frameSet.count; ++i)
     {
-        Image *frame = &s->frames[i];
+        Image *frame = &s->frameSet.frames[i];
         iResizeImage(frame, width, height);
     }
     iUpdateCollisionMask(s);
@@ -1479,9 +1505,9 @@ void iMirrorSprite(Sprite *s, MirrorState state)
     {
         s->flipVertical = !s->flipVertical;
     }
-    for (int i = 0; i < s->totalFrames; ++i)
+    for (int i = 0; i < s->frameSet.count; ++i)
     {
-        Image *frame = &s->frames[i];
+        Image *frame = &s->frameSet.frames[i];
         iMirrorImage(frame, state);
     }
     iUpdateCollisionMask(s);
@@ -1489,11 +1515,10 @@ void iMirrorSprite(Sprite *s, MirrorState state)
 
 void iFreeSprite(Sprite *s)
 {
-    for (int i = 0; i < s->totalFrames; ++i)
+    if (s->frameSet.frames != nullptr)
     {
-        iFreeImage(&s->frames[i]);
+        iFreeFrameSet(&s->frameSet);
     }
-    delete[] s->frames;
     if (s->collisionMask != nullptr)
     {
         delete[] s->collisionMask;

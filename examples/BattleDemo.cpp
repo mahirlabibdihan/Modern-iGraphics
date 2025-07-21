@@ -9,7 +9,7 @@ typedef enum
 
 typedef struct
 {
-    Image idle[4], walk[6], jump[8];
+    FrameSet idle, walk, jump;
     Sprite sprite;
     State state;
     int direction; // 1 for right, -1 for left
@@ -19,23 +19,24 @@ Monster pinkMonster;
 
 typedef struct
 {
-    Image idle[18], walk[25], jump[25];
+    FrameSet idle, walk, jump;
     Sprite sprite;
     State state;
     int direction; // 1 for right, -1 for left
 } Golem;
 
+Image bg;
+
 Golem golem;
 
 void loadPinkMonster()
 {
-    iLoadFramesFromSheet(pinkMonster.idle, "assets/images/sprites/1 Pink_Monster/Pink_Monster_Idle_4.png", 1, 4);
-    iLoadFramesFromSheet(pinkMonster.walk, "assets/images/sprites/1 Pink_Monster/Pink_Monster_Walk_6.png", 1, 6);
-    iLoadFramesFromSheet(pinkMonster.jump, "assets/images/sprites/1 Pink_Monster/Pink_Monster_Jump_8.png", 1, 8);
+    iLoadFramesFromSheet(&pinkMonster.idle, "assets/images/sprites/1 Pink_Monster/Pink_Monster_Idle_4.png", 1, 4);
+    iLoadFramesFromSheet(&pinkMonster.walk, "assets/images/sprites/1 Pink_Monster/Pink_Monster_Walk_6.png", 1, 6);
+    iLoadFramesFromSheet(&pinkMonster.jump, "assets/images/sprites/1 Pink_Monster/Pink_Monster_Jump_8.png", 1, 8);
 
-    iInitSprite(&pinkMonster.sprite);
-    iChangeSpriteFrames(&pinkMonster.sprite, pinkMonster.idle, 4);
-    iSetSpritePosition(&pinkMonster.sprite, 250, 0);
+    iChangeSpriteFrames(&pinkMonster.sprite, &pinkMonster.idle);
+    iSetSpritePosition(&pinkMonster.sprite, 250, 110);
     iScaleSprite(&pinkMonster.sprite, 3.0);
     pinkMonster.state = IDLE;
     pinkMonster.direction = 1; // 1 for right, -1 for left
@@ -43,13 +44,12 @@ void loadPinkMonster()
 
 void loadGolem()
 {
-    iLoadFramesFromFolder(golem.idle, "assets/images/sprites/Golem_2/Idle Blinking");
-    iLoadFramesFromFolder(golem.walk, "assets/images/sprites/Golem_2/Walking");
-    iLoadFramesFromFolder(golem.jump, "assets/images/sprites/Golem_2/Jump Start");
+    iLoadFramesFromFolder(&golem.idle, "assets/images/sprites/Golem_2/Idle Blinking");
+    iLoadFramesFromFolder(&golem.walk, "assets/images/sprites/Golem_2/Walking");
+    iLoadFramesFromFolder(&golem.jump, "assets/images/sprites/Golem_2/Jump Start");
 
-    iInitSprite(&golem.sprite);
-    iChangeSpriteFrames(&golem.sprite, golem.idle, 18);
-    iSetSpritePosition(&golem.sprite, 250, -75);
+    iChangeSpriteFrames(&golem.sprite, &golem.idle);
+    iSetSpritePosition(&golem.sprite, 250, 35);
     iScaleSprite(&golem.sprite, 0.5);
     iMirrorSprite(&golem.sprite, HORIZONTAL);
     golem.state = IDLE;
@@ -67,14 +67,14 @@ void iAnim()
             !isSpecialKeyPressed(GLUT_KEY_RIGHT))
         {
             pinkMonster.state = IDLE;
-            iChangeSpriteFrames(&pinkMonster.sprite, pinkMonster.idle, 4);
+            iChangeSpriteFrames(&pinkMonster.sprite, &pinkMonster.idle);
         }
         break;
     case JUMP:
         if (!isSpecialKeyPressed(GLUT_KEY_UP))
         {
             pinkMonster.state = IDLE;
-            iChangeSpriteFrames(&pinkMonster.sprite, pinkMonster.idle, 4);
+            iChangeSpriteFrames(&pinkMonster.sprite, &pinkMonster.idle);
         }
         break;
     }
@@ -90,6 +90,7 @@ void iDraw()
     iClear();
     iSetColor(255, 255, 255);
     iFilledRectangle(0, 0, 800, 400);
+    iShowLoadedImage(0, 0, &bg);
     iShowSprite(&golem.sprite);
     iShowSprite(&pinkMonster.sprite);
 
@@ -144,11 +145,12 @@ void iSpecialKeyPress(unsigned char key)
         }
         else
         {
-            pinkMonster.sprite.x--;
+            golem.sprite.x += 2;
+            iWrapImage(&bg, 2);
             if (pinkMonster.state != WALK)
             {
                 pinkMonster.state = WALK;
-                iChangeSpriteFrames(&pinkMonster.sprite, pinkMonster.walk, 6);
+                iChangeSpriteFrames(&pinkMonster.sprite, &pinkMonster.walk);
             }
         }
     }
@@ -161,11 +163,12 @@ void iSpecialKeyPress(unsigned char key)
         }
         else
         {
-            pinkMonster.sprite.x++;
+            golem.sprite.x -= 2;
+            iWrapImage(&bg, -2);
             if (pinkMonster.state != WALK)
             {
                 pinkMonster.state = WALK;
-                iChangeSpriteFrames(&pinkMonster.sprite, pinkMonster.walk, 6);
+                iChangeSpriteFrames(&pinkMonster.sprite, &pinkMonster.walk);
             }
         }
     }
@@ -175,7 +178,7 @@ void iSpecialKeyPress(unsigned char key)
         if (pinkMonster.state != JUMP)
         {
             pinkMonster.state = JUMP;
-            iChangeSpriteFrames(&pinkMonster.sprite, pinkMonster.jump, 8);
+            iChangeSpriteFrames(&pinkMonster.sprite, &pinkMonster.jump);
         }
     }
     if (key == GLUT_KEY_DOWN)
@@ -190,6 +193,8 @@ int main(int argc, char *argv[])
     iSetTimer(100, iAnim);
     loadPinkMonster();
     loadGolem();
+    iLoadImage(&bg, "assets/images/background.jpg");
+    iResizeImage(&bg, 800, 400);
     iOpenWindow(800, 400, "BattleDemo");
     return 0;
 }
