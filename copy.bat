@@ -28,7 +28,7 @@ REM Copy everything except excluded folders and files using robocopy
 echo Copying project files...
 robocopy "." "%RELEASE_DIR%" /e ^
     /xd release examples demo MINGW .vscode .github .git bin obj OpenGL tests ^
-    /xf *.bat *.cbp *.h *.cpp *.depend *.layout *.sh .gitignore banner.svg README.md *.py
+    /xf *.bat *.cbp *.h *.cpp *.depend *.layout *.sh .gitignore banner.svg README.md *.py .gitattributes
 
 REM robocopy returns different exit codes, so check if it worked
 if %errorlevel% leq 7 (
@@ -41,4 +41,3 @@ echo Contents of release folder:
 dir /b "%RELEASE_DIR%"
 
 endlocal
-pause
