@@ -150,7 +150,7 @@ void (*iAnimAdvancedFunction[MAX_TIMERS])(int) = {0};
 int iAnimCount = 0;
 int iAnimDelays[MAX_TIMERS];
 int iAnimPause[MAX_TIMERS];
-int isAdvanceTimer[MAX_TIMERS] = {0};
+int isAdvancedTimer[MAX_TIMERS] = {0};
 int iAnimLastCallTime[MAX_TIMERS] = {0};
 
 static bool needsRedraw = false;
@@ -170,7 +170,7 @@ void timerCallback(int index)
         {
             deltaTime = (currentTime - iAnimLastCallTime[index]); // in seconds
         }
-        if (isAdvanceTimer[index])
+        if (isAdvancedTimer[index])
         {
             iAnimAdvancedFunction[index](deltaTime);
         }
@@ -197,7 +197,7 @@ int iSetAdvancedTimer(int msec, void (*f)(int))
     iAnimAdvancedFunction[index] = f;
     iAnimDelays[index] = msec;
     iAnimPause[index] = 0;
-    isAdvanceTimer[index] = 1;
+    isAdvancedTimer[index] = 1;
 
     glutTimerFunc(msec, timerCallback, index);
     return index;
