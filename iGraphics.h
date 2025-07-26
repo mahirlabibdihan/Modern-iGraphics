@@ -159,7 +159,7 @@ void markDirty() { needsRedraw = true; }
 
 void timerCallback(int index)
 {
-    if (!iAnimPause[index] && iAnimFunction[index])
+    if (!iAnimPause[index] && (iAnimFunction[index] || iAnimAdvancedFunction[index]))
     {
         int deltaTime = 0;
         int currentTime = glutGet(GLUT_ELAPSED_TIME); // milliseconds since start
@@ -1065,6 +1065,11 @@ int iCheckCollision(Sprite *s1, Sprite *s2)
         }
     }
     return count;
+}
+
+int iCheckSpriteCollision(Sprite *s1, Sprite *s2)
+{
+    iCheckCollision(s1, s2);
 }
 
 void iRotateSprite(Sprite *s, double x, double y, double degree)
