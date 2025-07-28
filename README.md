@@ -324,7 +324,7 @@ void iKeyPress(unsigned char key)
     {
     case 'q':
         // do something with 'q'
-        iCloseWindow();
+        iExitMainLoop();
         break;
     // place your codes for other keys here
     default:
@@ -357,8 +357,9 @@ void iSpecialKeyPress(unsigned char key)
 int main(int argc, char *argv[])
 {
     // Initialization code before opening the window
-    iOpenWindow(400, 400, "iGraphics");
-    // Execution will continue from here once iCloseWindow() is called.
+    iWindowedMode(400, 400, "iGraphics");
+    iStartMainLoop();
+    // Execution will continue from here once iExitMainLoop() is called.
     return 0;
 }
 ```
@@ -369,7 +370,7 @@ int main(int argc, char *argv[])
 
 ### 🖼️ Graphics Functions
 
-#### `void iOpenWindow(int width=500, int height=500, char* title="iGraphics")`
+#### `void iWindowedMode(int width=500, int height=500, char* title="iGraphics")`
 
 - **Description:** Creates a window of specified size and title.
 - **Parameters:**
@@ -378,10 +379,34 @@ int main(int argc, char *argv[])
   - `title`: Title of the window.
 - **Example:**
   ```cpp
-  iOpenWindow(300, 300, "iGraphics");
+  iWindowedMode(300, 300, "iGraphics");
   ```
 
-#### `void iCloseWindow()`
+#### `void iGameMode(const char *gameModeStr = W800_X_H600)`
+
+- **Description:** Sets the game mode for fullscreen display.
+- **Parameters:**
+  - `gameModeStr`: String representing the game mode. 
+    - Available modes include:
+      - `W800_X_H600`: 800x600 resolution.
+      - `W1024_X_H768`: 1024x768 resolution.
+      - `W1280_X_H720`: 1280x720 resolution.
+      - `W1920_X_H1080`: 1920x1080 resolution.
+  - **Example:**
+  ```cpp
+  iGameMode(W1280_X_H720);
+  ```
+
+#### `void iStartMainLoop()`
+- **Description:** Starts the main loop of the application.
+- **Parameters:** None
+- **Note:** This function contains an infinite loop that keeps the application running until `iExitMainLoop()` is called.
+- **Example:**
+  ```cpp
+  iStartMainLoop();
+  ```
+
+#### `void iExitMainLoop()`
 
 - **Description:** Closes the current window.
 - **Parameters:** None
@@ -392,7 +417,7 @@ int main(int argc, char *argv[])
       switch (key)
       {
       case 'q':
-          iCloseWindow();
+          iExitMainLoop();
           break;
       default:
           break;
