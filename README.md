@@ -408,7 +408,7 @@ int main(int argc, char *argv[])
 
 #### `void iExitMainLoop()`
 
-- **Description:** Closes the current window.
+- **Description:** Exits the main loop and return from `iStartMainLoop()`.
 - **Parameters:** None
 - **Example:**
   ```cpp
