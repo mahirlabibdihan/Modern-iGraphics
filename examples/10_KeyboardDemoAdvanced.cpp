@@ -15,12 +15,14 @@ void iDraw()
     // Clear the screen
     iClear();
 
+    iSetColor(255, 255, 255);
+    iFilledRectangle(0, 0, iScreenWidth, iScreenHeight);
     // Set drawing color Red
-    iSetColor(255, 0, 0);
+    iSetTransparentColor(255, 0, 0, 0.5);
     iFilledCircle(ball_1_x, ball_1_y, ball_radius);
 
     // Set drawing color Blue
-    iSetColor(0, 0, 255);
+    iSetTransparentColor(0, 0, 255, 0.5);
     iFilledCircle(ball_2_x, ball_2_y, ball_radius);
 }
 
