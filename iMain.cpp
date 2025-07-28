@@ -1,3 +1,8 @@
+/***
+ * Author: Mahir Labib Dihan
+ * Email: mahirlabibdihan@gmail.com
+ * GitHub: https://github.com/mahirlabibdihan
+ */
 #include "iGraphics.h"
 
 int main(int argc, char *argv[])
