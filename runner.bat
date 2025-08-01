@@ -4,8 +4,8 @@ set "BASE_DIR=%~dp0MINGW"
 
 :: Check if MINGW folder exists
 if not exist "%BASE_DIR%" (
-    echo >> Warning: MINGW folder not found at: %BASE_DIR%
-    echo >> Please download MINGW from https://github.com/mahirlabibdihan/Modern-iGraphics/releases/download/v0.0.1/MINGW.zip
+    echo Warning: MINGW folder not found at: %BASE_DIR%
+    echo Please download MINGW from https://github.com/mahirlabibdihan/Modern-iGraphics/releases/download/v0.0.1/MINGW.zip
     echo.
 )
 
