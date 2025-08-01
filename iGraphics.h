@@ -8,7 +8,7 @@
  * Author: Mahir Labib Dihan
  * Email: mahirlabibdihan@gmail.com
  * GitHub: https://github.com/mahirlabibdihan
- * Date: July 21, 2025
+ * Date: July 28, 2025
  */
 
 //
@@ -568,7 +568,7 @@ struct CacheEntry
 };
 static std::unordered_map<std::string, CacheEntry> imageCache;
 static std::list<std::string> lruList; // Most recently used at front
-static const size_t MAX_CACHE_SIZE = 500;
+static const size_t MAX_CACHE_SIZE = 5000;
 
 void iShowImage2(int x, int y, const char *filename, int ignoreColor = -1)
 {

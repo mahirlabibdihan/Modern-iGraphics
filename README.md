@@ -383,9 +383,34 @@ int main(int argc, char *argv[])
   iWindowedMode(300, 300, "iGraphics");
   ```
 
+#### `void iGameMode(const char *gameModeStr = W800_X_H600)`
+
+- **Description:** Sets the game mode for fullscreen display.
+- **Parameters:**
+  - `gameModeStr`: String representing the game mode.
+    - Available modes include:
+      - `W800_X_H600`: 800x600 resolution.
+      - `W1024_X_H768`: 1024x768 resolution.
+      - `W1280_X_H720`: 1280x720 resolution.
+      - `W1920_X_H1080`: 1920x1080 resolution.
+  - **Example:**
+  ```cpp
+  iGameMode(W1280_X_H720);
+  ```
+
+#### `void iStartMainLoop()`
+
+- **Description:** Starts the main loop of the application.
+- **Parameters:** None
+- **Note:** This function contains an infinite loop that keeps the application running until `iExitMainLoop()` is called.
+- **Example:**
+  ```cpp
+  iStartMainLoop();
+  ```
+
 #### `void iExitMainLoop()`
 
-- **Description:** Closes the current window.
+- **Description:** Exits the main loop and return from `iStartMainLoop()`.
 - **Parameters:** None
 - **Example:**
   ```cpp
