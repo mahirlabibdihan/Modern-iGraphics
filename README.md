@@ -90,13 +90,13 @@ You can find executable games [here](https://github.com/mahirlabibdihan/Modern-i
 
 ## Necessary Files
 
-- Download the `Modern-iGraphics-main.zip` file from [here](https://github.com/mahirlabibdihan/Modern-iGraphics/archive/refs/heads/main.zip) and extract it.
+- Download the `Modern-iGraphics-1.0.0.zip` file from [here](https://github.com/mahirlabibdihan/Modern-iGraphics/releases/download/v1.0.0/Modern-iGraphics-1.0.0.zip) and extract it.
 - Download `MINGW.zip` file from [here](https://github.com/mahirlabibdihan/Modern-iGraphics/releases/download/v0.0.1/MINGW.zip) and extract it.
-- Copy the `MINGW` folder to the extracted `Modern-iGraphics-main` folder.
+- Copy the `MINGW` folder to the extracted `Modern-iGraphics-1.0.0` folder.
 - The final folder structure should look like this:
 
 ```
-Modern-iGraphics-main
+Modern-iGraphics-1.0.0
 ├── MINGW
 │   ├── bin
 │   ├── include
@@ -106,7 +106,6 @@ Modern-iGraphics-main
 ├── OpenGL
 ├── assets
 ├── bin
-├── obj
 ├── examples
 ├── iGraphics.h
 ├── iGraphics.cbp
