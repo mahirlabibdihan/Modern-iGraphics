@@ -1,15 +1,12 @@
 #!/bin/bash
 
-# Check if filename argument is provided
+# Check if filename argument is provided, use default if not
 if [ $# -eq 0 ]; then
-    echo "📋 Usage: ./create_project.sh <filename>"
-    echo "💡 Example: ./create_project.sh MyGame"
-    echo ""
-    echo "🎯 This will create MyGame.cpp with iGraphics starter code"
-    exit 1
+    filename="iMain"
+    echo "� No filename provided, using default: iMain.cpp"
+else
+    filename="$1"
 fi
-
-filename="$1"
 
 echo "🚀 Creating project file for: $filename"
 

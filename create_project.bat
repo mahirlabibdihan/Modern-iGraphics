@@ -2,17 +2,13 @@
 chcp 65001 >nul 2>&1
 setlocal enabledelayedexpansion
 
-REM Check if filename argument is provided
+REM Check if filename argument is provided, use default if not
 if "%~1"=="" (
-    echo 📋 Usage: create_project.bat ^<filename^>
-    echo 💡 Example: create_project.bat MyGame
-    echo.
-    echo 🎯 This will create MyGame.cpp with iGraphics starter code
-    pause
-    exit /b 1
+    set "filename=iMain"
+    echo � No filename provided, using default: iMain.cpp
+) else (
+    set "filename=%~1"
 )
-
-set "filename=%~1"
 
 echo 🚀 Creating project file for: %filename%
 
