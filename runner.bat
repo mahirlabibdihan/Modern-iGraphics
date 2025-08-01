@@ -1,5 +1,17 @@
 @echo off
-setlocal
+:: Set the base directory for g++ (optional if g++ is in your PATH)
+set "BASE_DIR=%~dp0MINGW"
+
+:: Check if MINGW folder exists
+if not exist "%BASE_DIR%" (
+    echo ⚠️ Warning: MINGW folder not found at: %BASE_DIR%
+    echo 💡 Please download MINGW from https://github.com/mahirlabibdihan/Modern-iGraphics/releases/download/v0.0.1/MINGW.zip
+    echo.
+)
+
+set "PATH=%BASE_DIR%;%BASE_DIR%\bin;%PATH%"
+
+echo Using g++ from: %BASE_DIR%cal
 
 :: Set default source file if not provided
 if "%~1"=="" (
