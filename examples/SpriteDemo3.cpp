@@ -12,7 +12,7 @@ void loadResources()
 
 void iAnim()
 {
-	iAnimateSprite(&sprite);
+	iAnimateSprite(&sprite); // Automatically updates the current frame
 }
 
 /*
