@@ -8,6 +8,8 @@ if not exist "%BASE_DIR%" (
     echo Warning: MINGW folder not found at: %BASE_DIR%
     echo Please download MINGW from https://github.com/mahirlabibdihan/Modern-iGraphics/releases/download/v0.0.1/MINGW.zip
     echo.
+
+    exit /b 1
 )
 
 set "PATH=%BASE_DIR%;%BASE_DIR%\bin;%PATH%"
