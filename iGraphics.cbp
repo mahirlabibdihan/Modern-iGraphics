@@ -22,7 +22,7 @@
 				</Compiler>
 				<Linker>
 					<Add option="-static-libgcc -static-libstdc++" />
-					<Add directory="OpenGL/lib" />
+					<Add directory="OpenGL/lib/x86" />
 					<Add library="mingw32" />
 					<Add library="SDL2main" />
 					<Add library="SDL2" />
