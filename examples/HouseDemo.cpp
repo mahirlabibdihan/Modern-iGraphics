@@ -125,6 +125,7 @@ void iSpecialKeyPress(unsigned char key)
 
 int main(int argc, char *argv[])
 {
-    iOpenWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Demo!");
+    iWindowedMode(SCREEN_WIDTH, SCREEN_HEIGHT, "Demo!");
+    iStartMainLoop();
     return 0;
 }

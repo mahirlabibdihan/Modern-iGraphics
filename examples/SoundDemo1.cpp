@@ -28,6 +28,7 @@ void iMouseClick(int button, int state, int mx, int my)
 
 int main(int argc, char *argv[])
 {
-	iOpenWindow(600, 250, "Sound Demo");
+	iWindowedMode(600, 250, "Sound Demo");
+	iStartMainLoop();
 	return 0;
 }

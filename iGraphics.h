@@ -101,13 +101,10 @@ int ifft = 0;
 #define MAX_TIMERS 10
 
 void iDraw() __attribute__((weak));
-void iKeyboard(unsigned char, int) __attribute__((weak)); // Deprecated: Use iKeyPress instead
 void iKeyPress(unsigned char) __attribute__((weak));
 void iKeyRelease(unsigned char) __attribute__((weak));
 void iSpecialKeyPress(unsigned char) __attribute__((weak));
-void iSpecialKeyboard(unsigned char, int) __attribute__((weak));
 void iSpecialKeyRelease(unsigned char) __attribute__((weak));
-void iMouse(int button, int state, int x, int y) __attribute__((weak));
 void iMouseClick(int button, int state, int x, int y) __attribute__((weak));
 void iMouseMove(int, int) __attribute__((weak)); // New function
 void iMouseDrag(int, int) __attribute__((weak)); // Renamed from iMouseMove to iMouseDrag
@@ -1299,24 +1296,6 @@ int iLoadFramesFromFolder(FrameSet *frameSet, const char *folderPath)
     return iLoadFramesFromFolder2(frameSet, folderPath);
 }
 
-void iInitSprite(Sprite *s)
-{
-    s->x = 0;
-    s->y = 0;
-
-    s->collisionMask = nullptr;
-    // s->ignoreColor = ignoreColor;
-
-    // Assign the pre-loaded frames to the sprite
-    s->currentFrame = -1;
-    s->scale = 1.0f;           // Initialize scale
-    s->flipHorizontal = false; // Initialize flip state
-    s->flipVertical = false;   // Initialize flip state
-    s->rotation = 0.0f;        // Initialize rotation angle
-    s->rotationCenterX = 0.0f; // Initialize rotation center X
-    s->rotationCenterY = 0.0f; // Initialize rotation center Y
-}
-
 void deepCopyImage(Image src, Image *dst)
 {
     // Copy the scalar members (width, height, channels)
@@ -1380,6 +1359,13 @@ int iGetVisiblePixelsCount(Sprite *s)
     return visibleCount;
 }
 
+FrameSet iCreateFrameSet(Image *frames, int count)
+{
+    FrameSet fs;
+    fs.frames = frames;
+    fs.count = count;
+    return fs;
+}
 void iChangeSpriteFrames(Sprite *s, const FrameSet *frameSet)
 {
     if (s->frameSet.frames != nullptr)
@@ -1865,18 +1851,6 @@ void keyboardHandler1FF(unsigned char key, int x, int y)
             iKeyPress(key);
         }
     }
-    else if (iKeyboard) // Deprecated
-    {
-        if (isKeyPressed(key))
-        {
-            iKeyboard(key, GLUT_HOLD); // Call with hold state
-        }
-        else
-        {
-            keys[key] = true; // Mark key as pressed
-            iKeyboard(key, GLUT_DOWN);
-        }
-    }
     else
     {
         // printf("Warning: Keyboard functionality is not enabled.\n");
@@ -1891,12 +1865,6 @@ void keyboardHandlerUp1FF(unsigned char key, int x, int y)
     {
         keys[key] = false;
         iKeyRelease(key);
-        redraw();
-    }
-    else if (iKeyboard)
-    {
-        keys[key] = false;
-        iKeyboard(key, GLUT_UP);
         redraw();
     }
     else
@@ -1927,18 +1895,6 @@ void keyboardHandler2FF(int key, int x, int y)
             iSpecialKeyPress(key);
         }
     }
-    else if (iSpecialKeyboard) // Deprecated
-    {
-        if (isSpecialKeyPressed(key))
-        {
-            iSpecialKeyboard(key, GLUT_HOLD); // Call with hold state
-        }
-        else
-        {
-            specialKeys[key] = true; // Mark special key as pressed
-            iSpecialKeyboard(key, GLUT_DOWN);
-        }
-    }
     else
     {
         // printf("Warning: Special keyboard functionality is not enabled.\n");
@@ -1953,12 +1909,6 @@ void keyboardHandlerUp2FF(int key, int x, int y)
     {
         specialKeys[key] = false; // Mark special key as released
         iSpecialKeyRelease(key);
-        redraw();
-    }
-    else if (iSpecialKeyboard)
-    {
-        specialKeys[key] = false; // Mark special key as released
-        iSpecialKeyboard(key, GLUT_UP);
         redraw();
     }
     else
@@ -2002,12 +1952,6 @@ void mouseHandlerFF(int button, int state, int x, int y)
         iMouseX = x;
         iMouseY = iScreenHeight - y;
         iMouseClick(button, state, iMouseX, iMouseY);
-    }
-    else if (iMouse)
-    {
-        iMouseX = x;
-        iMouseY = iScreenHeight - y;
-        iMouse(button, state, iMouseX, iMouseY);
     }
     else
     {
@@ -2190,20 +2134,6 @@ void iExitMainLoop()
     programEnded = 1;
 }
 
-void iCloseWindow()
-{
-    if (isGameMode)
-    {
-        // glutLeaveGameMode();
-        glutLeaveMainLoop();
-    }
-    else
-    {
-        glutLeaveMainLoop();
-    }
-    programEnded = 1;
-}
-
 #define W649_X_H480 "640x480"
 #define W800_X_H600 "800x600"
 #define W1024_X_H768 "1024x768"
@@ -2265,52 +2195,4 @@ void iGameMode(const char *gameModeStr = W800_X_H600)
 void iStartMainLoop()
 {
     glutMainLoop();
-}
-void iOpenWindow(int width = 500, int height = 500, const char *title = "iGraphics", int fullscreen = 0)
-{
-    // Ensure GLUT was initialized
-    iInitGlut();
-
-    iSmallScreenHeight = iScreenHeight = height;
-    iSmallScreenWidth = iScreenWidth = width;
-    iWindowTitle = title;
-
-    glutSetOption(GLUT_MULTISAMPLE, 8);
-    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_ALPHA | GLUT_MULTISAMPLE);
-    glEnable(GLUT_MULTISAMPLE);
-
-    if (fullscreen)
-    {
-        char gameModeStr[20];
-        sprintf(gameModeStr, "%dx%d", width, height);
-        glutGameModeString(gameModeStr); // Supports: 640×480 800×600 1024×768 1280×720 1366x768
-        if (glutGameModeGet(GLUT_GAME_MODE_POSSIBLE))
-        {
-            isFullScreen = 1;
-            glutEnterGameMode();
-        }
-        else
-        {
-            printf("ERROR: Game Mode not possible with %s\n", gameModeStr);
-            // Fallback to normal window
-            glutInitWindowSize(iScreenWidth, iScreenHeight);
-            glutInitWindowPosition(10, 10);
-
-            glutCreateWindow(title);
-        }
-    }
-    else
-    {
-        glutInitWindowSize(iScreenWidth, iScreenHeight);
-        glutInitWindowPosition(10, 10);
-
-        glutCreateWindow(title);
-    }
-    iInit();
-    glutMainLoop();
-}
-
-void iInitialize(int width = 500, int height = 500, const char *title = "iGraphics")
-{
-    iOpenWindow(width, height, title, 0);
 }

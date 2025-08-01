@@ -9,17 +9,17 @@ int pic_x, pic_y;
 int m_state = IDLE;
 int direction = 1; // 1 for right, -1 for left
 
-Image idleMonster[4], walkMonster[6], jumpMonster[8];
+FrameSet idleMonster, walkMonster, jumpMonster;
 Sprite monster;
 
 #define max(a, b) ((a) > (b) ? (a) : (b))
 void loadResources()
 {
-	iLoadFramesFromSheet(idleMonster, "assets/images/sprites/1 Pink_Monster/Pink_Monster_Idle_4.png", 1, 4);
-	iLoadFramesFromSheet(walkMonster, "assets/images/sprites/1 Pink_Monster/Pink_Monster_Walk_6.png", 1, 6);
-	iLoadFramesFromSheet(jumpMonster, "assets/images/sprites/1 Pink_Monster/Pink_Monster_Jump_8.png", 1, 8);
+	iLoadFramesFromSheet(&idleMonster, "assets/images/sprites/1 Pink_Monster/Pink_Monster_Idle_4.png", 1, 4);
+	iLoadFramesFromSheet(&walkMonster, "assets/images/sprites/1 Pink_Monster/Pink_Monster_Walk_6.png", 1, 6);
+	iLoadFramesFromSheet(&jumpMonster, "assets/images/sprites/1 Pink_Monster/Pink_Monster_Jump_8.png", 1, 8);
 
-	iChangeSpriteFrames(&monster, idleMonster, 4);
+	iChangeSpriteFrames(&monster, &idleMonster);
 	iSetSpritePosition(&monster, 20, 0);
 	iScaleSprite(&monster, 3.0);
 }
@@ -36,7 +36,7 @@ void updateMonster()
 		if (monster.y == 0)
 		{
 			m_state = IDLE;
-			iChangeSpriteFrames(&monster, idleMonster, 4);
+			iChangeSpriteFrames(&monster, &idleMonster);
 		}
 		break;
 	}
@@ -97,7 +97,7 @@ void iSpecialKeyPress(unsigned char key)
 			if (m_state != WALK)
 			{
 				m_state = WALK;
-				iChangeSpriteFrames(&monster, walkMonster, 6);
+				iChangeSpriteFrames(&monster, &walkMonster);
 			}
 		}
 	}
@@ -114,7 +114,7 @@ void iSpecialKeyPress(unsigned char key)
 			if (m_state != WALK)
 			{
 				m_state = WALK;
-				iChangeSpriteFrames(&monster, walkMonster, 6);
+				iChangeSpriteFrames(&monster, &walkMonster);
 			}
 		}
 	}
@@ -124,7 +124,7 @@ void iSpecialKeyPress(unsigned char key)
 		if (m_state != JUMP)
 		{
 			m_state = JUMP;
-			iChangeSpriteFrames(&monster, jumpMonster, 8);
+			iChangeSpriteFrames(&monster, &jumpMonster);
 		}
 	}
 	if (key == GLUT_KEY_DOWN)

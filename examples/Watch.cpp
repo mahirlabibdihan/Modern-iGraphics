@@ -102,6 +102,7 @@ int main(int argc, char *argv[])
     iSetTimer(1000, second);
     iSetTimer(1000, minute);
     iSetTimer(1000, hour);
-    iOpenWindow(1000, 720, "demo");
+    iWindowedMode(1000, 720, "demo");
+    iStartMainLoop();
     return 0;
 }

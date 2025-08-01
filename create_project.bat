@@ -98,7 +98,7 @@ echo     switch ^(key^)
 echo     {
 echo     case 'q':
 echo     case 'Q':
-echo         iCloseWindow^(^);
+echo         iExitMainLoop^(^);
 echo         break;
 echo     case 'f':
 echo     case 'F':
@@ -135,7 +135,7 @@ echo     case GLUT_KEY_RIGHT:
 echo         // Right arrow pressed
 echo         break;
 echo     case GLUT_KEY_END:
-echo         iCloseWindow^(^);
+echo         iExitMainLoop^(^);
 echo         break;
 echo     default:
 echo         break;

@@ -69,6 +69,7 @@ int main(int argc, char *argv[])
 {
     pic_x = 0;
     pic_y = 0;
-    iOpenWindow(900, 900, "PictureDemo");
+    iWindowedMode(900, 900, "PictureDemo");
+    iStartMainLoop();
     return 0;
 }

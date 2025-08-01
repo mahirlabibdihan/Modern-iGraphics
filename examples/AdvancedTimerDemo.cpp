@@ -88,6 +88,7 @@ int main(int argc, char *argv[])
 {
     iSetTimer(20, ballChange1);
     iSetAdvancedTimer(20, ballChange2);
-    iOpenWindow(400, 350, "Ball Demo");
+    iWindowedMode(400, 350, "Ball Demo");
+    iStartMainLoop();
     return 0;
 }

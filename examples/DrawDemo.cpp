@@ -44,6 +44,7 @@ void iSpecialKeyPress(unsigned char key)
 
 int main(int argc, char *argv[])
 {
-    iOpenWindow(width, height, "DrawDemo");
+    iWindowedMode(width, height, "DrawDemo");
+    iStartMainLoop();
     return 0;
 }

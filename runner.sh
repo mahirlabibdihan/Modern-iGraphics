@@ -19,17 +19,17 @@ then
     g++ -w -fexceptions -g -I. -IOpenGL/include -IOpenGL/include/SDL2 -IOpenGL/include/Freetype -c "$SOURCE_FILE" -o obj/object.o
 
     # Link the object file to create the executable
-    g++ -o bin/opengl obj/object.o -lGL -lGLU -lglut -pthread -lSDL2 -lSDL2main -lSDL2_mixer -lfreetype
+    g++ -o bin/iGraphics obj/object.o -lGL -lGLU -lglut -pthread -lSDL2 -lSDL2main -lSDL2_mixer -lfreetype
 
     echo "Finished building."
 
-    ./bin/opengl
+    ./bin/iGraphics
 else
-    g++ -w -fexceptions -g -I. -IOpenGL/include -IOpenGL/include/SDL2 -IOpenGL/include/Freetype "$SOURCE_FILE" -o bin/opengl.exe -static-libgcc -static-libstdc++ -lmingw32 -lSDL2main -lSDL2 -lSDL2_mixer -lOpenGL32 -lfreeglut -lfreetype
+    g++ -w -fexceptions -g -I. -IOpenGL/include -IOpenGL/include/SDL2 -IOpenGL/include/Freetype "$SOURCE_FILE" -o bin/iGraphics.exe -static-libgcc -static-libstdc++ -lmingw32 -lSDL2main -lSDL2 -lSDL2_mixer -lOpenGL32 -lfreeglut -lfreetype
     echo "Finished building."
-    ./bin/opengl.exe
+    ./bin/iGraphics.exe
 fi
-# g++ -w -fexceptions -g -I. -IOpenGL/include -IOpenGL/include/SDL2 iMain.cpp -o bin/opengl.exe -static-libgcc -static-libstdc++ -lmingw32 -lSDL2main -lSDL2 -lSDL2_mixer -lOpenGL32 -lfreeglut && ./bin/opengl.exe
+# g++ -w -fexceptions -g -I. -IOpenGL/include -IOpenGL/include/SDL2 iMain.cpp -o bin/iGraphics.exe -static-libgcc -static-libstdc++ -lmingw32 -lSDL2main -lSDL2 -lSDL2_mixer -lOpenGL32 -lfreeglut && ./bin/iGraphics.exe
 
 
 

@@ -147,6 +147,7 @@ void iKeyPress(unsigned char key)
 
 int main(int argc, char *argv[])
 {
-    iOpenWindow(1920, 1080, "Graph");
+    iWindowedMode(1920, 1080, "Graph");
+    iStartMainLoop();
     return 0;
 }

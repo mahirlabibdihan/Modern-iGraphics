@@ -65,6 +65,7 @@ void iSpecialKeyPress(unsigned char key)
 
 int main(int argc, char *argv[])
 {
-	iOpenWindow(600, 400, "Mousedemo");
+	iWindowedMode(600, 400, "Mousedemo");
+	iStartMainLoop();
 	return 0;
 }

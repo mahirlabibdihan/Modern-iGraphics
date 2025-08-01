@@ -195,6 +195,7 @@ int main(int argc, char *argv[])
     loadGolem();
     iLoadImage(&bg, "assets/images/background.jpg");
     iResizeImage(&bg, 800, 400);
-    iOpenWindow(800, 400, "BattleDemo");
+    iWindowedMode(800, 400, "BattleDemo");
+    iStartMainLoop();
     return 0;
 }

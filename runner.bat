@@ -21,7 +21,7 @@ if not exist "obj" (
 )
 :: Compile the source file to an object file (with irrKlang include path)
 
-MINGW\\bin\\g++.exe -w -fexceptions -g -I. -IOpenGL\\include -IOpenGL\\include\\SDL2 -IOpenGL\\include\\Freetype -c "%SOURCE_FILE%" -o obj\\opengl.o
+MINGW\\bin\\g++.exe -w -fexceptions -g -I. -IOpenGL\\include -IOpenGL\\include\\SDL2 -IOpenGL\\include\\Freetype -c "%SOURCE_FILE%" -o obj\\iGraphics.o
 
 if %ERRORLEVEL% neq 0 (
    echo Compilation failed.
@@ -30,7 +30,7 @@ if %ERRORLEVEL% neq 0 (
 
 echo Compiling %SOURCE_FILE% to object file...
 
-MINGW\\bin\\g++.exe -static-libgcc -static-libstdc++ -L.\\OpenGL\\lib -o bin\\opengl.exe obj\\opengl.o -lmingw32 -lSDL2main -lSDL2 -lSDL2_mixer -lOPENGL32 -lfreeglut -lwinmm -lfreetype
+MINGW\\bin\\g++.exe -static-libgcc -static-libstdc++ -L.\\OpenGL\\lib -o bin\\iGraphics.exe obj\\iGraphics.o -lmingw32 -lSDL2main -lSDL2 -lSDL2_mixer -lOPENGL32 -lfreeglut -lwinmm -lfreetype
 
 if %ERRORLEVEL% neq 0 (
     echo Linking failed.
@@ -41,7 +41,7 @@ echo Linking %SOURCE_FILE% to executable...
 
 echo Finished building.
 
-set "OUTPUT_EXE=opengl.exe"
+set "OUTPUT_EXE=iGraphics.exe"
 :: Run the executable
 echo Running bin\%OUTPUT_EXE%...
 bin\%OUTPUT_EXE%

@@ -43,6 +43,7 @@ void iKeyPress(unsigned char key)
 int main(int argc, char *argv[])
 {
     loadResources(); // Load resources before initializing graphics
-    iOpenWindow(1000, 800, "SVG Demo");
+    iWindowedMode(1000, 800, "SVG Demo");
+    iStartMainLoop();
     return 0;
 }

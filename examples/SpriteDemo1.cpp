@@ -82,6 +82,7 @@ int main(int argc, char *argv[])
     pic_y = 0;
     populate_monster_images();
     iSetTimer(100, update_monster);
-    iOpenWindow(900, 900, "SpriteDemo");
+    iWindowedMode(900, 900, "SpriteDemo");
+    iStartMainLoop();
     return 0;
 }

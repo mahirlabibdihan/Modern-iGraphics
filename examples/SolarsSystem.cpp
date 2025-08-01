@@ -240,6 +240,7 @@ int main(int argc, char *argv[])
     g_satelliteR = 5;
 
     iSetTimer(20, movePlanets);
-    iOpenWindow(CX_MAX, CY_MAX, "Solar system!");
+    iWindowedMode(CX_MAX, CY_MAX, "Solar system!");
+    iStartMainLoop();
     return 0;
 }

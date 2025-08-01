@@ -96,7 +96,7 @@ void iKeyPress(unsigned char key)
     {
     case 'q':
     case 'Q':
-        iCloseWindow();
+        iExitMainLoop();
         break;
     case 'f':
     case 'F':
@@ -133,7 +133,7 @@ void iSpecialKeyPress(unsigned char key)
         // Right arrow pressed
         break;
     case GLUT_KEY_END:
-        iCloseWindow();
+        iExitMainLoop();
         break;
     default:
         break;
@@ -163,13 +163,16 @@ int main(int argc, char *argv[])
     // iSetTimer(16, iAnimation); // ~60 FPS
 
     // Open the graphics window
-    iOpenWindow(screenWidth, screenHeight, "EOF
+    iWindowedMode(screenWidth, screenHeight, "EOF
 
 # Add the filename to the window title
-echo "    iOpenWindow(screenWidth, screenHeight, \"$filename\");" >> "$output_file"
+echo "    iWindowedMode(screenWidth, screenHeight, \"$filename\");" >> "$output_file"
 
 # Add the closing part
 cat >> "$output_file" << 'EOF'
+
+    // Start the main loop
+    iStartMainLoop();
 
     return 0;
 }

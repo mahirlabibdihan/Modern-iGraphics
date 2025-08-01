@@ -76,6 +76,7 @@ int main(int argc, char *argv[])
 {
     iSetTimer(20, ballChange);
     // iSetTimer(2000, randomizeBallPosition);
-    iOpenWindow(400, 400, "Ball Demo");
+    iWindowedMode(400, 400, "Ball Demo");
+    iStartMainLoop();
     return 0;
 }

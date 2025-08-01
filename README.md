@@ -54,19 +54,19 @@ It was originally created by [Shahriar Nirjon](https://www.cs.unc.edu/~nirjon/) 
 
 <!-- <div align="center"> -->
 
-| **Feature**                | **Original iGraphics (2009)** | **Modern iGraphics (2025)**      |
-| :------------------------- | :---------------------------- | :------------------------------- |
-| **Cross-Platform Support** | ❌ Windows only                | ✅ Windows & Linux                |
-| **Image Formats**          | ❌ BMP only                    | ✅ Multiple formats               |
-| **Audio Formats**          | ❌ WAV only                    | ✅ Multiple formats               |
-| **Font Support**           | ❌ Limited bitmap fonts        | ✅ Custom TTF fonts               |
-| **Sound Integration**      | ❌ Single Channel              | ✅ Multi-Channel                  |
-| **Input Handling**         | ❌ Basic                       | ✅ Enhanced controls              |
-| **Transparency Support**   | ❌ Not available               | ✅ Full RGBA color support        |
-| **Image Manipulation**     | ❌ No transformations          | ✅ Rotate/Scale/Flip/Wrap         |
-| **Image rendering**        | ❌ Slow                        | ✅ Fast (Texture-based + Caching) |
-| **Sprite Management**      | ❌ Manual implementation       | ✅ Built-in sprite system         |
-| **Collision Detection**    | ❌ Not available               | ✅ Pixel-perfect collision        |
+| **Feature**                | **Original iGraphics (2009)** | **Modern iGraphics (2025)**       |
+| :------------------------- | :---------------------------- | :-------------------------------- |
+| **Cross-Platform Support** | ❌ Windows only               | ✅ Windows & Linux                |
+| **Image Formats**          | ❌ BMP only                   | ✅ Multiple formats               |
+| **Audio Formats**          | ❌ WAV only                   | ✅ Multiple formats               |
+| **Font Support**           | ❌ Limited bitmap fonts       | ✅ Custom TTF fonts               |
+| **Sound Integration**      | ❌ Single Channel             | ✅ Multi-Channel                  |
+| **Input Handling**         | ❌ Basic                      | ✅ Enhanced controls              |
+| **Transparency Support**   | ❌ Not available              | ✅ Full RGBA color support        |
+| **Image Manipulation**     | ❌ No transformations         | ✅ Rotate/Scale/Flip/Wrap         |
+| **Image rendering**        | ❌ Slow                       | ✅ Fast (Texture-based + Caching) |
+| **Sprite Management**      | ❌ Manual implementation      | ✅ Built-in sprite system         |
+| **Collision Detection**    | ❌ Not available              | ✅ Pixel-perfect collision        |
 
 <!-- </div> -->
 <!-- Besides, the original library used `glut`, which is upgraded to `freeglut` in this version. -->
@@ -156,13 +156,14 @@ sudo apt install libfreetype6-dev
 ```
 
 - **MSYS2-MINGW64**
-  
+
 ```bash
 pacman -S mingw-w64-x86_64-SDL2 mingw-w64-x86_64-SDL2_mixer
 pacman -S mingw-w64-x86_64-freeglut mingw-w64-x86_64-gcc
 pacman -S mingw-w64-x86_64-freetype
 ./runner.sh examples/BallDemo.cpp
 ```
+
 ---
 
 ## 🚀 Quick Start
@@ -324,7 +325,7 @@ void iKeyPress(unsigned char key)
     {
     case 'q':
         // do something with 'q'
-        iCloseWindow();
+        iExitMainLoop();
         break;
     // place your codes for other keys here
     default:
@@ -357,8 +358,9 @@ void iSpecialKeyPress(unsigned char key)
 int main(int argc, char *argv[])
 {
     // Initialization code before opening the window
-    iOpenWindow(400, 400, "iGraphics");
-    // Execution will continue from here once iCloseWindow() is called.
+    iWindowedMode(400, 400, "iGraphics");
+    iStartMainLoop();
+    // Execution will continue from here once iExitMainLoop() is called or window is closed.
     return 0;
 }
 ```
@@ -369,7 +371,7 @@ int main(int argc, char *argv[])
 
 ### 🖼️ Graphics Functions
 
-#### `void iOpenWindow(int width=500, int height=500, char* title="iGraphics")`
+#### `void iWindowedMode(int width=500, int height=500, char* title="iGraphics")`
 
 - **Description:** Creates a window of specified size and title.
 - **Parameters:**
@@ -378,10 +380,10 @@ int main(int argc, char *argv[])
   - `title`: Title of the window.
 - **Example:**
   ```cpp
-  iOpenWindow(300, 300, "iGraphics");
+  iWindowedMode(300, 300, "iGraphics");
   ```
 
-#### `void iCloseWindow()`
+#### `void iExitMainLoop()`
 
 - **Description:** Closes the current window.
 - **Parameters:** None
@@ -392,7 +394,7 @@ int main(int argc, char *argv[])
       switch (key)
       {
       case 'q':
-          iCloseWindow();
+          iExitMainLoop();
           break;
       default:
           break;
@@ -590,6 +592,21 @@ int main(int argc, char *argv[])
     - `GLUT_BITMAP_HELVETICA_18`
 - **Example:** `iText(50, 60, "This is a text", GLUT_BITMAP_TIMES_ROMAN_10);`
 
+#### `void iTextBold(double x, double y, char *str, void* font=GLUT_BITMAP_8_BY_13)`
+
+- **Description:** Displays a bold string on screen.
+
+#### `void iTextAdvanced(double x, double y, const char *str, float scale = 0.3, float weight = 1.0, void *font = GLUT_STROKE_ROMAN)`
+
+- **Description:** Displays a string on screen with specified scale and weight.
+- **Parameters:**
+  - `x`, `y`: Coordinates of the first character.
+  - `str`: The text to display.
+  - `scale`: Scale factor for the text.
+  - `weight`: Weight of the text (1.0 for normal, 2.0 for bold).
+  - `font`: Font type (default is `GLUT_STROKE_ROMAN`).
+- **Example:** `iTextAdvanced(50, 60, "This is a text", 0.5, 2.0);`
+
 #### `void iRotate(double x, double y, double degree)`
 
 - **Description:** Rotates the coordinate system around a point.
@@ -636,9 +653,9 @@ int main(int argc, char *argv[])
   int main(int argc, char *argv[])
   {
       ...
-      int t = iSetTimer(100, func); // //call it inside main() before iOpenWindow();
+      int t = iSetTimer(100, func); // //call it inside main() before iWindowedMode();
       ...
-      iOpenWindow(400, 400, "iGraphics");
+      iWindowedMode(400, 400, "iGraphics");
   }
   ```
 
@@ -1047,42 +1064,29 @@ Custom font rendering is supported using TrueType fonts. `freetype` library is u
 Free sprite resources: [https://craftpix.net/freebies/](https://craftpix.net/freebies/)\\
 Online sprite cutter: [https://ezgif.com/sprite-cutter](https://ezgif.com/sprite-cutter)
 
-<!-- #### `void iInitSprite(Sprite *s)`
-
-- **Description:** Initializes a sprite structure.
-- **Parameters:**
-
-  - `s`: Pointer to a `Sprite` structure.
-
-- **Example:**
-  ```cpp
-  Sprite s;
-  iInitSprite(&s); // Initialize sprite and ignore white color
-  ```
-- 
-  ``` -->
-
 #### Structure Definitions
 
 **FrameSet Structure**
-  ```cpp
-  typedef struct
-  {
-      Image *frames;
-      int count;
-  } FrameSet;
-  ```
+
+```cpp
+typedef struct
+{
+    Image *frames;
+    int count;
+} FrameSet;
+```
 
 **Sprite Structure**
-  ```cpp
-  typedef struct
-  {
-      int x, y;
-      FrameSet frameSet;
-      int currentFrame;
-      ....
-  } Sprite;
-  ```
+
+```cpp
+typedef struct
+{
+    int x, y;
+    FrameSet frameSet;
+    int currentFrame;
+    ....
+} Sprite;
+```
 
 #### `int iLoadFramesFromFolder(FrameSet *frames, const char *folderPath)`
 
@@ -1101,14 +1105,14 @@ Online sprite cutter: [https://ezgif.com/sprite-cutter](https://ezgif.com/sprite
 
 #### `int iLoadFramesFromSheet(FrameSet *frames, const char *filename, int rows, int cols)`
 
-- **Description:** Loads frames from a sprite sheet. 
+- **Description:** Loads frames from a sprite sheet.
 - **Parameters:**
 
   - `frames`: Pointer to a `FrameSet` structure.
   - `filename`: Path to the sprite sheet image.
   - `rows`: Number of rows in the sprite sheet.
   - `cols`: Number of columns in the sprite sheet.
-   
+
 - **Returns:** Number of frames loaded. -1 if failed to load the sprite sheet.
 
 - **Example:**
@@ -1200,23 +1204,6 @@ Online sprite cutter: [https://ezgif.com/sprite-cutter](https://ezgif.com/sprite
 - **Parameters:**
   - `s`: Pointer to a `Sprite` structure.
 
-#### `int iCheckCollision(Sprite* s1, Sprite* s2)`
-
-- **Description:** Checks for pixel-level collision between two sprites. If the bounding box of two images do not overlap, this has a time complexity of `O(1)`. Otherwise, it has a time complexity of `O(wh)`, where `w` and `h` are the width and height of the overlapping area of the two images.
-
-- **Parameters:**
-  - `s1`: Pointer to the first `Sprite` structure.
-  - `s2`: Pointer to the second `Sprite` structure.
-- **Returns:** `1` if collision is detected, `0` otherwise.
-- **Example:**
-  ```cpp
-  Sprite s1, s2;
-  ....
-  if (iCheckCollision(&s1, &s2)) {
-      // Collision detected
-  }
-  ```
-
 #### `int iGetVisiblePixelsCount(Sprite* s1)`
 
 - **Description:** Counts the number of visible pixels in a sprite. This is useful for collision detection.
@@ -1228,6 +1215,94 @@ Online sprite cutter: [https://ezgif.com/sprite-cutter](https://ezgif.com/sprite
   Sprite s1;
   ...
   int visiblePixels = iGetVisiblePixelsCount(&s1);
+  ```
+
+#### `FrameSet iCreateFrameSet(Image *frames, int count)`
+
+- **Description:** Creates a `FrameSet` from an array of images.
+- **Parameters:**
+  - `frames`: Pointer to an array of `Image` structures.
+  - `count`: Number of frames in the array.
+  - **Returns:** A `FrameSet` structure containing the frames.
+- **Example:**
+
+  ```cpp
+  Image frames[4];
+  ...
+  FrameSet frameSet = iCreateFrameSet(frames, 4); // Create a FrameSet from the array of images
+  ```
+
+  ```cpp
+  Image singleImg;
+  ...
+  FrameSet frameSet = iCreateFrameSet(&singleImg, 1); // Create a FrameSet from a single image
+  ```
+
+````
+
+<!-- Collision Detection -->
+
+### 🛡️ Collision Detection
+
+#### `int iCheckImageCollision(int x1, int y1, Image *img1, int x2, int y2, Image *img2)`
+
+- **Description:** Checks for pixel-level collision between two images.
+- **Parameters:**
+  - `x1`, `y1`: Coordinates of the first image.
+  - `img1`: Pointer to the first `Image` structure.
+  - `x2`, `y2`: Coordinates of the second image.
+  - `img2`: Pointer to the second `Image` structure.
+- **Returns:** Number of overlapping pixels. `>= 1` if collision is detected, `0` otherwise.
+- **Note:** This function doesn't consider image rotation (Using `iRotate` and `iUnRotate`). Use `iCheckSpriteCollision` for such cases.
+- **Example:**
+
+  ```cpp
+  Image img1, img2;
+  iLoadImage(&img1, "image1.png");
+  iLoadImage(&img2, "image2.png");
+
+  ....
+  // Check for collision between img1 at (100, 200) and img2 at (150, 250)
+  if (iCheckImageCollision(100, 200, &img1, 150, 250, &img2)) {
+      // Collision detected
+  }
+````
+
+#### `int iCheckSpriteCollision(Sprite* s1, Sprite* s2)`
+
+- **Description:** Checks for pixel-level collision between two sprites.
+
+- **Parameters:**
+  - `s1`: Pointer to the first `Sprite` structure.
+  - `s2`: Pointer to the second `Sprite` structure.
+- **Returns:** Number of overlapping pixels. `>= 1` if collision is detected, `0` otherwise.
+- **Example:**
+  ```cpp
+  Sprite s1, s2;
+  ....
+  if (iCheckSpriteCollision(&s1, &s2)) {
+      // Collision detected
+  }
+  ```
+
+#### `int iCheckImageSpriteCollision(int x1, int y1, Image *img, Sprite *s)`
+
+- **Description:** Checks for pixel-level collision between an image and a sprite.
+- **Parameters:**
+  - `x1`, `y1`: Coordinates of the image.
+  - `img`: Pointer to the `Image` structure.
+  - `s`: Pointer to the `Sprite` structure.
+  - **Returns:** Number of overlapping pixels. `>= 1` if collision is detected, `0` otherwise.
+  - **Note:** This function doesn't consider image rotation (Using `iRotate` and `iUnRotate`). Use `iCheckSpriteCollision` for such cases.
+- **Example:**
+  ```cpp
+  Image img;
+  Sprite s;
+  iLoadImage(&img, "image.png");
+  ....
+  if (iCheckImageSpriteCollision(100, 200, &img, &s)) {
+      // Collision detected between image and sprite
+  }
   ```
 
 ### 🧰 Miscellaneous
@@ -1276,12 +1351,12 @@ This library is for educational purposes and is typically used in academic or ho
 - **Mouse**: Added support for mouse passive motion and mouse wheel scrolling. Also, now we can show or hide the mouse cursor using `iShowCursor` and `iHideCursor` functions.
 - **Sprite**: Added functions to easily work with sprites, including loading frames from folders and sprite sheets (Previously, needed to use a online sprite cutter), animating sprites.
 - **Image Wrap**: Now image wrapping is possible in all four directions (left, right, up, down) using `iWrapImage`. Previously, only in the right direction was possible.
-- **Closing Window**: Added `iCloseWindow` function to close the current window. No such function was available previously. Had to use `exit(0)` to close the window, which is not a good practice.
+- **Closing Window**: Added `iExitMainLoop` function to close the current window. No such function was available previously. Had to use `exit(0)` to close the window, which is not a good practice.
 - **Sound**: Added sound playback functionality using `SDL2` library. Now, we can play sounds, pause, resume, and stop them. Also, added volume control for sounds. Specially, parallel sound playback is now possible, which was not possible before. Previously, windows specific `PlaySound` function was used, which was not cross-platform.
 - **Timer**: Used `glutTimerFunc` for timer functionality. Previously, windows specific `SetTimer` function was used, which was not cross-platform.
 - **Scaling**: Added support for scaling anything (drawings, images, text) using `iScale` and `iUnscale` functions.
 - **Callbacks**: Made iGraphics function callbacks (e.g., `iDraw`, `iMouseClick`, `iKeyPress`) optional, so that users can choose to implement only the functions they need.
-- **Naming**: Renamed some functions and parameters for better clarity and consistency. For example, `iOpenWindow` instead of `iInitialize`, `iMouseDrag` instead of `iMouseMove`, `iMouseClick` instead of `iMouse`, `iShowImage` instead of `iShowBMP`, etc. This makes the API more intuitive and easier to use. -->
+- **Naming**: Renamed some functions and parameters for better clarity and consistency. For example, `iWindowedMode` instead of `iInitialize`, `iMouseDrag` instead of `iMouseMove`, `iMouseClick` instead of `iMouse`, `iShowImage` instead of `iShowBMP`, etc. This makes the API more intuitive and easier to use. -->
 
 ## 🙏 Acknowledgements
 

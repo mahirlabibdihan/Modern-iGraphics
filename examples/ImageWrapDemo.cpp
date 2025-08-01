@@ -68,6 +68,7 @@ void iSpecialKeyPress(unsigned char key)
 int main(int argc, char *argv[])
 {
 	loadResources();
-	iOpenWindow(900, 450, "ImageWrapDemo");
+	iWindowedMode(900, 450, "ImageWrapDemo");
+	iStartMainLoop();
 	return 0;
 }

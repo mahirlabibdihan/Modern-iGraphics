@@ -3,7 +3,8 @@
 int main(int argc, char *argv[])
 {
     // iGameMode(W800_X_H600);
-    iWindowedMode(800, 600, "iGraphics Example");
+    iWindowedMode(400, 400, "iGraphics Example");
+    // iEnterFullscreen();
     iStartMainLoop();
     printf("Exiting main loop...\n");
     return 0;

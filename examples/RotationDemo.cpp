@@ -10,14 +10,18 @@ Image marioImage;
 void loadResources()
 {
     iLoadImage(&marioImage, "assets/images/mario.png");
-    iInitSprite(&mario1);
-    iInitSprite(&mario2);
-    iChangeSpriteFrames(&mario1, &marioImage, 1);
-    iChangeSpriteFrames(&mario2, &marioImage, 1);
+
+    // Construct a FrameSet with the single image
+    FrameSet tmp = iCreateFrameSet(&marioImage, 1);
+
+    iChangeSpriteFrames(&mario1, &tmp);
     iSetSpritePosition(&mario1, 400, 150);
-    iSetSpritePosition(&mario2, 650, 100);
     iScaleSprite(&mario1, 0.2);
+
+    iChangeSpriteFrames(&mario2, &tmp);
+    iSetSpritePosition(&mario2, 650, 100);
     iScaleSprite(&mario2, 0.4);
+
     iResizeImage(&marioImage, 90, 100);
 }
 
@@ -86,6 +90,7 @@ int main(int argc, char *argv[])
 {
     iSetTimer(10, iAnim); // Set a timer to call iAnim every 100 milliseconds
     loadResources();
-    iOpenWindow(1000, 400, "demooo");
+    iWindowedMode(1000, 400, "demooo");
+    iStartMainLoop();
     return 0;
 }
